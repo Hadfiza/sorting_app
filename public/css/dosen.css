@@ -1,0 +1,194 @@
+:root {
+    --navbar-h: 60px;
+    --sidebar-w: 240px;
+
+    --primary: #1e40af;
+    --primary-light: #e0e7ff;
+    --gray-bg: #f3f4f6;
+}
+
+/* ===== BASE ===== */
+body {
+    margin: 0;
+    background: var(--gray-bg);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ===== NAVBAR DOSEN ===== */
+.navbar-dosen {
+    height: 60px;
+    background:linear-gradient(90deg, #1e40af, #2563eb);
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+    padding-top: 0;
+    padding-bottom: 0;
+    z-index: 1030;
+}
+
+.navbar-dosen .navbar-brand {
+    font-size: 20px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* ===== SIDEBAR DOSEN ===== */
+.sidebar {
+    position: fixed;
+    top: var(--navbar-h);
+    left: 0;
+    width: var(--sidebar-w);
+    height: calc(100vh - var(--navbar-h));
+    background: #ffffff;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+    padding: 18px;
+    overflow-y: auto;
+}
+
+/* Divider */
+.sidebar-divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 14px 0;
+}
+
+/* ===== MENU ===== */
+.menu-item {
+    margin-bottom: 8px;
+}
+
+.menu-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+    padding: 12px 14px;
+
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+
+    font-weight: 500;
+    color: #334155;
+    text-decoration: none;
+
+    transition: all .2s ease;
+}
+
+/* Hover */
+.menu-btn:hover {
+    background: #f1f5f9;
+    color: var(--primary);
+}
+
+/* Active */
+.menu-item.active .menu-btn {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* Icon */
+.menu-btn i {
+    width: 20px;
+    text-align: center;
+    font-size: 17px;
+}
+
+/* ===== CONTENT ===== */
+.content {
+    margin-left: var(--sidebar-w);
+    padding: 28px;
+    padding-top: calc(var(--navbar-h) + 20px);
+}
+
+/* ===== CARD DASHBOARD DOSEN ===== */
+.dashboard-card {
+    border: none;
+    border-radius: 14px;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+    transition: transform .2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-3px);
+}
+
+.dashboard-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: var(--primary-light);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+
+.welcome-box {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+}
+
+/* ===== STAT CARD BASE ===== */
+.stat-card {
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+    transition: transform .2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+}
+
+/* ===== COLOR VARIANTS ===== */
+
+/* Hijau soft */
+.stat-green {
+    background: #dcfce7;
+    border-left: 5px solid #16a34a;
+}
+
+/* Biru soft */
+.stat-blue {
+    background: #e0f2fe;
+    border-left: 5px solid #0284c7;
+}
+
+/* Kuning soft */
+.stat-yellow {
+    background: #fef9c3;
+    border-left: 5px solid #ca8a04;
+}
+
+.stat-card h5 {
+    color: #2a5298;
+    margin-bottom: 10px;
+}
+
+.stat-card h3 {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 767.98px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    .sidebar.show {
+        transform: translateX(0);
+    }
+    .content {
+        margin-left: 0;
+    }
+}
+

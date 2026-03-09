@@ -1,0 +1,120 @@
+/* --- CONTAINER FILE --- */
+.file-container {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    margin: 20px auto;
+    background: #fdfdfd;
+    border-radius: 8px;
+    border-bottom: 2px solid #eee;
+    overflow: visible;
+}
+
+
+
+/* --- ITEM FILE --- */
+.file-wrap {
+    position: absolute; /* Wajib Absolute agar bisa geser */
+    bottom: 20px;       /* Nempel bawah */
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    /* KUNCI ANIMASI */
+    transition: all 0.6s ease-in-out;
+    z-index: 1;
+}
+
+.file-wrap img {
+    width: 100%;
+    height: auto;
+    display: block;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    background: white;
+}
+
+.file-label {
+    margin-top: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #666;
+}
+
+/* ===============================
+   STATE VISUALISASI
+   =============================== */
+
+/* 1. KEY (FILE YANG DIPEGANG) */
+.file-wrap.is-key {
+    z-index: 10;             /* Paling depan */
+    transform: scale(1.1);   /* Membesar, tidak naik */
+}
+
+.file-wrap.is-key img {
+    border: 3px solid #8e44ad; /* Border ungu */
+    box-shadow: 0 0 15px rgba(142, 68, 173, 0.4);
+}
+
+.file-wrap.is-key::after {
+    content: 'KEY';
+    position: absolute;
+    top: -26px;
+    background: #8e44ad;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* 2. AREA TERURUT (HIJAU) */
+.file-wrap.is-sorted::before {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    width: 100%;
+    height: 4px;
+    background: #2ecc71;
+    border-radius: 2px;
+}
+
+/* 3. SEDANG DIBANDINGKAN (KUNING) */
+.file-wrap.comparing {
+    transform: scale(1.05);
+    z-index: 50;
+}
+
+.file-wrap.comparing img {
+    border: 3px solid #f1c40f;
+}
+
+/* ===============================
+   TOMBOL AKSI
+   =============================== */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-sim {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    color: white;
+    background: #95a5a6;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-sim.active {
+    background: #3498db;
+}
+
+.btn-sim.btn-swap {
+    background: #e67e22;
+}

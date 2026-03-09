@@ -1,0 +1,142 @@
+/* ===============================
+   CONTAINER BUKU (HORIZONTAL)
+   =============================== */
+.book-container {
+    display: flex !important;
+    justify-content: center;
+    gap: 30px;
+    padding: 20px 0;
+    align-items: flex-end;
+}
+
+/* ===============================
+   KELOMPOK BUKU (KIRI / KANAN / HASIL)
+   =============================== */
+.group-box {
+    border: 2px dashed #bdc3c7;
+    padding: 50px 15px 15px;  /* Jarak dengan boeder */
+    border-radius: 8px;
+    background: #fdfdfd;
+    display: flex;
+    gap: 12px;
+    position: relative;
+    min-height: 140px;        /* untuk tinggi */
+    align-items: flex-end;
+    overflow: visible;
+    box-sizing: border-box;
+}
+
+
+/* Label Group */
+.group-box::before {
+    content: attr(data-label);
+    position: absolute;
+    top: -20px;                 /* lebih naik */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #bdc3c7;
+    color: white;
+    font-size: 11px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    z-index: 20;
+}
+
+/* ===============================
+        GROUP HASIL (KHUSUS)
+   =============================== */
+.group-box.result-group {
+    border-color: #27ae60;
+    background: #eafaf1;
+}
+
+.group-box.result-group::before {
+    background: #27ae60; 
+}
+
+/* ===============================
+   ITEM BUKU
+   =============================== */
+.book-img-wrap {
+    width: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.book-img-wrap img {
+    width: 100%;
+    height: auto;
+    display: block;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    background: white;
+}
+
+.book-label {
+    margin-top: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #555;
+}
+
+/* ===============================
+   STATE ANIMASI
+   =============================== */
+
+/* Sedang dibandingkan */
+.book-img-wrap.comparing {
+    transform: scale(1.08);
+}
+
+.book-img-wrap.comparing img {
+    border: 3px solid #f1c40f;
+}
+
+
+/* Sudah masuk ke HASIL */
+.book-img-wrap.merged-item {
+    animation: dropIn 0.45s ease-out;
+}
+
+.book-img-wrap.merged-item img {
+    border-bottom: 4px solid #2ecc71;
+}
+
+/* Animasi jatuh */
+@keyframes dropIn {
+    from {
+        transform: translateY(-25px) scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* ===============================
+   TOMBOL
+   =============================== */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-sim {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    color: white;
+    background: #95a5a6;
+    transition: all 0.2s;
+}
+
+.btn-sim.active {
+    background: #3498db;
+}

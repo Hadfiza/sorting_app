@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Interaktif Bubble Sort</title>
+    <style>
+        /* CSS SEDERHANA UNTUK TAMPILAN */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1, h2 { text-align: center; color: #2c3e50; }
+        
+        .quiz-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .question-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            border-left: 5px solid #3498db;
+            padding-left: 10px;
+        }
+
+        .btn-check {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            display: block;
+            width: 100%;
+        }
+
+        .btn-check:hover { background-color: #2980b9; }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none; /* Sembunyikan default */
+            font-weight: bold;
+        }
+        
+        .correct { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .incorrect { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        /* GAYA KHUSUS SOAL 1 (DRAG & DROP) */
+        .drag-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            background: #eee;
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 60px;
+        }
+
+        .draggable-item {
+            width: 50px;
+            height: 50px;
+            background-color: #fff;
+            border: 2px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .draggable-item:active { cursor: grabbing; }
+
+        /* GAYA KHUSUS SOAL 2 (SIMULASI) */
+        .array-display {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .array-box {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .highlight {
+            border-color: #e67e22;
+            background-color: #f39c12;
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+        .simulation-btns { display: flex; gap: 10px; justify-content: center; }
+        .sim-btn {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background: white;
+            border-radius: 5px;
+        }
+        .sim-btn:hover { background: #f0f0f0; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* GAYA KHUSUS SOAL 3 (INPUT) */
+        .input-box {
+            padding: 10px;
+            font-size: 16px;
+            width: 80px;
+            text-align: center;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* GAYA KHUSUS SOAL KODE & ISIAN */
+        .code-block {
+            background-color: #282c34; /* Warna gelap ala VS Code */
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            overflow-x: auto;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .code-select {
+            background-color: #e5c07b; /* Warna kuning soft */
+            border: 1px solid #d19a66;
+            border-radius: 3px;
+            padding: 2px;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .inline-input {
+            border: none;
+            border-bottom: 2px solid #3498db;
+            background: transparent;
+            width: 120px;
+            text-align: center;
+            font-size: 1em;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .inline-input:focus {
+            outline: none;
+            border-bottom-color: #e67e22;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Latihan Interaktif: Bubble Sort</h1>
+    <p style="text-align: center; margin-bottom: 30px;">Selesaikan tantangan berikut berdasarkan materi yang telah dipelajari.</p>
+
+    <div class="quiz-card">
+        <div class="question-title">1. Mekanisme Iterasi (Drag & Drop)</div>
+        <p>Data awal: <strong>[7, 3, 9, 2]</strong>.<br>
+        Susunlah kotak di bawah ini menjadi urutan yang benar setelah <strong>Iterasi Pertama (Pass 1)</strong> selesai.</p>
+        
+        <div class="drag-container" id="sortableList">
+            <div class="draggable-item" draggable="true">2</div>
+            <div class="draggable-item" draggable="true">9</div>
+            <div class="draggable-item" draggable="true">3</div>
+            <div class="draggable-item" draggable="true">7</div>
+        </div>
+        <p style="font-size: 0.9em; color: #666; text-align: center;">*Geser (drag) kotak untuk menyusun urutan</p>
+
+        <button class="btn-check" onclick="checkDragAnswer()">Cek Susunan</button>
+        <div id="feedback1" class="feedback"></div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question-title">2. Keputusan Algoritma</div>
+        <p>Perhatikan dua elemen yang disorot (kuning). Berdasarkan prinsip Bubble Sort (Ascending), apakah kedua elemen ini perlu ditukar?</p>
+        
+        <div class="array-display">
+            <div class="array-box highlight">4</div>
+            <div class="array-box highlight">8</div>
+            <div class="array-box">1</div>
+            <div class="array-box">5</div>
+        </div>
+
+        <div class="simulation-btns">
+            <button class="sim-btn" onclick="checkSimulation(true)">YA, Tukar</button>
+            <button class="sim-btn" onclick="checkSimulation(false)">TIDAK, Lanjut</button>
+        </div>
+        
+        <div id="feedback2" class="feedback"></div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question-title">3. Analisis Efisiensi</div>
+        <p>Jika terdapat <strong>6 buku</strong> (n=6) yang akan diurutkan. Berdasarkan rumus <code>n-1</code>, berapa kali perbandingan yang terjadi pada siklus (iterasi) pertama?</p>
+        
+        <div style="text-align: center;">
+            <input type="number" id="inputEff" class="input-box" placeholder="0">
+        </div>
+
+        <button class="btn-check" onclick="checkMathAnswer()">Cek Jawaban</button>
+        <div id="feedback3" class="feedback"></div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question-title">4. Implementasi Kode (Code Completion)</div>
+        <p>Lengkapi potongan kode C++ berikut agar algoritma Bubble Sort berjalan secara <strong>Ascending</strong> (kecil ke besar).</p>
+        
+        <div class="code-block">
+            void bubbleSort(int arr[], int n) {<br>
+            &nbsp;&nbsp;for (int i = 0; i < n-1; i++) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;for (int j = 0; j < n-i-1; j++) {<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Cek apakah elemen kiri lebih besar dari kanan<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (arr[j] 
+            <select id="code1" class="code-select">
+                <option value="x">...</option>
+                <option value=">">></option>
+                <option value="<"><</option>
+                <option value="==">==</option>
+            </select> 
+            arr[j+1]) {<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Lakukan pertukaran (Swap)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int temp = arr[j];<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arr[j] = arr[j+1];<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arr[j+1] = 
+            <select id="code2" class="code-select">
+                <option value="x">...</option>
+                <option value="arr[j]">arr[j]</option>
+                <option value="temp">temp</option>
+                <option value="n">n</option>
+            </select>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;}<br>
+            }
+        </div>
+
+        <button class="btn-check" onclick="checkCodeAnswer()">Cek Kode</button>
+        <div id="feedback4" class="feedback"></div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question-title">5. Pemahaman Konsep (Isian Singkat)</div>
+        <p>Isilah bagian yang kosong sesuai dengan materi yang telah dipelajari.</p>
+        
+        <p style="line-height: 2em;">
+            1. Bubble Sort bekerja dengan membandingkan elemen yang 
+            <input type="text" id="blank1" class="inline-input" placeholder="..."> 
+            satu sama lain.<br>
+            
+            2. Jika kita ingin mengurutkan data dari nilai terkecil ke terbesar, metode ini disebut 
+            <input type="text" id="blank2" class="inline-input" placeholder="...">.<br>
+            
+            3. Proses pengurutan akan berhenti ketika dalam satu iterasi penuh tidak ada lagi elemen yang 
+            <input type="text" id="blank3" class="inline-input" placeholder="...">.
+        </p>
+
+        <button class="btn-check" onclick="checkBlankAnswer()">Cek Jawaban</button>
+        <div id="feedback5" class="feedback"></div>
+    </div>
+
+    <script>
+        // --- LOGIKA SOAL 1: DRAG & DROP ---
+        const list = document.getElementById('sortableList');
+        let draggedItem = null;
+
+        // Event Listeners untuk Drag and Drop
+        list.addEventListener('dragstart', function(e) {
+            draggedItem = e.target;
+            setTimeout(() => e.target.style.opacity = '0.5', 0);
+        });
+
+        list.addEventListener('dragend', function(e) {
+            setTimeout(() => e.target.style.opacity = '1', 0);
+            draggedItem = null;
+        });
+
+        list.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            const afterElement = getDragAfterElement(list, e.clientX);
+            if (afterElement == null) {
+                list.appendChild(draggedItem);
+            } else {
+                list.insertBefore(draggedItem, afterElement);
+            }
+        });
+
+        function getDragAfterElement(container, x) {
+            const draggableElements = [...container.querySelectorAll('.draggable-item:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = x - box.left - box.width / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function checkDragAnswer() {
+            const feedback = document.getElementById('feedback1');
+            const items = document.querySelectorAll('.draggable-item');
+            let userResult = [];
+            items.forEach(item => userResult.push(item.innerText));
+            
+            // KUNCI JAWABAN: [3, 7, 2, 9]
+            // Analisis: 7 vs 3 (Tukar) -> 3,7,9,2. 7 vs 9 (Tetap). 9 vs 2 (Tukar) -> 3,7,2,9.
+            const correctAnswer = "3,7,2,9"; 
+            
+            if (userResult.join(',') === correctAnswer) {
+                feedback.className = "feedback correct";
+                feedback.innerHTML = "✅ Benar! Elemen terbesar (9) berhasil 'menggelembung' ke posisi akhir.";
+            } else {
+                feedback.className = "feedback incorrect";
+                feedback.innerHTML = "❌ Masih salah. Ingat: Bandingkan per pasangan. Elemen terbesar harus di ujung kanan.";
+            }
+            feedback.style.display = 'block';
+        }
+
+        // --- LOGIKA SOAL 2: SIMULASI ---
+        function checkSimulation(userSaysSwap) {
+            const feedback = document.getElementById('feedback2');
+            // Soal: 4 vs 8. Karena 4 < 8, maka TIDAK perlu tukar.
+            // userSaysSwap = true (jika user klik YA), false (jika user klik TIDAK)
+            
+            if (userSaysSwap === false) {
+                feedback.className = "feedback correct";
+                feedback.innerHTML = "✅ Benar! Karena 4 < 8 (Kiri lebih kecil), posisi sudah benar. Tidak perlu tukar.";
+            } else {
+                feedback.className = "feedback incorrect";
+                feedback.innerHTML = "❌ Salah. Perhatikan nilainya: 4 lebih kecil dari 8, jadi urutannya sudah benar (Ascending).";
+            }
+            feedback.style.display = 'block';
+        }
+
+        // --- LOGIKA SOAL 3: MATH ---
+        function checkMathAnswer() {
+            const inputVal = document.getElementById('inputEff').value;
+            const feedback = document.getElementById('feedback3');
+            
+            // Soal: n=6, Rumus n-1. Jawaban = 5.
+            if (inputVal == 5) {
+                feedback.className = "feedback correct";
+                feedback.innerHTML = "✅ Tepat! n = 6, maka perbandingan = 6 - 1 = 5 kali.";
+            } else {
+                feedback.className = "feedback incorrect";
+                feedback.innerHTML = "❌ Salah. Gunakan rumus (n - 1). Jika n=6, berapakah hasilnya?";
+            }
+            feedback.style.display = 'block';
+        }
+
+        // --- LOGIKA SOAL 4: MELENGKAPI KODE ---
+function checkCodeAnswer() {
+    const ans1 = document.getElementById('code1').value;
+    const ans2 = document.getElementById('code2').value;
+    const feedback = document.getElementById('feedback4');
+
+    // KUNCI JAWABAN:
+    // 1. ">" (Untuk Ascending, kiri harus lebih besar dari kanan agar ditukar)
+    // 2. "temp" (Variabel sementara untuk menyimpan nilai swap)
+    
+    if (ans1 === ">" && ans2 === "temp") {
+        feedback.className = "feedback correct";
+        feedback.innerHTML = "✅ Koding Sempurna! Logika perbandingan (>) dan mekanisme Swap sudah benar.";
+    } else {
+        feedback.className = "feedback incorrect";
+        feedback.innerHTML = "❌ Masih ada *bug* di kodemu. Perhatikan tanda perbandingan untuk Ascending dan variabel penampung saat Swap.";
+    }
+    feedback.style.display = 'block';
+}
+
+// --- LOGIKA SOAL 5: FILL IN THE BLANK ---
+function checkBlankAnswer() {
+    // Ambil nilai dan ubah ke huruf kecil (lowercase) agar tidak sensitif huruf besar/kecil
+    const ans1 = document.getElementById('blank1').value.trim().toLowerCase();
+    const ans2 = document.getElementById('blank2').value.trim().toLowerCase();
+    const ans3 = document.getElementById('blank3').value.trim().toLowerCase();
+    const feedback = document.getElementById('feedback5');
+
+    // KUNCI JAWABAN (Array untuk menampung variasi jawaban benar)
+    const key1 = ["bersebelahan", "sebelah", "berdekatan"];
+    const key2 = ["ascending", "menaik"];
+    const key3 = ["ditukar", "tukar", "pertukaran", "swap"];
+
+    let score = 0;
+    let errors = [];
+
+    // Cek Jawaban 1
+    if (key1.includes(ans1)) score++;
+    else errors.push("No. 1 (Kata kunci: posisi elemen)");
+
+    // Cek Jawaban 2
+    if (key2.includes(ans2)) score++;
+    else errors.push("No. 2 (Kata kunci: jenis urutan)");
+
+    // Cek Jawaban 3
+    if (key3.includes(ans3)) score++;
+    else errors.push("No. 3 (Kata kunci: kondisi berhenti)");
+
+    if (score === 3) {
+        feedback.className = "feedback correct";
+        feedback.innerHTML = "✅ Luar Biasa! Semua konsep dasar telah kamu kuasai.";
+    } else if (score > 0) {
+        feedback.className = "feedback incorrect"; // Tetap merah jika belum sempurna
+        feedback.innerHTML = "⚠️ Hampir benar (" + score + "/3). Perbaiki bagian: " + errors.join(", ");
+    } else {
+        feedback.className = "feedback incorrect";
+        feedback.innerHTML = "❌ Jawaban belum tepat. Silakan baca ulang materi tentang prinsip kerja Bubble Sort.";
+    }
+    feedback.style.display = 'block';
+}
+    </script>
+</body>
+</html>

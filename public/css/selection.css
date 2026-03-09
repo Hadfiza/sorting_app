@@ -1,0 +1,138 @@
+/* --- CSS TAMBAHAN UNTUK SIMULASI --- */
+/* Container Utama Simulasi */
+#simulation-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+/* KARTU SIMULASI */
+.sim-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+    margin-bottom: 20px;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.sim-header {
+    padding: 20px 25px;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+    font-size: 1rem;
+    color: #444;
+}
+
+.sim-body {
+    padding: 30px;
+    text-align: center;
+}
+
+.iter-title {
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.can-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Jarak antar buku */
+    margin-bottom: 30px;
+    min-height: 120px;
+    align-items: flex-end;
+}
+
+/* Wrapper Gambar Buku */
+.can-img-wrap {
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.3s;
+    background: transparent;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Label di bawah buku (Index) */
+.can-label {
+    margin-top: 5px;
+    font-size: 0.8rem;
+    color: #777;
+}
+
+/* HIGHLIGHT STATES */
+/* Posisi yang sedang ingin diisi (i) */
+.can-img-wrap.current-pos {
+    border-bottom: 4px solid #3498db; /* Biru */
+}
+/* Item yang sedang discan (j) */
+.can-img-wrap.scanning {
+    transform: scale(1.1);
+    background: #fff3cd;
+    border: 2px solid #ffc107; /* Kuning */
+}
+/* Nilai minimum sementara yang ditemukan */
+.can-img-wrap.min-found {
+    background: #d4edda;
+    border: 2px solid #28a745; /* Hijau */
+}
+/* Gabungan: Sedang discan DAN dia adalah minimum saat ini */
+.can-img-wrap.scanning.min-found {
+     background: #cce5ff;
+     border: 2px solid #e74c3c; /* Merah (Kontras) */
+     transform: scale(1.15);
+}
+
+/* BUTTONS */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-sim {
+    padding: 10px 25px;
+    border-radius: 6px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #fff;
+    background-color: #95a5a6; /* Default Abu */
+}
+
+.btn-sim.active { background-color: #3498db; box-shadow: 0 4px 0 #2980b9; } /* Biru Aktif */
+.btn-sim.btn-swap-action { background-color: #e67e22; }
+.btn-sim.btn-swap-action.active { background-color: #d35400; box-shadow: 0 4px 0 #a84300; } /* Oranye Tukar */
+
+.btn-reset { background-color: #c0392b; }
+.btn-reset:hover { background-color: #e74c3c; }
+
+.btn-sim.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #bdc3c7;
+    box-shadow: none;
+    transform: none !important;
+}
+
+.status-text {
+    font-size: 0.95rem;
+    color: #555;
+    margin-top: 10px;
+}

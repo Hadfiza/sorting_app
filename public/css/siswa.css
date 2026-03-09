@@ -1,0 +1,409 @@
+:root {
+    --navbar-h: 60px;
+    --sidebar-w: 240px;
+    --primary-blue: #2563eb;
+    --light-blue: #dbeafe;
+}
+
+/* ===== RESET & BASE ===== */
+body {
+    margin: 0;
+    background: #f5f6f8;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ===== NAVBAR ===== */
+.navbar-siswa {
+    height: 60px;
+    background:linear-gradient(90deg, #1e40af, #2563eb);
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+    padding-top: 0;
+    padding-bottom: 0;
+    z-index: 1030;
+}
+
+.navbar-siswa .navbar-brand {
+    font-size: 20px;
+    letter-spacing: .3px;
+    color: white;
+}
+
+
+
+/* ===== CONTENT ===== */
+.content {
+    margin-left: var(--sidebar-w);
+    padding: 24px;
+    padding-top: calc(56px + 24px);
+    transition: margin-left .3s ease;
+}
+
+
+
+/* ===== TEKS RATA KIRI KANAN ===== */
+.card-text {
+    text-align: justify;
+    text-justify: inter-word;
+    line-height: 1.7;
+}
+
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 767.98px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.show { transform: translateX(0); }
+    .content { margin-left: 0; }
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+    position:fixed;
+    top:60px;
+    left:0;
+    width:var(--sidebar-w);
+    height:calc(100vh - var(--navbar-h));
+    background: #ffffff;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.08);
+    padding:16px;
+    z-index:1020;
+    margin-top: -1px;
+    overflow-y:auto;
+}
+
+
+/* Divider */
+.sidebar-divider{
+    height:1px;
+    background:#e2e8f0;
+    margin:10px 0;
+}
+
+/* ===== MENU ITEM ===== */
+.menu-item{
+    margin-bottom:6px;
+}
+
+/* ===== MENU UTAMA ===== */
+.menu-btn{
+    width:100%;
+    padding:10px 12px;
+    background:transparent;
+    border:none;
+    text-align:left;
+    font-weight:600;
+    color:#1e293b;
+    border-radius:10px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:10px;              
+    transition:background .2s ease;
+    text-decoration: none !important;
+}
+
+.menu-btn:hover{
+    background:#f1f5f9;
+}
+
+/* MENU UTAMA AKTIF */
+.menu-item.active .menu-btn{
+    background:#2563eb;
+    color:#ffffff;
+}
+
+/* ===== PANAH ===== */
+.arrow{
+    margin-left:auto;     
+    transition:transform .3s ease;
+    font-size:14px;
+}
+
+.menu-item.open .arrow{
+    transform:rotate(180deg);
+}
+
+/* ===== SUBMENU ===== */
+.submenu{
+    display:none;
+    margin-top:4px;
+    padding-left:10px;
+}
+
+.menu-item.open .submenu{
+    display:block;
+}
+
+/* LINK SUBMENU */
+.submenu a{
+    display:flex;             
+    align-items:center;
+    gap:10px;
+
+    padding:8px 12px;
+    font-size:14px;
+    color:#334155;
+    text-decoration:none;
+    border-radius:8px;
+    margin-bottom:4px;
+    transition:background .2s ease;
+}
+
+.submenu a i{
+    width:18px;
+    text-align:center;
+    font-size:16px;
+}
+
+/* HOVER SUBMENU */
+.submenu a:hover{
+    background:#e5e7eb;
+}
+
+/* SUBMENU AKTIF (BEDA DARI MENU UTAMA) */
+.submenu a.active-sub{
+    background:#dbeafe;
+    color:#1e3a8a;
+    font-weight:600;
+}
+
+.menu-btn i{
+    width:20px;
+    text-align:center;
+    font-size:18px;
+}
+
+
+/* ===== STYLING UNTUK JUDUL DENGAN BOX ===== */
+.title-card {
+    background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.15);
+    color: white;
+    margin-top: 10px;
+}
+
+.title-card .card-body {
+    padding: 24px 30px;
+}
+
+.title-card h3 {
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+}
+
+.title-card p.text-muted {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-size: 16px;
+    margin-top: 8px;
+}
+
+.title-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+}
+
+/* ===============================
+   MATERI BOX (SORTING)
+   =============================== */
+
+.materi-box {
+    border-left: 5px solid #2563eb;
+    background: linear-gradient(to right, #f8fafc, #ffffff);
+}
+
+.materi-text {
+    padding: 24px 28px;
+}
+
+/* Header materi */
+.materi-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+/* Badge */
+.materi-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 20px;
+    font-weight: 600;
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+/* Icon */
+.materi-header i {
+    font-size: 35px;
+    color: #2563eb;
+}
+
+/* Teks materi */
+.materi-text {
+    font-size: 1.05rem;        /* 👈 LEBIH BESAR dari materi biasa */
+    line-height: 1.85;         /* 👈 Lebih nyaman dibaca */
+    color: #1f2937;
+    text-align: justify;
+}
+
+
+
+/* ==========================
+   QUIZ OPTIONS STYLE
+   ========================== */
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.option-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    background: #fff;
+
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+/* sembunyikan radio */
+.option-box input {
+    display: none;
+}
+
+/* HOVER */
+.option-box:hover {
+    border-color: #3b82f6;
+    background: #f0f7ff;
+}
+
+/* 🔥 SAAT DIPILIH */
+.option-box:has(input:checked) {
+    border-color: #2563eb;
+    background: #eff6ff;
+    box-shadow: 0 0 0 2px rgba(37,99,235,.15);
+    font-weight: 600;
+}
+
+
+
+
+/* ==============================
+   WELCOME BOX
+================================ */
+.welcome-box {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.welcome-box h2 {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* ==============================
+   STAT CARD
+================================ */
+.stat-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    border-left: 6px solid #2a5298;
+    transition: 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card h5 {
+    color: #2a5298;
+    margin-bottom: 15px;
+}
+
+.stat-card h3 {
+    font-weight: bold;
+    font-size: 28px;
+}
+
+/* ==============================
+   PROGRESS CIRCLE
+================================ */
+.progress-wrapper {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.progress-circle {
+    --size: 150px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background: conic-gradient(
+        #2a5298 calc(var(--progress) * 1%), 
+        #e6ecf5 0
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    position: relative;
+}
+
+.progress-circle::before {
+    content: "";
+    width: 120px;
+    height: 120px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.progress-circle span {
+    position: relative;
+    font-weight: bold;
+    font-size: 24px;
+    color: #2a5298;
+}
+
+
+
+
+
+/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> */
+
+/* Atau gunakan SVG jika tidak ingin Font Awesome */
+/* .title-icon svg { */
+
+/* ===============================
+   BUBBLE SORT ILLUSTRATION
+   =============================== */
+
+/* =========================================================
+   BUBBLE SORT SIMULATION (SAFE SCOPE)
+   Prefix: .bubble-sort-sim
+   ========================================================= */
+

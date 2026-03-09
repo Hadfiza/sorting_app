@@ -1,0 +1,160 @@
+/* ===== DRAG LIST ===== */
+.drag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* ===== DRAG ITEM ===== */
+.drag-item {
+    width: 100%;
+    max-width: 420px;   /* opsional */
+    height: 240px;
+
+    border: 2px dashed #cbd5e1;
+    border-radius: 14px;
+    background: #fff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+}
+
+
+.drag-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+/* ===== DROP ZONE ===== */
+.sorting-zones {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.drop-zone {
+    min-height: 260px;
+    border: 2px dashed #94a3b8;
+    border-radius: 18px;
+    background: #f8fafc;
+    padding: 16px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.zone-header {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.zone-content {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    min-height: 140px;
+}
+
+
+/* ===== IMAGE HASIL DROP ===== */
+.dropped-image {
+    width: 300px;
+    height: 200px;
+    object-fit: contain;
+}
+
+/* ===== MODE SELESAI ===== */
+#dragActivity.completed .col-md-4 {
+    display: none;
+}
+
+#dragActivity.completed .col-md-8 {
+    width: 100%;
+}
+
+#dragActivity.completed .drop-zone {
+    min-height: 420px;
+    background: #ecfdf5;
+    border-color: #22c55e;
+}
+
+
+
+/* ===== ILUSTRASI BUKU SORTING ===== */
+.book {
+    width: 120px;
+    height: 110px;
+    transition: transform 0.6s ease-in-out; /* Memberikan efek meluncur */
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+}
+
+.book:hover {
+    transform: translateY(-10px) scale(1.1);
+}
+
+.swap-target {
+    outline: 2px dashed var(--primary-blue);
+    padding: 6px;
+    border-radius: 6px;
+}
+
+#sorted-books .book {
+    border: 2px solid #16a34a;
+    padding: 6px;
+    border-radius: 6px;
+}
+
+.book.swap-active {
+    z-index: 10;
+}
+
+
+/* ===== TABEL SORTING MODERN ===== */
+.sorting-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 16px;
+    font-size: 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.sorting-table th {
+    background: #f8fafc;
+    color: #1e293b;
+    font-weight: 700;
+    padding: 12px;
+    text-align: center;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.sorting-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #f1f5f9;
+    background: white;
+}
+
+.sorting-table td:first-child,
+.sorting-table th:first-child {
+    text-align: left;
+    font-weight: 600;
+}
+
+/* Gaya khusus untuk Big O notation */
+.sorting-table td:not(:first-child) {
+    font-family: 'Courier New', Courier, monospace;
+    color: #2563eb;
+    font-weight: 700;
+}
+

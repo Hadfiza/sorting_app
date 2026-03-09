@@ -1,0 +1,87 @@
+/* ===== LAPTOP WRAPPER ===== */
+.laptop-wrapper{
+    position:relative;
+    width:520px;
+    margin:auto;
+}
+
+/* ===== GAMBAR LAPTOP ===== */
+.laptop-img{
+    width:100%;
+    display:block;
+    position:relative;
+    z-index:2; /* LAPTOP DI ATAS */
+}
+
+/* ===== LAYAR LAPTOP ===== */
+.laptop-screen{
+    position:absolute;
+    top:18%;      /* SESUAIKAN DI SINI */
+    left:15%;     /* SESUAIKAN DI SINI */
+    width:70%;
+    height:40%;
+    background:#ffffff;
+    border-radius:14px;
+    z-index:1;    /* DI BAWAH LAPTOP */
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden; /* WAJIB */
+}
+
+/* ===== SORTING ===== */
+.sort-container{
+    display:flex;
+    gap:8px;
+}
+
+/* ===== KOTAK ===== */
+.box{
+    width:34px;
+    height:34px;
+    background:#0d6efd;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:6px;
+    font-weight:bold;
+    font-size:14px;
+    transition:.3s;
+}
+
+.box.active{
+    background:#ffc107;
+    color:black;
+}
+
+.box.swap{
+    background:#dc3545;
+}
+
+.hero{
+    min-height:100vh;          /* setinggi layar */
+    display:flex;
+    align-items:center;        /* tengah vertikal */
+
+}
+
+/* Rapatkan menu navbar */
+.nav-tight .nav-link {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.navbar {
+    background: linear-gradient(90deg, #2563eb, #1d4ed8);
+}
+
+.navbar .nav-link,
+.navbar .navbar-brand {
+    color: #ffffff !important;
+}
+
+.navbar .nav-link:hover {
+    color: #e0e7ff !important;
+}
+

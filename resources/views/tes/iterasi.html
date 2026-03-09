@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Bubble Sort - Skripsi</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 { margin-bottom: 10px; color: #2c3e50; }
+        .sub-title { margin-bottom: 30px; color: #7f8c8d; font-size: 0.9em; }
+
+        /* --- Area Visualisasi Utama --- */
+        .main-stage {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            width: 700px;
+        }
+
+        .iteration-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #2c3e50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .shelf-container {
+            position: relative;
+            height: 220px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-top: 40px; /* Space for iteration badge */
+            border-bottom: 5px solid #bdc3c7; /* Lantai rak */
+        }
+
+        /* Buku */
+        .book {
+            width: 60px;
+            height: 160px;
+            position: absolute;
+            bottom: 0;
+            border-radius: 4px 8px 8px 4px;
+            box-shadow: -3px 0 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            writing-mode: vertical-rl; 
+            text-orientation: mixed;
+            transition: left 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efek pantul dikit */
+            border-left: 4px solid rgba(255,255,255,0.3);
+            z-index: 1;
+        }
+
+        /* Warna Buku */
+        .book[data-val="4"] { background-color: #f1c40f; color: #555; } /* Kuning */
+        .book[data-val="2"] { background-color: #27ae60; } /* Hijau */
+        .book[data-val="5"] { background-color: #8e44ad; } /* Ungu */
+        .book[data-val="1"] { background-color: #2980b9; } /* Biru */
+        .book[data-val="3"] { background-color: #c0392b; } /* Merah */
+
+        /* Highlight saat dibandingkan */
+        .highlight-box {
+            position: absolute;
+            border: 3px dashed #34495e;
+            border-radius: 5px;
+            transition: all 0.3s;
+            pointer-events: none;
+            z-index: 0;
+            display: none;
+        }
+
+        /* --- Panel Kontrol & Penjelasan --- */
+        .info-panel {
+            text-align: center;
+            margin-top: 20px;
+            min-height: 80px;
+        }
+
+        .explanation {
+            font-size: 1.1em;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .explanation strong { color: #d35400; }
+
+        .btn-action {
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.2s;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            color: white;
+            min-width: 200px;
+        }
+        
+        .btn-action:active { transform: translateY(4px); box-shadow: none; }
+        
+        .btn-start { background-color: #3498db; }
+        .btn-swap { background-color: #e74c3c; } /* Merah untuk Tukar */
+        .btn-stay { background-color: #27ae60; } /* Hijau untuk Tetap */
+        .btn-check { background-color: #f39c12; } /* Orange untuk Cek */
+        .btn-disabled { background-color: #95a5a6; cursor: not-allowed; }
+
+        /* --- Log History Hasil Iterasi --- */
+        .history-section {
+            width: 700px;
+            margin-top: 20px;
+        }
+        
+        .history-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .history-row {
+            background: white;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid #34495e;
+            animation: fadeIn 0.5s;
+        }
+
+        .history-label {
+            font-weight: bold;
+            width: 120px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        /* Miniatur buku untuk history */
+        .mini-books { display: flex; gap: 5px; }
+        .mini-book {
+            width: 20px;
+            height: 30px;
+            border-radius: 2px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Simulasi Bubble Sort</h1>
+    <div class="sub-title">Studi Kasus: Pengurutan Nomor Edisi Buku</div>
+
+    <div class="main-stage">
+        <div class="iteration-badge" id="iter-badge">Persiapan</div>
+        
+        <div class="shelf-container" id="shelf">
+            <div class="highlight-box" id="highlight-box"></div>
+            </div>
+
+        <div class="info-panel">
+            <div class="explanation" id="explanation">
+                Klik tombol di bawah untuk memulai proses pengurutan.
+            </div>
+            <button class="btn-action btn-start" id="main-btn" onclick="nextAction()">Mulai Iterasi 1</button>
+        </div>
+    </div>
+
+    <div class="history-section">
+        <div class="history-title">
+            <span>Hasil Per Iterasi</span>
+            <span style="font-size:0.8em; font-weight:normal; cursor:pointer; color:blue;" onclick="location.reload()">Reset</span>
+        </div>
+        <div id="history-container">
+            </div>
+    </div>
+
+    <script>
+        // --- Konfigurasi Awal ---
+        const initialData = [4, 2, 5, 1, 3];
+        const colors = {
+            4: '#f1c40f',
+            2: '#27ae60',
+            5: '#8e44ad',
+            1: '#2980b9',
+            3: '#c0392b'
+        };
+        
+        // --- Variabel Global State ---
+        let currentArr = [...initialData];
+        let i = 0; // Outer Loop (Iterasi ke-X)
+        let j = 0; // Inner Loop (Posisi perbandingan)
+        let state = 'START'; // START, COMPARE, DECIDE
+        
+        // --- Setup Visual ---
+        const shelf = document.getElementById('shelf');
+        const highlightBox = document.getElementById('highlight-box');
+        const explanation = document.getElementById('explanation');
+        const mainBtn = document.getElementById('main-btn');
+        const iterBadge = document.getElementById('iter-badge');
+        const historyContainer = document.getElementById('history-container');
+        
+        // Posisi visual
+        const startX = 150; 
+        const gap = 80; // Jarak antar buku
+
+        // Render Awal
+        function renderBooks() {
+            // Hapus buku lama (kecuali highlight box)
+            document.querySelectorAll('.book').forEach(e => e.remove());
+            
+            currentArr.forEach((val, idx) => {
+                const b = document.createElement('div');
+                b.className = 'book';
+                b.id = `book-${val}`; // ID berdasarkan nilai agar bisa dipindah
+                b.innerText = `EDISI ${val}`;
+                b.dataset.val = val;
+                
+                // Styling khusus warna
+                b.style.backgroundColor = colors[val];
+                if(val === 4) b.style.color = '#333'; // Text gelap untuk kuning
+
+                // Posisi
+                b.style.left = (startX + idx * gap) + 'px';
+                
+                shelf.appendChild(b);
+            });
+        }
+
+        // --- Logika Utama (State Machine) ---
+        function nextAction() {
+            const n = currentArr.length;
+
+            // 1. STATE: START / PREPARE
+            if (state === 'START') {
+                state = 'COMPARE';
+                i = 0;
+                j = 0;
+                iterBadge.innerText = `Iterasi ke-${i+1}`;
+                updateButton("Cek Edisi Pertama", "btn-check");
+                explanation.innerHTML = "Siap memulai proses Bubble Sort.<br>Kita mulai dari dua buku pertama.";
+                return;
+            }
+
+            // 2. STATE: COMPARE (Highlight 2 buku)
+            if (state === 'COMPARE') {
+                // Tampilkan highlight box di sekitar dua buku
+                showHighlight(j, j+1);
+                
+                const val1 = currentArr[j];
+                const val2 = currentArr[j+1];
+
+                explanation.innerHTML = `Bandingkan <strong>Edisi ${val1}</strong> dan <strong>Edisi ${val2}</strong>.<br>`;
+                
+                // Tentukan nasib tombol selanjutnya
+                if (val1 > val2) {
+                    explanation.innerHTML += `Karena ${val1} > ${val2}, maka posisi harus <strong>DITUKAR</strong>.`;
+                    updateButton("LAKUKAN TUKAR", "btn-swap");
+                } else {
+                    explanation.innerHTML += `Karena ${val1} < ${val2}, maka posisi <strong>TETAP</strong>.`;
+                    updateButton("POSISI TETAP", "btn-stay");
+                }
+                
+                state = 'DECIDE';
+                return;
+            }
+
+            // 3. STATE: DECIDE (Eksekusi Tukar atau Tetap)
+            if (state === 'DECIDE') {
+                const val1 = currentArr[j];
+                const val2 = currentArr[j+1];
+
+                if (val1 > val2) {
+                    // Logika Swap JS
+                    [currentArr[j], currentArr[j+1]] = [currentArr[j+1], currentArr[j]];
+                    // Animasi Swap Visual
+                    swapVisuals(val1, val2, j, j+1);
+                }
+
+                // Maju ke pasangan berikutnya
+                j++;
+
+                // Cek apakah Inner Loop Selesai?
+                if (j >= n - 1 - i) {
+                    // Iterasi Selesai
+                    addHistoryLog(i + 1, [...currentArr]);
+                    i++;
+                    j = 0;
+                    
+                    // Cek apakah Outer Loop Selesai (Sorting Beres)?
+                    if (i >= n - 1) {
+                        finishSorting();
+                        return;
+                    }
+
+                    // Setup untuk Iterasi berikutnya
+                    iterBadge.innerText = `Iterasi ke-${i+1}`;
+                    state = 'COMPARE';
+                    highlightBox.style.display = 'none';
+                    explanation.innerHTML = `Iterasi ke-${i} selesai.<br>Lanjut ke <strong>Iterasi ke-${i+1}</strong>.`;
+                    updateButton("Lanjut Iterasi Berikutnya", "btn-start");
+                } else {
+                    // Masih dalam iterasi yang sama, lanjut pasangan berikutnya
+                    state = 'COMPARE';
+                    // Delay sedikit update teks agar animasi swap terlihat dulu (opsional)
+                    updateButton("Cek Pasangan Berikutnya", "btn-check");
+                    // highlightBox.style.display = 'none'; // Sembunyikan sebentar
+                }
+            }
+        }
+
+        // --- Helper Functions ---
+
+        function showHighlight(idx1, idx2) {
+            const leftPos = startX + idx1 * gap - 10;
+            const width = (gap * (idx2 - idx1)) + 60 + 20; // 60 lebar buku + padding
+            
+            highlightBox.style.display = 'block';
+            highlightBox.style.left = leftPos + 'px';
+            highlightBox.style.width = width + 'px';
+            highlightBox.style.height = '180px';
+            highlightBox.style.bottom = '-10px';
+        }
+
+        function swapVisuals(val1, val2, newIdx1, newIdx2) {
+            // Kita cari elemen DOM berdasarkan ID uniknya
+            const el1 = document.getElementById(`book-${val1}`); // Buku kiri (yg besar)
+            const el2 = document.getElementById(`book-${val2}`); // Buku kanan (yg kecil)
+
+            // Posisi target (Pixel)
+            // idx1 sekarang menempati posisi idx2, dan sebaliknya
+            // Tapi parameter newIdx1 adalah posisi index array.
+            // Saat swap: buku val1 pindah ke j+1 (kanan), buku val2 pindah ke j (kiri)
+            
+            const posKiri = startX + (newIdx1 * gap); // Posisi j
+            const posKanan = startX + (newIdx2 * gap); // Posisi j+1
+
+            el1.style.left = posKanan + 'px'; // Yang besar pindah ke kanan
+            el2.style.left = posKiri + 'px';  // Yang kecil pindah ke kiri
+        }
+
+        function updateButton(text, className) {
+            mainBtn.innerText = text;
+            mainBtn.className = `btn-action ${className}`;
+        }
+
+        function addHistoryLog(iterNum, arrSnapshot) {
+            const row = document.createElement('div');
+            row.className = 'history-row';
+
+            let miniBooksHTML = '';
+            arrSnapshot.forEach(val => {
+                const color = colors[val];
+                const textColor = (val===4) ? '#333' : 'white';
+                miniBooksHTML += `<div class="mini-book" style="background:${color}; color:${textColor}">${val}</div>`;
+            });
+
+            row.innerHTML = `
+                <div class="history-label">Selesai Iterasi ${iterNum}</div>
+                <div class="mini-books">${miniBooksHTML}</div>
+                <div style="margin-left:auto; font-size:0.8em; color:#888;">Data: (${arrSnapshot.join(', ')})</div>
+            `;
+            historyContainer.appendChild(row);
+        }
+
+        function finishSorting() {
+            state = 'FINISHED';
+            highlightBox.style.display = 'none';
+            iterBadge.innerText = "Selesai";
+            iterBadge.style.backgroundColor = "#27ae60";
+            explanation.innerHTML = "<strong>Pengurutan Selesai!</strong><br>Semua buku sudah terurut dari Edisi terkecil ke terbesar.";
+            mainBtn.innerText = "Reset Simulasi";
+            mainBtn.className = "btn-action btn-disabled";
+            mainBtn.onclick = () => location.reload();
+            mainBtn.style.backgroundColor = "#333";
+            mainBtn.style.cursor = "pointer";
+        }
+
+        // Jalankan saat load
+        renderBooks();
+
+    </script>
+</body>
+</html>
