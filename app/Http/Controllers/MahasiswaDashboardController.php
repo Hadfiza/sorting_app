@@ -13,7 +13,7 @@ class MahasiswaDashboardController extends Controller
     {
         $mahasiswa = Mahasiswa::with('kelas')
             ->where('id_user', auth()->id())
-            ->firstOrFail();
+            ->first();
 
         // Ambil aktivitas untuk sidebar
         $aktivitas = Aktivitas::orderBy('folder')

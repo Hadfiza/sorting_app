@@ -33,6 +33,11 @@ class Mahasiswa extends Model
         return $this->hasMany(JawabanMahasiswa::class, 'id_mahasiswa');
     }
 
+    public function pengumpulanPraktikum()
+    {
+        return $this->hasMany(PengumpulanPraktikum::class, 'id_mahasiswa');
+    }
+
     // public function progres()
     // {
     //     return $this->hasMany(ProgresMahasiswa::class, 'id_mahasiswa');

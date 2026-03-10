@@ -2,12 +2,12 @@
 
 use App\Http\Controllers\AktivitasController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DataMahasiswaController;
 use App\Http\Controllers\DosenDashboardController;
 use App\Http\Controllers\KategoriSoalController;
 use App\Http\Controllers\KelasController;
-// use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MahasiswaDashboardController;
-// use App\Http\Controllers\NilaiController;
+use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\PraktikumController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
@@ -214,42 +214,48 @@ Route::prefix('mahasiswa')
 });
 
 
-/* =====================================================
-   DOSEN
-===================================================== */
-Route::prefix('dosen')
-    ->name('dosen.')
-    ->middleware(['auth','role:dosen'])
-    ->group(function(){
+    /* =====================================================
+    DOSEN
+    ===================================================== */
+    Route::prefix('dosen')
+        ->name('dosen.')
+        ->middleware(['auth','role:dosen'])
+        ->group(function(){
 
     Route::get('/dashboard', [DosenDashboardController::class,'index'])
         ->name('dashboard');
 
+    // ---------------------------------------------------------
+    // ROUTE MANAJEMEN PRAKTIKUM
+    // ---------------------------------------------------------
     Route::get('/praktikum', [PraktikumController::class, 'index'])
     ->name('praktikum.index');
-
     Route::get('/praktikum/{id}', [PraktikumController::class, 'dosenShow'])
         ->name('praktikum.show');
     Route::put('/praktikum/update/{id}', [PraktikumController::class, 'update']);
-
-
     Route::post('/dosen/praktikum/nilai', [PraktikumController::class, 'beriNilai']);
 
-    // Route::prefix('nilai')->name('nilai.')->group(function(){
-    //     Route::get('/', [NilaiController::class,'index'])
-    //         ->name('index');
-    // });
+    // ---------------------------------------------------------
+    // ROUTE MANAJEMEN KELAS
+    // ---------------------------------------------------------
+    Route::get('/kelas', [KelasController::class, 'index'])
+        ->name('kelas.index');
+    Route::post('/kelas', [KelasController::class, 'store'])
+        ->name('kelas.store');
+    Route::put('/kelas/{id}', [KelasController::class, 'update'])
+    ->name('dosen.kelas.update');
+    Route::delete('/kelas/{id}', [KelasController::class, 'destroy'])
+    ->name('kelas.destroy');
 
-    
+    // ---------------------------------------------------------
+    // ROUTE MANAJEMEN MAHASISWA
+    // ---------------------------------------------------------
+    Route::get('/datamahasiswa', [DataMahasiswaController::class, 'index'])->name('datamahasiswa.index');
+    Route::put('/datamahasiswa/{id}', [DataMahasiswaController::class, 'update'])->name('datamahasiswa.update');
+    Route::delete('/datamahasiswa/{id}', [DataMahasiswaController::class, 'destroy'])->name('datamahasiswa.destroy');
 
-    // Route::prefix('mahasiswa')->name('mahasiswa.')->group(function(){
-    //     Route::get('/', [MahasiswaController::class,'index'])
-    //         ->name('index');
-    // });
-
-    Route::prefix('kelas')->name('kelas.')->group(function(){
-        Route::get('/', [KelasController::class,'index'])->name('index');
-    });
+    Route::get('/rekap-nilai', [NilaiController::class, 'index'])
+    ->name('nilai.index');
 
     Route::post('/set-kkm', [DosenDashboardController::class, 'setKkm'])
     ->name('setKkm');

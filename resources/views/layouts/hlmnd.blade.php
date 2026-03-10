@@ -60,7 +60,8 @@
 @php
     $dashboard = request()->routeIs('dosen.dashboard');
     $nilai     = request()->routeIs('dosen.nilai.*');
-    $mahasiswa = request()->routeIs('dosen.mahasiswa.*');
+    $mahasiswa = request()->routeIs('dosen.datamahasiswa.*');
+    $praktikum = request()->routeIs('dosen.praktikum.*');
     $kelas     = request()->routeIs('dosen.kelas.*');
     $setting   = request()->routeIs('dosen.setting');
 @endphp
@@ -87,23 +88,23 @@
     </div>
 
     <!-- Data Nilai -->
-    <div class="menu-item {{ $nilai ? 'active' : '' }}">
-        <a href="#" class="menu-btn">
+    <div class="menu-item {{ request()->routeIs('dosen.nilai.*') ? 'active' : '' }}">
+        <a href="{{ route('dosen.nilai.index') }}" class="menu-btn">
             <i class="fa-solid fa-chart-column me-2"></i>
             Data Nilai
         </a>
     </div>
 
     <!-- Data Mahasiswa -->
-    <div class="menu-item {{ $mahasiswa ? 'active' : '' }}">
-        <a href="#" class="menu-btn">
+    <div class="menu-item {{ request()->routeIs('dosen.datamahasiswa.*') ? 'active' : '' }}">
+        <a href="{{ route('dosen.datamahasiswa.index') }}" class="menu-btn">
             <i class="fa-solid fa-users me-2"></i>
             Data Mahasiswa
         </a>
     </div>
 
     <!-- Data Mahasiswa -->
-    <div class="menu-item {{ $mahasiswa ? 'active' : '' }}">
+    <div class="menu-item {{ request()->routeIs('dosen.praktikum.*') ? 'active' : '' }}">
         <a href="{{ route('dosen.praktikum.index') }}" class="menu-btn">
             <i class="fa-solid fa-users me-2"></i>
             Hasil Praktikum
