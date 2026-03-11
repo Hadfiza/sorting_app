@@ -18,6 +18,10 @@
         border-radius: 8px;
         padding: 8px 12px;
     }
+
+    .card-body{
+
+    }
 </style>
 
 <div class="container py-4">
@@ -57,7 +61,7 @@
             </div>
             @endif
 
-            <div class="p-4 bg-light rounded-4 border">
+            <div class="p-4 rounded-4 border" style="background-color:#e3edff;">
                 <h5 class="fw-bold text-secondary mb-4 d-flex align-items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5H2zM3 3H2v1h1V3z"/>
@@ -109,11 +113,11 @@
                                 </div>
 
                             </div>
-                            <div class="card-footer bg-transparent border-top-0 p-4 pt-0 d-flex justify-content-end">
+                            {{-- <div class="card-footer bg-transparent border-top-0 p-4 pt-0 d-flex justify-content-end">
                                 <a href="#" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-medium">
                                     Lihat Mahasiswa &rarr;
                                 </a>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                     @empty

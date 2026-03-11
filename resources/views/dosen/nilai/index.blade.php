@@ -40,7 +40,7 @@
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
                 <div>
                     <span class="badge bg-success bg-opacity-10 text-success mb-2 px-3 py-2 rounded-pill fw-semibold">
-                        <i class="bi bi-journal-bookmark-fill me-1"></i> Buku Nilai Terpadu
+                        <i class="bi bi-journal-bookmark-fill me-1"></i> Data Nilai Mahasiswa
                     </span>
                     <h2 class="fw-bold text-dark mb-1">Rekapitulasi Nilai Mahasiswa</h2>
                     <p class="text-muted mb-0">Pantau perkembangan nilai Kuis, Praktikum, dan Evaluasi dari kelas Anda.</p>

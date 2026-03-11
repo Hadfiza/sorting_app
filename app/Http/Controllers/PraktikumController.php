@@ -10,15 +10,34 @@ use Illuminate\Http\Request;
 class PraktikumController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $praktikum = \App\Models\PengumpulanPraktikum::with([
+        $query = PengumpulanPraktikum::with([
             'praktikum',
             'mahasiswa.user',
             'mahasiswa.kelas'
-        ])->get();
+        ]);
 
-        return view('dosen.praktikum.index', compact('praktikum'));
+        // Filter pencarian nama mahasiswa
+        if ($request->filled('search')) {
+            $query->whereHas('mahasiswa.user', function ($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // Filter berdasarkan kelas
+        if ($request->filled('kelas_id')) {
+            $query->whereHas('mahasiswa', function ($q) use ($request) {
+                $q->where('id_kelas', $request->kelas_id);
+            });
+        }
+
+        $praktikum = $query->get();
+
+        // Ambil daftar kelas untuk dropdown
+        $kelases = \App\Models\Kelas::all();
+
+        return view('dosen.praktikum.index', compact('praktikum','kelases'));
     }
 
     public function show($id)

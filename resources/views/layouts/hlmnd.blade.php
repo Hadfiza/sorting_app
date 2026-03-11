@@ -64,6 +64,7 @@
     $praktikum = request()->routeIs('dosen.praktikum.*');
     $kelas     = request()->routeIs('dosen.kelas.*');
     $setting   = request()->routeIs('dosen.setting');
+    $soal = request()->routeIs('dosen.soal.*');
 @endphp
 
 <!-- ===== SIDEBAR ===== -->
@@ -90,7 +91,7 @@
     <!-- Data Nilai -->
     <div class="menu-item {{ request()->routeIs('dosen.nilai.*') ? 'active' : '' }}">
         <a href="{{ route('dosen.nilai.index') }}" class="menu-btn">
-            <i class="fa-solid fa-chart-column me-2"></i>
+            <i class="fa-solid fa-chart-simple me-2"></i>
             Data Nilai
         </a>
     </div>
@@ -103,11 +104,19 @@
         </a>
     </div>
 
-    <!-- Data Mahasiswa -->
+    <!-- Data Praktikum -->
     <div class="menu-item {{ request()->routeIs('dosen.praktikum.*') ? 'active' : '' }}">
         <a href="{{ route('dosen.praktikum.index') }}" class="menu-btn">
-            <i class="fa-solid fa-users me-2"></i>
+            <i class="fa-solid fa-flask me-2"></i>
             Hasil Praktikum
+        </a>
+    </div>
+
+    <!-- Data Soal -->
+    <div class="menu-item ">
+        <a href="" class="menu-btn">
+            <i class="fa-solid fa-file-pen"></i>
+            Manajemen Soal
         </a>
     </div>
 
