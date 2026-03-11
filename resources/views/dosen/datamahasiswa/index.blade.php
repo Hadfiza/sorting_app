@@ -57,6 +57,47 @@
     </div>
     @endif
 
+    <div class="card card-panel bg-white mb-4 border">
+        <div class="card-body p-3 p-md-4">
+            <form action="" method="GET" class="row g-3 align-items-center">
+                
+                <div class="col-12 col-md-5">
+                    <label class="form-label small fw-bold text-muted mb-1">Cari Mahasiswa</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white text-muted border-end-0">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Ketik nama mahasiswa..." value="{{ request('search') }}">
+                    </div>
+                </div>
+                
+                <div class="col-12 col-md-4">
+                    <label class="form-label small fw-bold text-muted mb-1">Filter Kelas</label>
+                    <select name="kelas_id" class="form-select">
+                        <option value="">-- Semua Kelas --</option>
+                        @foreach($kelases as $kelas)
+                            <option value="{{ $kelas->id }}" {{ request('kelas_id') == $kelas->id ? 'selected' : '' }}>
+                                {{ $kelas->nama_kelas }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                
+                <div class="col-12 col-md-3 d-flex gap-2 align-items-end" style="margin-top: auto;">
+                    <button type="submit" class="btn btn-primary flex-grow-1 fw-medium shadow-sm">
+                        <i class="bi bi-funnel"></i> Terapkan
+                    </button>
+                    @if(request()->has('search') || request()->has('kelas_id'))
+                        <a href="{{ url()->current() }}" class="btn btn-light border fw-medium" title="Reset Filter">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </a>
+                    @endif
+                </div>
+                
+            </form>
+        </div>
+    </div>
+
     <div class="card card-panel bg-white border">
         <div class="card-body p-0 p-md-4">
             <div class="table-responsive rounded-4">

@@ -13,20 +13,33 @@ class DataMahasiswaController extends Controller
     /**
      * Menampilkan daftar seluruh mahasiswa yang berada di kelas Dosen terkait.
      */
-    public function index()
+public function index(Request $request)
     {
         $idDosen = auth()->user()->dosen->id ?? auth()->id();
+        $kelases = \App\Models\Kelas::where('id_dosen', $idDosen)->get();
 
-        // Ambil mahasiswa beserta relasi user dan kelasnya
-        $mahasiswas = Mahasiswa::with(['user', 'kelas'])
-            ->whereHas('kelas', function ($query) use ($idDosen) {
-                $query->where('id_dosen', $idDosen);
-            })
-            ->latest()
-            ->get();
+        // Buat query dasar
+        $query = Mahasiswa::with(['user', 'kelas'])
+            ->whereHas('kelas', function ($q) use ($idDosen) {
+                $q->where('id_dosen', $idDosen);
+            });
 
-        // Ambil data kelas dosen ini untuk pilihan di dropdown Edit Modal
-        $kelases = Kelas::where('id_dosen', $idDosen)->get();
+        // 1. Logika Filter Pencarian Nama
+        if ($request->filled('search')) {
+            $query->whereHas('user', function($q) use ($request) {
+                // Catatan: Jika kolom di tabel user Anda bernama 'nama', ganti 'name' menjadi 'nama'
+                $q->where('nama', 'like', '%' . $request->search . '%');
+                  
+            });
+        }
+
+        // 2. Logika Filter Berdasarkan Kelas
+        if ($request->filled('kelas_id')) {
+            $query->where('id_kelas', $request->kelas_id);
+        }
+
+        // Eksekusi query
+        $mahasiswas = $query->latest()->get();
 
         return view('dosen.datamahasiswa.index', compact('mahasiswas', 'kelases'));
     }

@@ -2,30 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Models\Kelas;
 use App\Models\Mahasiswa;
-// use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 
 class NilaiController extends Controller
 {
     /**
      * Menampilkan rekapitulasi seluruh nilai mahasiswa (Kuis, Praktikum, Evaluasi)
      */
-    public function index()
+public function index(Request $request)
     {
-        // 1. Ambil ID Dosen yang sedang login
         $idDosen = auth()->user()->dosen->id ?? auth()->id();
+        
+        // Ambil data kelas untuk dropdown filter di view
+        $kelases = \App\Models\Kelas::where('id_dosen', $idDosen)->get();
 
-        // 2. Ambil data mahasiswa yang berada di kelas milik dosen ini.
-        // Eager load relasi 'user', 'kelas', dan 'jawaban' agar performa query cepat (N+1 safe).
-        $mahasiswas = Mahasiswa::with(['user', 'kelas', 'jawaban.aktivitas', 'PengumpulanPraktikum'])
-            ->whereHas('kelas', function ($query) use ($idDosen) {
-                $query->where('id_dosen', $idDosen);
-            })
-            ->get();
+        // Buat query dasar
+        $query = Mahasiswa::with(['user', 'kelas', 'jawaban.aktivitas', 'pengumpulanPraktikum'])
+            ->whereHas('kelas', function ($q) use ($idDosen) {
+                $q->where('id_dosen', $idDosen);
+            });
 
-        // Catatan: Jika Anda memiliki relasi 'pengumpulan_praktikum' di model Mahasiswa,
-        // tambahkan juga ke dalam array with() di atas.
+        // 1. Logika Filter Pencarian Nama
+        if ($request->filled('search')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->search . '%');
+            });
+        }
 
-        return view('dosen.nilai.index', compact('mahasiswas'));
+        // 2. Logika Filter Berdasarkan Kelas
+        if ($request->filled('kelas_id')) {
+            $query->where('id_kelas', $request->kelas_id);
+        }
+
+        $mahasiswas = $query->get();
+
+        return view('dosen.nilai.index', compact('mahasiswas', 'kelases'));
     }
 }
