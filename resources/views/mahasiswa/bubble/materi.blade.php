@@ -141,26 +141,6 @@ Container Ilustrasi agar rapi di tengah
     margin-top: 10px;
 }
 
-
-    
-    .editor-header { padding: 10px 20px; background: #2d2d2d; border-bottom: 1px solid #444; display: flex; justify-content: space-between; align-items: center; color: white; }
-    .editor-header h1 { margin: 0; font-size: 1rem; }
-    .split-container { display: flex; flex: 1; overflow: hidden; border-top: 1px solid #444; }
-
-    .panel-right { flex: 4; display: flex; flex-direction: column; background: #101010; }
-    .panel-label { background: #333; color: #ccc; padding: 5px 15px; font-size: 0.75rem; text-transform: uppercase; }
-    .CodeMirror { flex: 1; min-height: 100%; font-size: 14px; text-align: left; }
-    #output { padding: 15px; color: #00ff00; font-family: 'Courier New', monospace; white-space: pre-wrap; overflow-y: auto; flex-grow: 1; font-size: 13px; text-align: left; }
-    .btn-run { padding: 5px 15px; background: #28a745; color: white; border: none; border-radius: 4px; font-weight: bold; }
-
-    .panel-left { 
-    flex: 6; 
-    border-right: 1px solid #444; 
-    display: flex; 
-    flex-direction: column; 
-    height: 100%; /* Pastikan tingginya penuh */
-}
-
 #code {
     display: none;
 }

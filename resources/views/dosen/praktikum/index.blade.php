@@ -57,51 +57,58 @@
 
     <div class="card shadow-sm border-0">
         <div class="card-body">
-            <form method="GET" class="row g-3 mb-4">
+            <form method="GET" class="row g-3 mb-4 align-items-center">
 
-            <div class="col-md-5">
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0">
-                        <i class="bi bi-search"></i>
-                    </span>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0" style="height:45px;">
+                            <i class="bi bi-search"></i>
+                        </span>
 
-                    <input type="text"
-                        name="search"
-                        class="form-control border-start-0 ps-0"
-                        placeholder="Cari nama mahasiswa..."
-                        value="{{ request('search') }}">
+                        <input type="text"
+                            name="search"
+                            class="form-control border-start-0 ps-0"
+                            style="height:45px;"
+                            placeholder="Cari nama mahasiswa..."
+                            value="{{ request('search') }}">
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-md-4">
-                <select name="kelas_id" class="form-select text-muted">
-                    <option value="">Semua Kelas</option>
+                <div class="col-md-4">
+                    <select name="kelas_id" class="form-select" style="height:45px;">
+                        <option value="">Semua Kelas</option>
 
-                    @foreach($kelases as $kelas)
-                    <option value="{{ $kelas->id }}"
-                        {{ request('kelas_id') == $kelas->id ? 'selected' : '' }}>
-                        {{ $kelas->nama_kelas }}
-                    </option>
-                    @endforeach
+                        @foreach($kelases as $kelas)
+                        <option value="{{ $kelas->id }}"
+                            {{ request('kelas_id') == $kelas->id ? 'selected' : '' }}>
+                            {{ $kelas->nama_kelas }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
 
-                </select>
-            </div>
+                <div class="col-md-3 d-flex gap-2">
 
-            <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" 
+                        class="btn btn-primary fw-bold flex-grow-1"
+                        style="height:45px;">
+                        <i class="bi bi-funnel"></i> Filter
+                    </button>
 
-                <button type="submit" class="btn btn-primary w-100 fw-bold">
-                    <i class="bi bi-funnel"></i> Filter
-                </button>
+                    @if(request()->has('search') || request()->has('kelas_id'))
+                    <a href="{{ url()->current() }}" 
+                    class="btn btn-primary d-flex align-items-center justify-content-center"
+                    style="height:45px; width:45px;"
+                    title="Reset Filter">
 
-                @if(request()->has('search') || request()->has('kelas_id'))
-                    <a href="{{ url()->current() }}" class="btn btn-light border">
-                        <i class="bi bi-arrow-clockwise"></i>
+                    <i class="bi bi-arrow-repeat"></i>
+
                     </a>
-                @endif
+                    @endif
 
-            </div>
+                </div>
 
-            </form>
+                </form>
 
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
