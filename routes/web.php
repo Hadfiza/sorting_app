@@ -28,6 +28,10 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
+    // Route Register
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.process');
+
 });
 
 
@@ -67,149 +71,6 @@ Route::prefix('mahasiswa')
     Route::get('/{folder}/{slug}',
         [AktivitasController::class,'show']
     )->name('aktivitas.show');
-
-
-//     /* ===== MATERI UMUM ===== */
-//     Route::get('/sorting', function () {
-//         return view('mahasiswa.pendahuluan.sorting');
-//     })->name('sorting');
-
-//     Route::get('/quiz-test/{id}', 
-//     [AktivitasController::class, 'showById']
-//     )->name('quiz.test');
-
-
-//     /* ===== PENDAHULUAN ===== */
-//     Route::prefix('pendahuluan')->name('pendahuluan.')->group(function () {
-
-//         // Route::get('/materi', function () {
-//         //     return view('mahasiswa.pendahuluan.materi');
-//         // })->name('materi');
-
-//         Route::get('/sorting', function () {
-//             return view('mahasiswa.pendahuluan.sorting');
-//         })->name('sorting');
-
-
-//         Route::get('/kompleksitas', function () {
-//             return view('mahasiswa.pendahuluan.kompleksitas');
-//         })->name('kompleksitas');
-
-//         Route::get('/quiz', function () {
-//             return view('mahasiswa.pendahuluan.quiz');
-//         })->name('quiz');
-
-//         // Route::get('/latihan', function () {
-//         //     return view('mahasiswa.pendahuluan.latihan');
-//         // })->name('latihan');
-//     });
-
-
-//     /* ===== BUBBLE SORT ===== */
-//     Route::prefix('bubble')->name('bubble.')->group(function () {
-
-//         Route::get('/materi', function () {
-//             return view('mahasiswa.bubble.materi');
-//         })->name('materi');
-
-//         Route::get('/simulasi', function () {
-//             return view('mahasiswa.bubble.simulasi');
-//         })->name('simulasi');
-
-//         Route::get('/program', function () {
-//             return view('mahasiswa.bubble.program');
-//         })->name('program');
-
-//         Route::get('/quiz', function () {
-//             return view('mahasiswa.bubble.quiz');
-//         })->name('quiz');
-
-//         Route::get('/praktikum', function () {
-//             return view('mahasiswa.bubble.praktikum');
-//         })->name('praktikum');
-
-//         Route::get('/mahasiswa/praktikum/{id}', [PraktikumController::class, 'show']);
-//         Route::post('/praktikum/submit',
-//             [PraktikumController::class, 'submit']
-//         )->name('praktikum.submit');
-
-
-//     });
-
-
-//     /* ===== SELECTION SORT ===== */
-//     Route::prefix('selection')->name('selection.')->group(function () {
-
-//         Route::get('/materi', function () {
-//             return view('mahasiswa.selection.materi');
-//         })->name('materi');
-
-//         Route::get('/simulasi', function () {
-//             return view('mahasiswa.selection.simulasi');
-//         })->name('simulasi');
-
-//         Route::get('/program', function () {
-//             return view('mahasiswa.selection.program');
-//         })->name('program');
-
-//         Route::get('/quiz', function () {
-//             return view('mahasiswa.selection.quiz');
-//         })->name('quiz');
-
-//         Route::get('/praktikum', function () {
-//             return view('mahasiswa.selection.praktikum');
-//         })->name('praktikum');
-//     });
-
-
-//     /* ===== INSERTION SORT ===== */
-//     Route::prefix('insertion')->name('insertion.')->group(function () {
-
-//         Route::get('/materi', function () {
-//             return view('mahasiswa.insertion.materi');
-//         })->name('materi');
-
-//         Route::get('/simulasi', function () {
-//             return view('mahasiswa.insertion.simulasi');
-//         })->name('simulasi');
-
-//         Route::get('/program', function () {
-//             return view('mahasiswa.insertion.program');
-//         })->name('program');
-
-//         Route::get('/quiz', function () {
-//             return view('mahasiswa.insertion.quiz');
-//         })->name('quiz');
-
-//         Route::get('/praktikum', function () {
-//             return view('mahasiswa.insertion.praktikum');
-//         })->name('praktikum');
-//     });
-
-
-//     /* ===== MERGE SORT ===== */
-//     Route::prefix('merge')->name('merge.')->group(function () {
-
-//         Route::get('/materi', function () {
-//             return view('mahasiswa.merge.materi');
-//         })->name('materi');
-
-//                 Route::get('/simulasi', function () {
-//             return view('mahasiswa.merge.simulasi');
-//         })->name('simulasi');
-
-//         Route::get('/program', function () {
-//             return view('mahasiswa.merge.program');
-//         })->name('program');
-
-//         Route::get('/quiz', function () {
-//             return view('mahasiswa.merge.quiz');
-//         })->name('quiz');
-
-//         Route::get('/praktikum', function () {
-//             return view('mahasiswa.merge.praktikum');
-//         })->name('praktikum');
-//     });
 
 });
 

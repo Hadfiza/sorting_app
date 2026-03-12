@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Models\Mahasiswa;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -44,6 +48,52 @@ class AuthController extends Controller
         return back()->withErrors([
             'email' => 'Email atau password salah!'
         ])->onlyInput('email');
+    }
+
+
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
+
+    public function register(Request $request)
+    {
+        // 1. Validasi Input (Tambahkan validasi token_kelas)
+        $request->validate([
+            'nama'        => 'required|string|max:255',
+            'nim'         => 'required|string|max:20|unique:mahasiswa,nim',
+            'angkatan'    => 'required|numeric|min:2000|max:2100',
+            'email'       => 'required|email|unique:users,email',
+            'token_kelas' => 'required|string|exists:kelas,token', // <-- Pastikan token ada di tabel kelas
+            'password'    => 'required|min:6|confirmed'
+        ], [
+            'email.unique'       => 'Email ini sudah terdaftar.',
+            'nim.unique'         => 'NIM ini sudah terdaftar.',
+            'token_kelas.exists' => 'Token kelas tidak ditemukan/tidak valid! Silakan minta token yang benar ke Dosen.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.'
+        ]);
+
+        // 2. Cari data Kelas berdasarkan token yang diinput
+        $kelas = \App\Models\Kelas::where('token', $request->token_kelas)->first();
+
+        // 3. Buat Akun User
+        $user = \App\Models\User::create([
+            'nama'     => $request->nama, 
+            'email'    => $request->email,
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'role'     => 'mahasiswa'
+        ]);
+
+        // 4. Buat Profil Mahasiswa & Masukkan ke Kelas tersebut
+        \App\Models\Mahasiswa::create([
+            'id_user'  => $user->id,
+            'nim'      => $request->nim,
+            'angkatan' => $request->angkatan,
+            'id_kelas' => $kelas->id, // <-- Otomatis masuk kelas
+        ]);
+
+        // 5. Arahkan kembali dengan pesan sukses
+        return redirect()->route('login')->with('success', 'Berhasil mendaftar dan tergabung di kelas ' . $kelas->nama_kelas . '! Silakan login.');
     }
 
     public function logout(Request $request)

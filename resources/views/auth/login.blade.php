@@ -15,6 +15,12 @@
 
             <h3 class="text-center mb-4">Login Sistem</h3>
 
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             @if ($errors->any())
                 <div class="alert alert-danger">
                     {{ $errors->first() }}
@@ -23,27 +29,25 @@
 
             <form method="POST" action="{{ route('login.process') }}">
                 @csrf
-
+                
                 <div class="mb-3">
                     <label>Email</label>
-                    <input type="email"
-                           name="email"
-                           class="form-control"
-                           value="{{ old('email') }}"
-                           required>
+                    <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
                 </div>
 
                 <div class="mb-3">
                     <label>Password</label>
-                    <input type="password"
-                           name="password"
-                           class="form-control"
-                           required>
+                    <input type="password" name="password" class="form-control" required>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100">
+                <button type="submit" class="btn btn-primary w-100 mb-3">
                     Login
                 </button>
+                
+                <div class="text-center mt-3">
+                    <span class="text-muted">Belum punya akun?</span> 
+                    <a href="{{ route('register') }}" class="text-decoration-none fw-bold">Daftar sekarang</a>
+                </div>
             </form>
 
         </div>
