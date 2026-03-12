@@ -4,6 +4,107 @@
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/bubble.css') }}">
+<style>
+    /* Style Tambahan khusus untuk Ilustrasi Visualisasi */
+    .sim-visual-container {
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 12px;
+        padding: 25px;
+        margin: 20px 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        text-align: center;
+    }
+
+    .stats-row {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85rem;
+        color: #58a6ff;
+        margin-bottom: 20px;
+    }
+
+    .visualizer-area {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        height: 180px;
+        gap: 8px;
+        border-bottom: 2px solid #30363d;
+        padding-bottom: 10px;
+    }
+
+    .bar-item {
+        background: #f85149; 
+        width: 35px;
+        border-radius: 4px 4px 0 0;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .bar-item span {
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.75rem;
+        color: #8b949e;
+    }
+
+    .bar-item.active-comp {
+        background: #ffffff !important;
+        transform: scaleX(1.1);
+        box-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+
+    .bar-item.is-sorted {
+        background: #3fb950 !important;
+    }
+
+    .legend-row {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+        font-size: 0.8rem;
+        color: #8b949e;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .color-box {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+    }
+
+    .controls-row {
+        margin-top: 25px;
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .btn-visual {
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        border: 1px solid #30363d;
+    }
+
+    .btn-start-v { background: #238636; color: white; border: none; }
+    .btn-reset-v { background: #21262d; color: white; }
+    
+    .btn-visual:disabled { opacity: 0.5; cursor: not-allowed; }
+</style>
 @endsection
 
 @section('content')
@@ -11,203 +112,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
-
-
-<style>
-Container Ilustrasi agar rapi di tengah
-/* Container Utama */
-#simulation-container {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    margin-top: 20px;
-}
-
-/* KARTU SIMULASI (Mirip Gambar Referensi) */
-.sim-card {
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    border: 1px solid #e0e0e0;
-    overflow: hidden;
-    margin-bottom: 20px;
-}
-
-/* Bagian Penjelasan Text (Atas) */
-.sim-header {
-    padding: 20px 25px;
-    background: #fafafa;
-    border-bottom: 1px solid #eee;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #444;
-}
-
-/* Bagian Visualisasi (Tengah) */
-.sim-body {
-    padding: 30px;
-    text-align: center;
-}
-
-.iter-title {
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #333;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-}
-
-/* Container Rak Buku/Kotak */
-.book-container {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.book-box {
-    width: 60px;
-    height: 60px; /* Atau auto jika pakai gambar buku */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 1.2rem;
-    transition: all 0.3s;
-    background: #e3f2fd; /* Default Biru Muda */
-    border: 2px solid #90caf9;
-}
-
-/* Jika Anda pakai gambar buku, sesuaikan class ini */
-.book-img-wrap {
-    padding: 5px;
-    border-radius: 8px;
-    transition: transform 0.3s;
-}
-.book-img-wrap.comparing {
-    transform: scale(1.15);
-    background: #fff3cd; /* Kuning highlight */
-    border: 2px solid #ffc107;
-    box-shadow: 0 0 10px rgba(255, 193, 7, 0.4);
-}
-
-/* BUTTONS GROUP */
-.action-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-
-/* Warna Tombol */
-/* TOMBOL DASAR */
-.btn-sim {
-    padding: 10px 25px;
-    border-radius: 6px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: white;
-}
-
-/* Tukar = Merah */
-.btn-tukar {
-    background-color: #e74c3c;
-}
-.btn-tukar:hover {
-    background-color: #c0392b;
-}
-
-/* Tidak Ditukar = Biru */
-.btn-stay {
-    background-color: #3498db;
-}
-.btn-stay:hover {
-    background-color: #2c80b4;
-}
-
-
-.btn-reset { background-color: #dc3545; color: #fff; }
-.btn-reset:hover { background-color: #c82333; }
-
-/* Status Text Bawah */
-.status-text {
-    font-size: 0.95rem;
-    color: #555;
-    margin-top: 10px;
-}
-
-#code {
-    display: none;
-}
-
-    .app-wrapper {
-        width: 100%;
-        height: 500px;
-        background: #1e1e1e;
-        border-radius: 12px;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        margin-top: 20px;
-    }
-
-.btn-active {
-    background: #3498db;
-    color: white;
-    cursor: pointer;
-    opacity: 1;
-}
-
-.btn-disabled {
-    background: #bdc3c7;
-    color: #ffffff;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-.code-container {
-    background: #1e1e2f;
-    border-radius: 16px;
-    padding: 20px;
-    overflow-x: auto;
-}
-
-.code-box {
-    margin: 0;
-    font-family: 'Courier New', monospace;
-    font-size: 15px;
-    line-height: 1.4;
-    color: #f8f8f2;
-    user-select: none;
-}
-
-.refleksi-alert {
-    background: #eef3ff;          /* biru lembut */
-    border: 1px solid #d6e2ff;
-    padding: 20px 25px;
-    border-radius: 12px;
-}
-
-.refleksi-alert h5 {
-    color: #1f3c88;
-}
-
-.refleksi-alert ul {
-    padding-left: 18px;
-}
-
-.refleksi-alert li {
-    line-height: 1.6;
-}
-
-
-
-</style>
 
 <div class="card title-card mb-4">
     <div class="card-body">
@@ -222,7 +126,8 @@ Container Ilustrasi agar rapi di tengah
     </div>
 </div>
 
-<div class="materi-page ">
+<div class="materi-page">
+    {{-- MATERI ASLI 1: TUJUAN PEMBELAJARAN --}}
     <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
             <h5 class="card-title">Tujuan Pembelajaran</h5> 
@@ -235,6 +140,7 @@ Container Ilustrasi agar rapi di tengah
         </div>
     </div>
 
+    {{-- MATERI ASLI 2: PENGERTIAN --}}
     <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
             <div class="materi-header">
@@ -249,6 +155,38 @@ Container Ilustrasi agar rapi di tengah
         </div>
     </div>
 
+    {{-- TAMBAHAN: ILUSTRASI VISUALISASI INTERAKTIF --}}
+    <div class="card mb-4 materi-box">
+        <div class="card-body materi-text">
+            <div class="materi-header">
+                <i class="fa-solid fa-play-circle"></i>
+                <span class="materi-badge">Ilustrasi Visualisasi</span>
+            </div>
+            
+            <div class="sim-visual-container">
+                <div class="stats-row">
+                    <span>Time Complexity: O(n²)</span>
+                    <span>Space Complexity: O(1)</span>
+                </div>
+
+                <div id="visualizer-content" class="visualizer-area">
+                    </div>
+
+                <div class="legend-row">
+                    <div class="legend-item"><div class="color-box" style="background: #f85149;"></div> Belum Terurut</div>
+                    <div class="legend-item"><div class="color-box" style="background: #ffffff; border: 1px solid #8b949e;"></div> Membandingkan</div>
+                    <div class="legend-item"><div class="color-box" style="background: #3fb950;"></div> Posisi Benar</div>
+                </div>
+
+                <div class="controls-row">
+                    <button id="vResetBtn" class="btn-visual btn-reset-v" onclick="initV()">Acak Data</button>
+                    <button id="vStartBtn" class="btn-visual btn-start-v" onclick="startV()">Mulai Visualisasi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- MATERI ASLI 3: CARA KERJA --}}
     <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
             <div class="materi-header">
@@ -269,28 +207,71 @@ Container Ilustrasi agar rapi di tengah
     </div>
 </div>
 
-
 <div class="d-flex justify-content-center gap-3 mt-4 pt-3 border-top">
-
-    <a href="#" 
-       class="btn btn-outline-secondary">
-        Sebelumnya
-    </a>
-
-    <a href="{{ route('mahasiswa.aktivitas.show',['bubble','simulasi']) }}" 
-       class="btn btn-primary">
-        Selanjutnya
-    </a>
-
+    <a href="#" class="btn btn-outline-secondary">Sebelumnya</a>
+    <a href="{{ route('mahasiswa.aktivitas.show',['bubble','simulasi']) }}" class="btn btn-primary">Selanjutnya</a>
 </div>
+
+{{-- SCRIPT VISUALISASI --}}
+<script>
+    let vData = [];
+    const vCont = document.getElementById("visualizer-content");
+    const vStartBtn = document.getElementById("vStartBtn");
+    const vResetBtn = document.getElementById("vResetBtn");
+
+    function initV() {
+        vData = Array.from({ length: 10 }, () => Math.floor(Math.random() * 70) + 15);
+        renderV();
+        vStartBtn.disabled = false;
+    }
+
+    function renderV(active = [], sorted = []) {
+        vCont.innerHTML = "";
+        vData.forEach((val, i) => {
+            const bar = document.createElement("div");
+            bar.className = "bar-item";
+            bar.style.height = `${val * 2}px`;
+            if (active.includes(i)) bar.classList.add("active-comp");
+            if (sorted.includes(i)) bar.classList.add("is-sorted");
+            
+            const txt = document.createElement("span");
+            txt.innerText = val;
+            bar.appendChild(txt);
+            vCont.appendChild(bar);
+        });
+    }
+
+    const sleepV = (ms) => new Promise(res => setTimeout(res, ms));
+
+    async function startV() {
+        vStartBtn.disabled = true;
+        vResetBtn.disabled = true;
+        let n = vData.length;
+        let sortedIdx = [];
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n - i - 1; j++) {
+                renderV([j, j + 1], sortedIdx);
+                await sleepV(700);
+                if (vData[j] > vData[j + 1]) {
+                    [vData[j], vData[j + 1]] = [vData[j + 1], vData[j]];
+                    renderV([j, j + 1], sortedIdx);
+                    await sleepV(700);
+                }
+            }
+            sortedIdx.push(n - 1 - i);
+            renderV([], sortedIdx);
+        }
+        vResetBtn.disabled = false;
+    }
+
+    document.addEventListener('DOMContentLoaded', initV);
+</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
-<script>
-window.IMG_PATH = "{{ asset('images/buku') }}/";
-</script>
+<script>window.IMG_PATH = "{{ asset('images/buku') }}/";</script>
 <script src="{{ asset('js/bubblesort.js') }}"></script>
-
 
 @endsection
