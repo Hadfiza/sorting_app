@@ -21,7 +21,7 @@
                     <span class="badge bg-success bg-opacity-10 text-success mb-2 px-3 py-2 rounded-pill fw-semibold">
                         <i class="fa-solid fa-book me-1"></i> Buku Nilai Terpadu
                     </span>
-                    <h2 class="fw-bold text-dark mb-1">Rekapitulasi Nilai Mahasiswa</h2>
+                    <h2 class="fw-bold text-dark mb-1">Rekapitulasi Nilai Siswa</h2>
                     <p class="text-muted mb-0">Pantau perkembangan nilai Kuis, Praktikum, dan Evaluasi secara detail.</p>
                 </div>
                 
@@ -69,10 +69,10 @@
                 <table class="table table-rekap table-bordered align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th scope="col" class="px-4 py-3 th-header fw-bold border-0 border-bottom border-end" rowspan="2" style="min-width: 220px;">Nama Mahasiswa</th>
+                            <th scope="col" class="px-4 py-3 th-header fw-bold border-0 border-bottom border-end" rowspan="2" style="min-width: 220px;">Nama Siswa</th>
                             <th scope="col" class="px-3 py-3 th-header fw-bold text-center border-0 border-bottom border-end" rowspan="2" style="min-width: 100px;">Kelas</th>
                             
-                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end" colspan="5">Quiz</th>
+                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end" colspan="5">Kuis (Modul)</th>
                             <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end" colspan="4">Praktikum</th>
                             <th scope="col" class="px-3 py-3 th-header fw-bold text-center border-0 border-bottom border-end" rowspan="2">Eval</th>
                             <th scope="col" class="px-3 py-3 th-header fw-bold text-center border-0 border-bottom border-end" rowspan="2">Rata</th>
@@ -100,13 +100,10 @@
                             // -------------------------------------------------------------
                             $id_k_pendahuluan = 3; $id_k_bubble = 7; $id_k_selection = 12; $id_k_insertion = 17; $id_k_merge = 22;
                             $id_p_bubble = 1; $id_p_selection = 2; $id_p_insertion = 3; $id_p_merge = 4;
-                            
-                            // ID EVALUASI
                             $id_k_evaluasi = 6; 
 
                             $jawaban = $mahasiswa->jawaban;
                             
-                            // LOGIKA DATA MODAL
                             $list_modul = [
                                 ['id' => $id_k_pendahuluan, 'nama' => 'Q1 (Pendahuluan)'],
                                 ['id' => $id_k_bubble, 'nama' => 'Q2 (Bubble Sort)'],
@@ -136,12 +133,34 @@
                                             $durasi = $m > 0 ? "{$m}m {$s}s" : "{$s}s";
                                         }
 
+                                        // --- PARSING JSON DETAIL JAWABAN (1-10) ---
+                                        $raw_detail = json_decode($attempt->detail_jawaban, true) ?? [];
+                                        $jawaban_status = array_fill(0, 10, null);
+
+                                        foreach ($raw_detail as $key => $jawabanUser) {
+
+                                            $nomor = (int) str_replace('q', '', $key);
+
+                                            $soal = \App\Models\ButirSoal::where('id_aktivitas', $modul['id'])
+                                                        ->where('nomor', $nomor)
+                                                        ->first();
+
+                                            if($soal){
+                                                $kunci = strtolower(trim($soal->jawaban_benar));
+                                                $user  = strtolower(trim($jawabanUser));
+
+                                                $jawaban_status[$nomor-1] = ($user === $kunci);
+                                            }
+
+                                        }
+
                                         $attempts_data[] = [
                                             'attempt' => $idx + 1,
                                             'mulai'   => $waktu_mulai,
                                             'selesai' => $waktu_selesai,
                                             'durasi'  => $durasi,
-                                            'skor'    => $attempt->skor
+                                            'skor'    => $attempt->skor,
+                                            'detail_soal' => $jawaban_status // Array berisi boolean benar/salah
                                         ];
                                     }
                                 }
@@ -170,7 +189,7 @@
                             // EVALUASI
                             $evaluasi = $jawaban->where('id_aktivitas', $id_k_evaluasi)->sortByDesc('created_at')->first()->skor ?? 0; 
                             
-                            // RATA-RATA KESELURUHAN
+                            // RATA-RATA
                             $rataAkhir = ($rataKuis + $rataPraktikum + $evaluasi) / 3;
                             $formatRata = number_format($rataAkhir, 1);
                         @endphp
@@ -237,7 +256,7 @@
 </div>
 
 <div class="modal fade" id="detailNilaiModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content shadow-lg border-0 rounded-4">
             
             <div class="modal-header border-bottom-0 pb-0">
@@ -255,7 +274,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="fw-bold text-secondary small text-uppercase tracking-wide mb-2">Riwayat Percobaan (Klik Judul Kuis)</label>
+                    <label class="fw-bold text-secondary small text-uppercase tracking-wide mb-2">Riwayat Percobaan & Detail Jawaban</label>
                     <div class="accordion" id="accordionKuisDetail">
                         </div>
                 </div>
@@ -281,7 +300,6 @@
 
 <script>
     function openDetailModal(btn) {
-        // 1. Isi Profil & Evaluasi
         const nama = btn.getAttribute('data-nama');
         document.getElementById('mdl_nama').innerText = nama;
         document.getElementById('mdl_nim').innerText = btn.getAttribute('data-nim');
@@ -289,36 +307,47 @@
         document.getElementById('mdl_inisial').innerText = nama ? nama.charAt(0).toUpperCase() : 'M';
         document.getElementById('mdl_evaluasi').innerText = btn.getAttribute('data-evaluasi');
 
-        // 2. Bangun Accordion Kuis dari JSON
         const kuisData = JSON.parse(btn.getAttribute('data-kuis-detail'));
         const accordionContainer = document.getElementById('accordionKuisDetail');
-        accordionContainer.innerHTML = ''; // Kosongkan data sebelumnya
+        accordionContainer.innerHTML = ''; 
 
         kuisData.forEach((modul, index) => {
             let badgeMainClass = modul.skor_terakhir >= 70 ? 'success' : 'danger';
             let collapseId = `collapseKuis${index}`;
             let headingId = `headingKuis${index}`;
 
-            // Buat isi tabel Attempt
             let tableRows = '';
             if (modul.total_attempt > 0) {
                 modul.attempts.forEach(att => {
                     let attBadge = att.skor >= 70 ? 'success' : 'danger';
+                    
+                    // Generate Centang/Silang untuk 10 Soal
+                    let detailHtml = '';
+                    att.detail_soal.forEach(status => {
+                        if (status === true) {
+                            detailHtml += `<td class="text-center align-middle"><i class="fa-solid fa-check text-success fs-6"></i></td>`;
+                        } else if (status === false) {
+                            detailHtml += `<td class="text-center align-middle"><i class="fa-solid fa-xmark text-danger fs-6"></i></td>`;
+                        } else {
+                            detailHtml += `<td class="text-center align-middle text-muted">-</td>`;
+                        }
+                    });
+
                     tableRows += `
                         <tr>
-                            <td class="text-center fw-bold text-secondary">Percobaan ${att.attempt}</td>
-                            <td class="text-center text-muted" style="font-size: 0.8rem;">${att.mulai}</td>
-                            <td class="text-center text-muted" style="font-size: 0.8rem;">${att.selesai}</td>
-                            <td class="text-center fw-medium" style="font-size: 0.85rem;"><i class="fa-regular fa-clock me-1"></i> ${att.durasi}</td>
-                            <td class="text-center"><span class="badge bg-${attBadge} px-2 py-1">${att.skor}</span></td>
+                            <td class="text-center fw-bold text-secondary align-middle">Attempt ${att.attempt}</td>
+                            <td class="text-center text-muted align-middle" style="font-size: 0.8rem;">${att.mulai}</td>
+                            <td class="text-center text-muted align-middle" style="font-size: 0.8rem;">${att.selesai}</td>
+                            <td class="text-center fw-medium align-middle" style="font-size: 0.85rem;"><i class="fa-regular fa-clock me-1"></i> ${att.durasi}</td>
+                            <td class="text-center align-middle border-end"><span class="badge bg-${attBadge} px-2 py-1 fs-6">${att.skor}</span></td>
+                            ${detailHtml}
                         </tr>
                     `;
                 });
             } else {
-                tableRows = `<tr><td colspan="5" class="text-center text-muted py-3">Siswa belum mengerjakan kuis ini.</td></tr>`;
+                tableRows = `<tr><td colspan="15" class="text-center text-muted py-3">Siswa belum mengerjakan kuis ini.</td></tr>`;
             }
 
-            // Gabungkan menjadi format Accordion HTML
             let accordionItem = `
                 <div class="accordion-item border-0 mb-2 rounded-3 shadow-sm" style="overflow: hidden;">
                     <h2 class="accordion-header" id="${headingId}">
@@ -335,14 +364,24 @@
                     <div id="${collapseId}" class="accordion-collapse collapse border border-top-0" data-bs-parent="#accordionKuisDetail">
                         <div class="accordion-body p-0">
                             <div class="table-responsive">
-                                <table class="table table-hover align-middle mb-0">
+                                <table class="table table-hover align-middle mb-0 text-nowrap">
                                     <thead class="table-light">
                                         <tr>
                                             <th class="text-center py-2 text-secondary" style="font-size: 0.75rem; text-transform: uppercase;">Attempt</th>
-                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem; text-transform: uppercase;">Waktu Mulai</th>
-                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem; text-transform: uppercase;">Waktu Selesai</th>
-                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem; text-transform: uppercase;">Lama Pengerjaan</th>
-                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem; text-transform: uppercase;">Skor</th>
+                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem; text-transform: uppercase;">Mulai</th>
+                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem; text-transform: uppercase;">Selesai</th>
+                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem; text-transform: uppercase;">Waktu</th>
+                                            <th class="text-center py-2 text-secondary border-end" style="font-size: 0.75rem; text-transform: uppercase;">Skor</th>
+                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">1</th>
+                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">2</th>
+                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">3</th>
+                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">4</th>
+                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">5</th>
+                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">6</th>
+                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">7</th>
+                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">8</th>
+                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">9</th>
+                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">10</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -357,7 +396,6 @@
             accordionContainer.innerHTML += accordionItem;
         });
 
-        // 3. Tampilkan Modal dengan aman
         var modalElement = document.getElementById('detailNilaiModal');
         var modalInstance = bootstrap.Modal.getInstance(modalElement);
         if (!modalInstance) {
