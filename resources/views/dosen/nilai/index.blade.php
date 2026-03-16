@@ -21,7 +21,7 @@
                     <span class="badge bg-success bg-opacity-10 text-success mb-2 px-3 py-2 rounded-pill fw-semibold">
                         <i class="fa-solid fa-book me-1"></i> Buku Nilai Terpadu
                     </span>
-                    <h2 class="fw-bold text-dark mb-1">Rekapitulasi Nilai Siswa</h2>
+                    <h2 class="fw-bold text-dark mb-1">Rekapitulasi Nilai Mahasiswa</h2>
                     <p class="text-muted mb-0">Pantau perkembangan nilai Kuis, Praktikum, dan Evaluasi secara detail.</p>
                 </div>
                 
@@ -69,10 +69,10 @@
                 <table class="table table-rekap table-bordered align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th scope="col" class="px-4 py-3 th-header fw-bold border-0 border-bottom border-end" rowspan="2" style="min-width: 220px;">Nama Siswa</th>
+                            <th scope="col" class="px-4 py-3 th-header fw-bold border-0 border-bottom border-end" rowspan="2" style="min-width: 220px;">Nama Mahasiswa</th>
                             <th scope="col" class="px-3 py-3 th-header fw-bold text-center border-0 border-bottom border-end" rowspan="2" style="min-width: 100px;">Kelas</th>
                             
-                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end" colspan="5">Kuis (Modul)</th>
+                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end" colspan="5">Quiz</th>
                             <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end" colspan="4">Praktikum</th>
                             <th scope="col" class="px-3 py-3 th-header fw-bold text-center border-0 border-bottom border-end" rowspan="2">Eval</th>
                             <th scope="col" class="px-3 py-3 th-header fw-bold text-center border-0 border-bottom border-end" rowspan="2">Rata</th>
@@ -98,8 +98,8 @@
                             // -------------------------------------------------------------
                             // ID DATABASE ANDA
                             // -------------------------------------------------------------
-                            $id_k_pendahuluan = 3; $id_k_bubble = 4; $id_k_selection = 4; $id_k_insertion = 4; $id_k_merge = 4;
-                            $id_p_bubble = 1; $id_p_selection = 5; $id_p_insertion = 5; $id_p_merge = 5;
+                            $id_k_pendahuluan = 3; $id_k_bubble = 7; $id_k_selection = 12; $id_k_insertion = 17; $id_k_merge = 22;
+                            $id_p_bubble = 1; $id_p_selection = 2; $id_p_insertion = 3; $id_p_merge = 4;
                             
                             // ID EVALUASI
                             $id_k_evaluasi = 6; 

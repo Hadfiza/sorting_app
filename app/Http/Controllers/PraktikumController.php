@@ -46,29 +46,51 @@ class PraktikumController extends Controller
         return view('mahasiswa.praktikum', compact('praktikum'));
     }
 
-    public function submit(Request $request)
+public function submit(Request $request)
     {
+        // 1. Validasi Input
         $request->validate([
             'kode_program' => 'required',
-            'penjelasan' => 'required',
+            'penjelasan'   => 'required',
             'praktikum_id' => 'required'
         ]);
 
-        $idMahasiswa = auth()->user()->mahasiswa->id;
+        try {
+            // 2. Ambil profil Mahasiswa (Bukan User)
+            $mahasiswa = auth()->user()->mahasiswa;
+            
+            if (!$mahasiswa) {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Profil mahasiswa tidak ditemukan di database!'
+                ], 404);
+            }
 
-        PengumpulanPraktikum::updateOrCreate(
-        [
-            'id_praktikum' => $request->praktikum_id,
-            'id_mahasiswa' => $idMahasiswa
-        ],
-        [
-            'kode_program' => $request->kode_program,
-            'output' => $request->output,
-            'penjelasan' => $request->penjelasan,
-            'status' => 'submitted'
-        ]);
+            // 3. Simpan ke database menggunakan ID MAHASISWA (Kembali seperti awal)
+            \App\Models\PengumpulanPraktikum::updateOrCreate(
+            [
+                'id_praktikum' => $request->praktikum_id,
+                'id_mahasiswa' => $mahasiswa->id // <-- KEMBALI MENGGUNAKAN $mahasiswa->id
+            ],
+            [
+                'kode_program'   => $request->kode_program,
+                'output'         => $request->output ?? '-',
+                'penjelasan'     => $request->penjelasan,
+                'status'         => 'submitted',
+                
+                // Beri nilai null agar aman dari error
+                'nilai'          => null, 
+                'feedback_dosen' => null  
+            ]);
 
-        return response()->json(['success' => true]);
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sistem Error: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     //Halaman Dosen
