@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Latihan Pendahuluan Sorting</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Quiz Bubble Sort</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
     <style>
@@ -78,7 +78,7 @@
 
             <!-- Isi Petunjuk -->
             <ol class="list-decimal ml-6 space-y-3 text-slate-700 text-lg leading-relaxed">
-                <li>Latihan ini terdiri dari <b>10 soal</b> tentang Agoritma Bubble Sort.</li>
+                <li>Latihan ini terdiri dari <b>10 soal</b> tentang Algoritma Bubble Sort.</li>
                 <li>Kerjakan soal secara <b>berurutan</b> menggunakan tombol <b>Lanjut</b>.</li>
                 <li>Pastikan semua soal telah dijawab sebelum menekan tombol <b>Selesai</b>.</li>
             </ol>
@@ -122,17 +122,20 @@
 
             @if($s->tipe == 'essay' && str_contains($s->pertanyaan,'___'))
 
-            @php
-            $parts = preg_split('/_{3,}/', $s->pertanyaan);
-            @endphp
+@php
+$pertanyaan = e($s->pertanyaan);
 
-            <pre class="bg-slate-900 text-green-400 p-6 rounded-2xl text-sm overflow-x-auto font-mono leading-relaxed">
-            {{ $parts[0] }}<input
-            name="q{{ $s->nomor }}"
-            oninput="markAnswered({{ $s->nomor }})"
-            class="inline-block w-20 mx-1 bg-slate-800 text-green-300 border-b border-green-400 outline-none text-center font-bold">
-            {{ $parts[1] ?? '' }}
-            </pre>
+// ganti ___ dengan placeholder unik
+$pertanyaan = preg_replace('/_{3,}/', '[[INPUT]]', $pertanyaan);
+
+// pecah berdasarkan placeholder
+$parts = explode('[[INPUT]]', $pertanyaan);
+@endphp
+
+<pre class="bg-slate-900 text-white p-6 rounded-2xl text-sm font-mono leading-relaxed">{{ $parts[0] }}<input
+name="q{{ $s->nomor }}"
+oninput="markAnswered({{ $s->nomor }})"
+class="inline-block w-24 mx-1 bg-slate-800 text-white border-b border-white outline-none text-center font-bold">{{ $parts[1] ?? '' }}</pre>
 
             @else
 
@@ -159,32 +162,6 @@
                     @endforeach
                 </div>
                 @endif
-
-{{-- ESSAY --}}
-{{-- @if($s->tipe == 'essay' && str_contains($s->pertanyaan, '___'))
-
-@php
-    $parts = preg_split('/_{3,}/', $s->pertanyaan);
-@endphp
-
-<pre class="bg-slate-900 text-green-400 p-6 rounded-2xl text-sm overflow-x-auto font-mono leading-relaxed">
-{{ $parts[0] }}<input
-    name="q{{ $s->nomor }}"
-    oninput="markAnswered({{ $s->nomor }})"
-    class="inline-block w-20 mx-1 bg-slate-800 text-green-300 border-b border-green-400 outline-none text-center font-bold">
-{{ $parts[1] ?? '' }}
-</pre>
-
-@elseif($s->tipe == 'essay')
-
-<input type="text"
-    name="q{{ $s->nomor }}"
-    oninput="markAnswered({{ $s->nomor }})"
-    placeholder="Ketik jawaban Anda..."
-    class="w-full p-4 border border-slate-200 rounded-xl">
-
-@endif --}}
-
 
                 {{-- TRUE FALSE --}}
                 @if($s->tipe == 'truefalse')
@@ -244,6 +221,7 @@
 
             </div>
 
+            {{-- AKSI --}}
             <div id="nav-bottom-container" class="flex justify-between mt-12 pt-6 border-t border-slate-50">
                 <button onclick="prevSoal()" class="bg-slate-100 text-slate-500 px-8 py-2.5 rounded-xl font-semibold hover:bg-slate-200 transition">Kembali</button>
 
@@ -257,23 +235,22 @@
 
         </div>
 
+        {{-- Navagisi --}}
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 h-fit sticky top-10">
             <p class="font-bold text-slate-700 mb-5 text-center text-[10px] tracking-[0.2em] uppercase border-b pb-3">
                 Navigasi Soal
             </p>
-
-            <div class="grid grid-cols-4 gap-2 mb-6" id="navigation-numbers">
-                <button onclick="goSoal(0)" ondblclick="toggleRagu(0)" id="nav-0" class="nav-btn unanswered w-full aspect-square rounded-lg flex items-center justify-center font-bold text-sm">1</button>
-                <button onclick="goSoal(1)" ondblclick="toggleRagu(1)" id="nav-1" class="nav-btn unanswered w-full aspect-square rounded-lg flex items-center justify-center font-bold text-sm">2</button>
-                <button onclick="goSoal(2)" ondblclick="toggleRagu(2)" id="nav-2" class="nav-btn unanswered w-full aspect-square rounded-lg flex items-center justify-center font-bold text-sm">3</button>
-                <button onclick="goSoal(3)" ondblclick="toggleRagu(3)" id="nav-3" class="nav-btn unanswered w-full aspect-square rounded-lg flex items-center justify-center font-bold text-sm">4</button>
-                <button onclick="goSoal(4)" ondblclick="toggleRagu(4)" id="nav-4" class="nav-btn unanswered w-full aspect-square rounded-lg flex items-center justify-center font-bold text-sm">5</button>
-                <button onclick="goSoal(5)" ondblclick="toggleRagu(5)" id="nav-5" class="nav-btn unanswered w-full aspect-square rounded-lg flex items-center justify-center font-bold text-sm">6</button>
-                <button onclick="goSoal(6)" ondblclick="toggleRagu(6)" id="nav-6" class="nav-btn unanswered w-full aspect-square rounded-lg flex items-center justify-center font-bold text-sm">7</button>
-                <button onclick="goSoal(7)" ondblclick="toggleRagu(7)" id="nav-7" class="nav-btn unanswered w-full aspect-square rounded-lg flex items-center justify-center font-bold text-sm">8</button>
-                <button onclick="goSoal(8)" ondblclick="toggleRagu(8)" id="nav-8" class="nav-btn unanswered w-full aspect-square rounded-lg flex items-center justify-center font-bold text-sm">9</button>
-                <button onclick="goSoal(9)" ondblclick="toggleRagu(9)" id="nav-9" class="nav-btn unanswered w-full aspect-square rounded-lg flex items-center justify-center font-bold text-sm">10</button>
-            </div>
+        <div class="grid grid-cols-4 gap-2 mb-6" id="navigation-numbers">
+            @foreach($soal as $index => $s)
+                <button
+                    onclick="goSoal({{ $index }})"
+                    ondblclick="toggleRagu({{ $index }})"
+                    id="nav-{{ $index }}"
+                    class="nav-btn unanswered w-full aspect-square rounded-lg flex items-center justify-center font-bold text-sm">
+                    {{ $index + 1 }}
+                </button>
+            @endforeach
+        </div>
 
             <div class="space-y-3 text-[10px] font-bold text-slate-400 border-t pt-5 uppercase tracking-wider">
                 <div class="flex items-center">
@@ -302,43 +279,47 @@
 const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id) }}";
 </script>
 <script>
-    // Kunci Jawaban: q7 adalah '258' (urutan setelah swap 5 dan 2)
     
     let indexSoal = 0;
-    let waktuMulai = null;
     const daftarSoal = document.querySelectorAll('.soal');
     const totalSoal = daftarSoal.length;
     let isLocked = false;
 
 
-    const kunciJawaban = {
+const kunciJawaban = {
 
-    @foreach($soal as $s)
+@foreach($soal as $s)
 
-    @if($s->tipe == 'dragdrop')
-        @php
-            $data = json_decode($s->jawaban_benar, true);
-            $correct = implode('', $data['correct']);
-        @endphp
-        q{{ $s->nomor }}: "{{ strtolower($correct) }}",
-    @else
-        q{{ $s->nomor }}: "{{ strtolower($s->jawaban_benar) }}",
-    @endif
+@if($s->tipe == 'dragdrop')
+    @php
+        $data = json_decode($s->jawaban_benar, true);
+        $correct = json_encode($data['correct']);
+    @endphp
+    q{{ $s->nomor }}: {!! $correct !!},
 
-    @endforeach
+@else
+    q{{ $s->nomor }}: "{{ strtolower($s->jawaban_benar) }}",
+@endif
 
-    };
+@endforeach
 
-    
-    function mulaiLatihan() {
+};
 
-        waktuMulai = new Date().toISOString();
+function mulaiLatihan() {
+    totalWaktu = {{ $quiz->durasi }} * 60;
 
-        document.getElementById('intro-area').classList.add('d-none');
-        document.getElementById('quiz-area').classList.remove('d-none');
+    fetch("{{ route('mahasiswa.quiz.start', $quiz->id) }}", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    });
 
-        startTimer();
-    }
+    document.getElementById('intro-area').classList.add('d-none');
+    document.getElementById('quiz-area').classList.remove('d-none');
+
+    startTimer();
+}
 
     function tampilkanSoal(i) {
         daftarSoal.forEach((soal, idx) => {
@@ -350,37 +331,35 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id) }}";
         if(!isLocked) btnNext.innerText = (indexSoal === totalSoal - 1) ? 'Finish' : 'Lanjut';
     }
 
-    function markAnswered(nomor) {
+function markAnswered(nomor) {
 
-        if(isLocked) return;
+    if(isLocked) return;
 
-        const radios = document.querySelectorAll(`input[name="q${nomor}"]`);
-        const navBtn = document.getElementById(`nav-${nomor-1}`);
+    const navBtn = document.getElementById(`nav-${nomor-1}`);
 
-        if (navBtn.classList.contains('ragu')) return;
+    if (navBtn.classList.contains('ragu')) return;
 
-        let filled = false;
+    let filled = false;
 
-        if (radios.length > 1) {
-
-            filled = document.querySelector(`input[name="q${nomor}"]:checked`);
-
-        } else {
-
-            const input = document.querySelector(`input[name="q${nomor}"]`);
-
-            filled = input && input.value.trim().length > 0;
-
-        }
-
-        if(filled) {
-            navBtn.classList.remove('unanswered');
-            navBtn.classList.add('answered');
-        } else {
-            navBtn.classList.add('unanswered');
-            navBtn.classList.remove('answered');
-        }
+    // CEK RADIO
+    const radios = document.querySelectorAll(`input[name="q${nomor}"][type="radio"]`);
+    if (radios.length > 0) {
+        filled = document.querySelector(`input[name="q${nomor}"]:checked`);
+    } 
+    // CEK INPUT TEXT / HIDDEN (DRAGDROP)
+    else {
+        const input = document.querySelector(`input[name="q${nomor}"]`);
+        filled = input && input.value.trim().length > 0;
     }
+
+    if(filled) {
+        navBtn.classList.remove('unanswered');
+        navBtn.classList.add('answered');
+    } else {
+        navBtn.classList.add('unanswered');
+        navBtn.classList.remove('answered');
+    }
+}
 
     function toggleRaguCurrent() {
         if (isLocked) return;
@@ -433,6 +412,7 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id) }}";
 
         return true;
     }
+    
     // --- LOGIKA DRAG & DROP ---
     function allowDrop(ev) { ev.preventDefault(); }
     function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
@@ -455,22 +435,23 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id) }}";
         }
     }
 
-    function updateDragAnswer(nomor) {
+function updateDragAnswer(nomor) {
 
-        let val = "";
+    let arr = [];
 
-        const drops = document.querySelectorAll(`[id^="drop"][id$="-${nomor}"]`);
+    const drops = document.querySelectorAll(`[id^="drop"][id$="-${nomor}"]`);
 
-        drops.forEach(d => {
-            val += d.innerText.trim();
-        });
-
-        document.getElementById(`ans-q${nomor}`).value = val;
-
-        if(val.length > 0) {
-            markAnswered(nomor);
+    drops.forEach(d => {
+        if (d.innerText.trim() !== "") {
+            arr.push(parseInt(d.innerText.trim()));
         }
-    }
+    });
+
+    document.getElementById(`ans-q${nomor}`).value = JSON.stringify(arr);
+
+    // 🔥 INI WAJIB
+    markAnswered(nomor);
+}
 
     function resetDrag(nomor) {
 
@@ -542,9 +523,25 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id) }}";
 
         semuaJawaban[key] = jawabanUser;
 
-        if (jawabanUser.toLowerCase() === kunciJawaban[key].toLowerCase()) {
+if (Array.isArray(kunciJawaban[key])) {
+
+    let userArr = [];
+
+    try {
+        userArr = JSON.parse(jawabanUser);
+        } catch(e) {}
+
+        if (JSON.stringify(userArr) === JSON.stringify(kunciJawaban[key])) {
             benar++;
         }
+
+        } else {
+
+            if (jawabanUser.toLowerCase() === kunciJawaban[key].toLowerCase()) {
+                benar++;
+        }
+
+    }
     }
 
     const skor = Math.round((benar / totalSoal) * 100);
@@ -580,7 +577,6 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id) }}";
 
                 body: JSON.stringify({
                     jawaban: semuaJawaban,
-                    waktu_mulai: waktuMulai
                 })
 
             })
@@ -636,8 +632,6 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id) }}";
     });
     }
 
-
-
     function kunciKuis() {
         isLocked = true;
         document.querySelectorAll('input').forEach(i => i.disabled = true);
@@ -654,41 +648,54 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id) }}";
 
 
     // ================= TIMER =================
-    let totalWaktu = {{ $quiz->durasi }} * 60;
-    let intervalTimer;
+    let intervalTimer = null;
 
     function startTimer() {
-        intervalTimer = setInterval(function () {
-            let menit = Math.floor(totalWaktu / 60);
-            let detik = totalWaktu % 60;
 
-            detik = detik < 10 ? "0" + detik : detik;
-            document.getElementById("timer").innerText = menit + ":" + detik;
+        // reset dulu kalau ada timer lama
+        if (intervalTimer) {
+            clearInterval(intervalTimer);
+        }
+
+        intervalTimer = setInterval(function () {
 
             if (totalWaktu <= 0) {
                 clearInterval(intervalTimer);
+                intervalTimer = null; // penting
+                document.getElementById("timer").innerText = "00:00";
                 waktuHabis();
+                return;
             }
 
+            let menit = Math.floor(totalWaktu / 60);
+            let detik = totalWaktu % 60;
+
+            // format 2 digit
+            menit = menit < 10 ? "0" + menit : menit;
+            detik = detik < 10 ? "0" + detik : detik;
+
+            document.getElementById("timer").innerText = menit + ":" + detik;
+
             totalWaktu--;
+
         }, 1000);
     }
 
-    function waktuHabis() {
-        Swal.fire({
-            title: 'Waktu Habis!',
-            text: 'Kuis otomatis diselesaikan.',
-            icon: 'warning',
-            confirmButtonText: 'Lihat Hasil',
-            allowOutsideClick: false,
-            buttonsStyling: false,
-            customClass: {
-                confirmButton: 'bg-blue-600 text-white px-8 py-2.5 rounded-lg font-bold'
-            }
-        }).then(() => {
-            hitungNilai();
-        });
-    }
+        function waktuHabis() {
+            Swal.fire({
+                title: 'Waktu Habis!',
+                text: 'Kuis otomatis diselesaikan.',
+                icon: 'warning',
+                confirmButtonText: 'Lihat Hasil',
+                allowOutsideClick: false,
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'bg-blue-600 text-white px-8 py-2.5 rounded-lg font-bold'
+                }
+            }).then(() => {
+                hitungNilai();
+            });
+        }
 </script>
 </body>
 </html>

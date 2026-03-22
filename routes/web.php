@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AktivitasController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ButirSoalController;
 use App\Http\Controllers\DataMahasiswaController;
 use App\Http\Controllers\DosenDashboardController;
 use App\Http\Controllers\KategoriSoalController;
@@ -64,6 +65,9 @@ Route::prefix('mahasiswa')
         [KategoriSoalController::class,'quiz']
     )->name('quiz.show');
 
+    Route::post('/quiz/{id}/start', [KategoriSoalController::class, 'start'])
+    ->name('quiz.start');
+
     Route::post('/quiz/submit/{id_aktivitas}',
         [KategoriSoalController::class,'submit']
     )->name('quiz.submit');
@@ -114,6 +118,15 @@ Route::prefix('mahasiswa')
     Route::get('/datamahasiswa', [DataMahasiswaController::class, 'index'])->name('datamahasiswa.index');
     Route::put('/datamahasiswa/{id}', [DataMahasiswaController::class, 'update'])->name('datamahasiswa.update');
     Route::delete('/datamahasiswa/{id}', [DataMahasiswaController::class, 'destroy'])->name('datamahasiswa.destroy');
+
+    // ---------------------------------------------------------
+    // ROUTE MANAJEMEN MAHASISWA
+    // ---------------------------------------------------------
+    Route::get('/soal', [ButirSoalController::class, 'index'])->name('soal.index');
+    Route::post('/soal', [ButirSoalController::class, 'store'])->name('soal.store');
+    Route::put('/soal/{id}', [ButirSoalController::class, 'update'])->name('soal.update');
+    Route::delete('/soal/{id}', [ButirSoalController::class, 'destroy'])->name('soal.destroy');
+
 
     Route::get('/rekap-nilai', [NilaiController::class, 'index'])
     ->name('nilai.index');

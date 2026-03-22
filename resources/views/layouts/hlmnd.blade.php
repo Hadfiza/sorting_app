@@ -113,8 +113,8 @@
     </div>
 
     <!-- Data Soal -->
-    <div class="menu-item ">
-        <a href="" class="menu-btn">
+    <div class="menu-item {{ request()->routeIs('dosen.soal.*') ? 'active' : '' }}">
+        <a href="{{ route('dosen.soal.index') }}" class="menu-btn">
             <i class="fa-solid fa-file-pen"></i>
             Manajemen Soal
         </a>

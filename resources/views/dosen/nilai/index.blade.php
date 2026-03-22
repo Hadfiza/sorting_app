@@ -99,8 +99,8 @@
                             // ID DATABASE ANDA
                             // -------------------------------------------------------------
                             $id_k_pendahuluan = 3; $id_k_bubble = 7; $id_k_selection = 12; $id_k_insertion = 17; $id_k_merge = 22;
-                            $id_p_bubble = 1; $id_p_selection = 2; $id_p_insertion = 3; $id_p_merge = 4;
-                            $id_k_evaluasi = 6; 
+                            $id_p_bubble = 8; $id_p_selection = 13; $id_p_insertion = 18; $id_p_merge = 23;
+                            $id_k_evaluasi = 24; 
 
                             $jawaban = $mahasiswa->jawaban;
                             
@@ -146,10 +146,25 @@
                                                         ->first();
 
                                             if($soal){
-                                                $kunci = strtolower(trim($soal->jawaban_benar));
-                                                $user  = strtolower(trim($jawabanUser));
+$raw = $soal->jawaban_benar;
+$decoded = json_decode($raw, true);
 
-                                                $jawaban_status[$nomor-1] = ($user === $kunci);
+// ===== DRAGDROP =====
+if (is_array($decoded) && isset($decoded['correct'])) {
+
+    $kunciArr = $decoded['correct'];
+    $userArr  = json_decode($jawabanUser, true);
+
+    $jawaban_status[$nomor-1] = ($userArr === $kunciArr);
+
+// ===== NORMAL =====
+} else {
+
+    $kunci = strtolower(trim($raw));
+    $user  = strtolower(trim($jawabanUser));
+
+    $jawaban_status[$nomor-1] = ($user === $kunci);
+}
                                             }
 
                                         }

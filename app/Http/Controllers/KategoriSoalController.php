@@ -29,51 +29,80 @@ class KategoriSoalController extends Controller
         ]);
     }
 
+public function start($id)
+{
+    session([
+        'quiz_start_'.$id => now()
+    ]);
+
+    return response()->json(['status' => 'started']);
+}
+
     public function submit(Request $request, $id_aktivitas)
     {
         $aktivitas = Aktivitas::with('butirSoal')->findOrFail($id_aktivitas);
-
         $jawabanUser = $request->json('jawaban') ?? [];
 
-        $waktuMulai = \Carbon\Carbon::parse(
-            $request->json('waktu_mulai')
-        )->format('Y-m-d H:i:s');
+        $mahasiswa = auth()->user()->mahasiswa;
 
+        // ================= HITUNG ATTEMPT =================
+        $last = JawabanMahasiswa::where('id_mahasiswa', $mahasiswa->id)
+            ->where('id_aktivitas', $id_aktivitas)
+            ->orderByDesc('attempt')
+            ->first();
+
+        $attemptBaru = $last ? $last->attempt + 1 : 1;
+
+        // ================= HITUNG NILAI =================
         $totalSoal = $aktivitas->butirSoal->count();
         $bobotPerSoal = $totalSoal > 0 ? 100 / $totalSoal : 0;
 
         $skor = 0;
 
         foreach ($aktivitas->butirSoal as $soal) {
-
             $key = 'q'.$soal->nomor;
 
             $user = strtolower(trim($jawabanUser[$key] ?? ''));
-            $correct = strtolower(trim($soal->jawaban_benar));
+            $correctRaw = $soal->jawaban_benar;
 
-            if ($user === $correct) {
-                $skor += $bobotPerSoal;
+            // cek apakah JSON (dragdrop)
+            $decoded = json_decode($correctRaw, true);
+
+            if (is_array($decoded) && isset($decoded['correct'])) {
+
+                $correct = $decoded['correct']; // array
+
+                $userArr = json_decode($jawabanUser[$key] ?? '[]', true);
+
+                if ($userArr === $correct) {
+                    $skor += $bobotPerSoal;
+                }
+
+            } else {
+
+                $user = strtolower(trim($jawabanUser[$key] ?? ''));
+                $correct = strtolower(trim($correctRaw));
+
+                if ($user === $correct) {
+                    $skor += $bobotPerSoal;
+                }
             }
         }
 
         $skor = round($skor);
-
-        $mahasiswa = auth()->user()->mahasiswa;
-
-        $attempt = JawabanMahasiswa::where('id_mahasiswa',$mahasiswa->id)
-            ->where('id_aktivitas',$aktivitas->id)
-            ->count() + 1;
-
         $statusLulus = $skor >= 60 ? 1 : 0;
+
+        // ================= SIMPAN =================
+        $start = session('quiz_start_'.$id_aktivitas);
 
         JawabanMahasiswa::create([
             'id_mahasiswa' => $mahasiswa->id,
-            'id_aktivitas' => $aktivitas->id,
+            'id_aktivitas' => $id_aktivitas,
+            'attempt' => $attemptBaru,
             'skor' => $skor,
-            'attempt' => $attempt,
             'status_lulus' => $statusLulus,
             'detail_jawaban' => json_encode($jawabanUser),
-            'waktu_mulai' => $waktuMulai,
+            'waktu_mulai' => $start,
             'waktu_selesai' => now()
         ]);
 
