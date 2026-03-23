@@ -96,7 +96,7 @@
      transform: scale(1.15);
 }
 
-/* BUTTONS */
+/* BUTTONS Simulasi */
 .action-buttons {
     display: flex;
     justify-content: center;
@@ -116,12 +116,30 @@
     background-color: #95a5a6; /* Default Abu */
 }
 
-.btn-sim.active { background-color: #3498db; box-shadow: 0 4px 0 #2980b9; } /* Biru Aktif */
-.btn-sim.btn-swap-action { background-color: #e67e22; }
-.btn-sim.btn-swap-action.active { background-color: #d35400; box-shadow: 0 4px 0 #a84300; } /* Oranye Tukar */
+.btn-tukar {
+    background-color: #22c55e; /* hijau */
+    color: white;
+}
 
-.btn-reset { background-color: #c0392b; }
-.btn-reset:hover { background-color: #e74c3c; }
+.btn-stay {
+    background-color: #3b82f6; /* biru */
+    color: white;
+}
+
+.btn-tukar:hover {
+    background-color: #16a34a;
+}
+
+.btn-stay:hover {
+    background-color: #2563eb;
+}
+
+.btn-sim.active { background-color: #3498db; box-shadow: 0 4px 0 #2980b9; } Biru Aktif
+/* .btn-sim.btn-swap-action { background-color: #e67e22; } */
+/* .btn-sim.btn-swap-action.active { background-color: #d35400; box-shadow: 0 4px 0 #a84300; } Oranye Tukar */
+
+/* .btn-reset { background-color: #c0392b; } */
+/* .btn-reset:hover { background-color: #e74c3c; } */
 
 .btn-sim.disabled {
     opacity: 0.6;

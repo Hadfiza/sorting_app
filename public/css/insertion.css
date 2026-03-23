@@ -1,34 +1,36 @@
-/* --- CONTAINER FILE --- */
+/* ===============================
+   1. AREA CONTAINER (Otomatis Center)
+   =============================== */
 .file-container {
     position: relative;
+    max-width: 670px; /* KUNCI CENTER: Batasi lebar agar pas dengan 5 kartu */
     width: 100%;
-    height: 180px;
-    margin: 20px auto;
+    height: 250px;
+    margin: 30px auto 20px auto; /* 'auto' akan mendorong kotak persis ke tengah */
     background: #fdfdfd;
     border-radius: 8px;
-    border-bottom: 2px solid #eee;
+    border: 1px dashed #e0e0e0;
     overflow: visible;
 }
 
-
-
-/* --- ITEM FILE --- */
+/* ===============================
+   2. ITEM KARTU NAMA
+   =============================== */
 .file-wrap {
-    position: absolute; /* Wajib Absolute agar bisa geser */
-    bottom: 20px;       /* Nempel bawah */
-    width: 100px;
+    position: absolute; 
+    bottom: 20px;       
+    width: 90px;        /* Kunci lebar pembungkus */
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    /* KUNCI ANIMASI */
-    transition: all 0.6s ease-in-out;
+    transition: all 0.5s ease-in-out; /* Transisi animasi mulus */
     z-index: 1;
 }
 
 .file-wrap img {
-    width: 100%;
-    height: auto;
+    width: 100% !important;
+    max-height: 110px !important; /* Batas tinggi agar tidak menjulang raksasa */
+    object-fit: contain; /* Gambar tidak gepeng */
     display: block;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
     border-radius: 4px;
@@ -36,40 +38,38 @@
 }
 
 .file-label {
-    margin-top: 5px;
+    margin-top: 8px;
     font-size: 12px;
     font-weight: bold;
     color: #666;
 }
 
 /* ===============================
-   STATE VISUALISASI
+   3. STATE VISUALISASI
    =============================== */
-
-/* 1. KEY (FILE YANG DIPEGANG) */
 .file-wrap.is-key {
-    z-index: 10;             /* Paling depan */
-    transform: scale(1.1);   /* Membesar, tidak naik */
+    z-index: 10;
+    bottom: 50px; /* Kartu diangkat ke atas */
+    transform: scale(1.05); 
 }
 
 .file-wrap.is-key img {
-    border: 3px solid #8e44ad; /* Border ungu */
+    border: 3px solid #8e44ad; 
     box-shadow: 0 0 15px rgba(142, 68, 173, 0.4);
 }
 
 .file-wrap.is-key::after {
-    content: 'KEY';
+    content: 'TARGET';
     position: absolute;
     top: -26px;
     background: #8e44ad;
     color: white;
-    padding: 2px 8px;
+    padding: 3px 10px;
     border-radius: 4px;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: bold;
 }
 
-/* 2. AREA TERURUT (HIJAU) */
 .file-wrap.is-sorted::before {
     content: '';
     position: absolute;
@@ -80,7 +80,6 @@
     border-radius: 2px;
 }
 
-/* 3. SEDANG DIBANDINGKAN (KUNING) */
 .file-wrap.comparing {
     transform: scale(1.05);
     z-index: 50;
@@ -91,30 +90,32 @@
 }
 
 /* ===============================
-   TOMBOL AKSI
+   4. UI CARD PENJELASAN & TOMBOL
    =============================== */
+.sim-card { background: #fff; border-radius: 14px; border: 1px solid #eee; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+.sim-header { padding: 15px 20px; border-bottom: 1px solid #f2f2f2; }
+.sim-body { padding: 20px; }
+
 .action-buttons {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 12px;
     margin-top: 20px;
 }
 
 .btn-sim {
-    padding: 8px 20px;
+    padding: 10px 22px;
+    border-radius: 6px;
     border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    color: white;
-    background: #95a5a6;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
-}
-
-.btn-sim.active {
+    transition: 0.2s;
     background: #3498db;
+    color: #fff;
 }
+.btn-sim:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+.btn-tukar { background: #0dcaf0; } 
+.btn-stay { background: #fca130; }  
 
-.btn-sim.btn-swap {
-    background: #e67e22;
-}
+.fade-in { animation: fadeIn 0.4s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }

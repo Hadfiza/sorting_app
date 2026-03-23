@@ -64,17 +64,20 @@
     border: 2px solid #90caf9;
 }
 
-/* Jika Anda pakai gambar buku, sesuaikan class ini */
 .book-img-wrap {
     padding: 5px;
     border-radius: 8px;
-    transition: transform 0.3s;
+    position: relative; /* Tambahkan ini */
+    transition: all 0.6s ease-in-out; /* Ubah 'transform' menjadi 'all' */
+    z-index: 1; /* Posisi normal di bawah */
 }
+
 .book-img-wrap.comparing {
     transform: scale(1.15);
     background: #fff3cd; /* Kuning highlight */
     border: 2px solid #ffc107;
     box-shadow: 0 0 10px rgba(255, 193, 7, 0.4);
+    z-index: 10; /* Buku yang disorot berada di lapisan teratas saat bergeser */
 }
 
 /* BUTTONS GROUP */

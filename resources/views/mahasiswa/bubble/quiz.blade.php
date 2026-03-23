@@ -449,7 +449,7 @@ function updateDragAnswer(nomor) {
 
     document.getElementById(`ans-q${nomor}`).value = JSON.stringify(arr);
 
-    // 🔥 INI WAJIB
+    //  INI WAJIB
     markAnswered(nomor);
 }
 

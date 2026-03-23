@@ -1,402 +1,238 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const materiPages = document.querySelectorAll('.materi-page');
-    if (materiPages.length === 0) return; 
-
-    const submenuPages = document.querySelectorAll('.submenu-page');
-    let materiIndex = 0;
-    const btnPrev = document.getElementById('btnPrev');
-    const btnNext = document.getElementById('btnNext');
-
-    function updateSidebarActive(index) {
-        submenuPages.forEach(link => {
-            link.classList.toggle(
-                'active-sub',
-                Number(link.dataset.index) === index
-            );
-        });
-    }
-
-    function tampilMateri(i) {
-        materiPages.forEach((page, idx) => {
-            page.classList.toggle('d-none', idx !== i);
-        });
-
-        materiIndex = i;
-        updateSidebarActive(i);
-        updateButtonState();
-
-        // 🔥 INIT EDITOR SAAT HALAMAN PROGRAM
-        if (materiPages[i].querySelector('#code')) {
-            setTimeout(() => {
-                initPythonEditor();
-                editor.refresh(); // WAJIB
-            }, 50);
-        }
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-
-    function updateButtonState() {
-        if (btnPrev) btnPrev.disabled = materiIndex === 0;
-        if (btnNext) btnNext.disabled = materiIndex === materiPages.length - 1;
-    }
-
-    window.goMateri = function(i){ tampilMateri(i); }
-    window.nextMateri = function(){
-        if (materiIndex < materiPages.length - 1) {
-            tampilMateri(materiIndex + 1);
-        }
-    }
-    window.prevMateri = function(){
-        if (materiIndex > 0) {
-            tampilMateri(materiIndex - 1);
-        }
-    }
-
-    // Init halaman pertama
-    tampilMateri(0);
-    
-
-    // JALANKAN EDITOR
-    initPythonEditor();
-});
-
-
-
-// Simulasi
+// =========================================================
+// BAGIAN 2: LOGIKA SIMULASI INSERTION SORT (KARTU NAMA)
+// =========================================================
 
 const IMG_PATH = window.IMG_PATH || '';
+const initialData = ['Sinta', 'Budi', 'Yahya', 'Akmal', 'Fitri'];
 
-/* ===============================
-   DATA AWAL Nama kartu meja
-   =============================== */
-const initialData = [
-    { id: 'f1', val: 'SINTA' },
-    { id: 'f2', val: 'AKMAL' },
-    { id: 'f3', val: 'FITRI' },
-    { id: 'f4', val: 'BUDI' },
-    { id: 'f5', val: 'YAHYA' }
-];
+let arr = [...initialData];
+let i = 1;              // Indeks target sisip
+let j = 0;              // Indeks pembanding
+let keyVal = '';        // Nama kartu yang diangkat
+let holeIdx = 1;        // Posisi ruang kosong
+let isProcessing = false;
 
-/* ===============================
-   CONFIG LAYOUT
-   =============================== */
-const FILE_WIDTH = 100;
-const GAP = 40;
-
-/* ===============================
-   GLOBAL STATE
-   =============================== */
-let arr = [];
-let i = 1;
-let j = 0;
-let keyObj = null;
-let currentCardId = null;
-
-const STATE = {
-    PICK_KEY: 'PICK_KEY',
-    COMPARE: 'COMPARE',
-    SHIFT: 'SHIFT',
-    INSERT: 'INSERT',
-    FINISHED: 'FINISHED'
-};
-
-let currentState = STATE.PICK_KEY;
 let container = document.getElementById('simulation-container');
 
-/* ===============================
-   UTIL – POSISI TENGAH
-   =============================== */
-function getCenteredLeft(index, total) {
-    const totalWidth = total * FILE_WIDTH + (total - 1) * GAP;
-    const startX = (container.clientWidth - totalWidth) / 2;
-    return startX + index * (FILE_WIDTH + GAP);
-}
-
-/* ===============================
-   RESET
-   =============================== */
 function resetSimulation() {
-    container.innerHTML = '';
+    container = document.getElementById('simulation-container');
     const finishMsg = document.getElementById('finish-message');
-    if (finishMsg) finishMsg.style.display = 'none';
+    
+    container.innerHTML = '';
+    if(finishMsg) finishMsg.style.display = 'none';
 
-    arr = initialData.map(item => ({ ...item }));
+    arr = [...initialData];
     i = 1;
     j = 0;
-    keyObj = null;
-    currentState = STATE.PICK_KEY;
+    keyVal = arr[1];
+    holeIdx = 1;
+    isProcessing = false;
 
     nextStep();
 }
 
-/* ===============================
-   STATE MACHINE
-   =============================== */
 function nextStep() {
-    if (currentState === STATE.FINISHED) {
-        document.getElementById('finish-message').style.display = 'block';
-        if (currentCardId) disableButtonsInCard(currentCardId);
+    if(!container) container = document.getElementById('simulation-container');
+    
+    if (i >= arr.length) {
+        showFinishMessage();
         return;
     }
 
-    let text = '';
-    let btnLabel = '';
-    let btnFunc = '';
-    let btnClass = 'btn-sim active';
+    let valSorted = arr[j]; 
+    let cardIdSuffix = `${i}-${j}`;
 
-    let vState = {
-        keyId: keyObj ? keyObj.id : null,
-        compareIndex: -1,
-        sortedLimit: i - 1
-    };
+    let explanationText = `
+        <div class="mb-2"><span class="badge bg-primary">Iterasi ke-${i}</span></div>
+        Bandingkan <strong>${keyVal}</strong> dengan <strong>${valSorted}</strong>.<br>
+        Pilih langkah yang paling tepat sesuai algoritma insertion sort (ascending).
+    `;
 
-    switch (currentState) {
+    let btn1HTML = `<button class="btn-sim btn-tukar fw-bold" onclick="checkAnswer(true, '${keyVal}', '${valSorted}', '${cardIdSuffix}', event)"><i class="fa-solid fa-arrow-right me-1"></i> Ya, Perlu Digeser</button>`;
+    let btn2HTML = `<button class="btn-sim btn-stay fw-bold" onclick="checkAnswer(false, '${keyVal}', '${valSorted}', '${cardIdSuffix}', event)"><i class="fa-solid fa-thumbtack me-1"></i> Tidak, Sisipkan</button>`;
 
-        case STATE.PICK_KEY:
-            if (i >= arr.length) {
-                currentState = STATE.FINISHED;
-                nextStep();
-                return;
-            }
-
-            keyObj = arr[i];
-            j = i - 1;
-            arr[i] = null;
-
-            const snapshot = [...arr];
-            snapshot[i] = keyObj;
-
-            createNewCard(i, snapshot);
-
-            // text = `Sisipkan <b>KEY (${keyObj.val})</b> ke kiri`;
-            text = `
-            Ambil <b>KEY arsip(${keyObj.val})</b> untuk dibandingkan dengan arsip
-            bagian kiri yang sudah terurut
-            `;
-            btnLabel = 'Mulai Bandingkan';
-            btnFunc = 'startCompare()';
-
-            vState.keyId = keyObj.id;
-            break;
-
-        case STATE.COMPARE:
-
-            const leftValue = arr[j] ? arr[j].val : '-';
-
-            text = `
-            Perhatikan arsip di sebelah kiri.<br><br>
-            Apakah <b>${leftValue}</b> secara alfabet 
-            lebih besar dari <b>${keyObj.val}</b> ?
-            `;
-
-            btnLabel = `
-                <button class="btn-sim btn-yes" onclick="answerCompare(true)">Ya</button>
-                <button class="btn-sim btn-no" onclick="answerCompare(false)">Tidak</button>
-            `;
-
-            btnFunc = null;
-            vState.keyId = keyObj.id;
-            vState.compareIndex = j;
-
-            break;
-
-
-
-        case STATE.SHIFT:
-            // text = `Karena <b>${arr[j].val}</b> > <b>${keyObj.val}</b>, geser file ke kanan`;
-            text = `
-            Karena <b>${arr[j].val}</b> secara alfabet lebih besar dari
-            <b>${keyObj.val}</b>, maka file disisipkan ke kanan
-            `;
-            btnLabel = 'Sisipkan';
-            btnFunc = 'executeShift()';
-            btnClass = 'btn-sim btn-swap';
-
-            vState.keyId = keyObj.id;
-            vState.compareIndex = j;
-            break;
-
-        case STATE.INSERT:
-            // text = `Sisipkan <b>KEY (${keyObj.val})</b> ke indeks <b>${j + 1}</b>`;
-            text = `
-            <b>KEY (${keyObj.val})</b> sudah berada pada posisi yang benar,
-            sehingga tidak perlu disisipkan
-            `;
-            btnLabel = 'Sisipkan';
-            btnFunc = 'executeInsert()';
-
-            vState.keyId = keyObj.id;
-            break;
-    }
-
-    updateVisuals(text, btnLabel, btnFunc, btnClass, vState);
-}
-
-/* ===============================
-            AKSI TOMBOL
-   =============================== */
-function startCompare() {
-    currentState = STATE.COMPARE;
-    nextStep();
-}
-
-function checkCondition() {
-    if (
-        j >= 0 &&
-        arr[j] &&
-        arr[j].val.localeCompare(keyObj.val, 'id') > 0
-    ) {
-        currentState = STATE.SHIFT;
-    } else {
-        currentState = STATE.INSERT;
-    }
-    nextStep();
-}
-
-function executeShift() {
-    arr[j + 1] = arr[j];
-    arr[j] = null;
-    j--;
-    currentState = STATE.COMPARE;
-    nextStep();
-}
-
-function executeInsert() {
-    arr[j + 1] = keyObj;
-    i++;
-    currentState = STATE.PICK_KEY;
-    disableButtonsInCard(currentCardId);
-    nextStep();
-}
-
-/* ===============================
-   VISUAL
-   =============================== */
-function createNewCard(iterIdx, data) {
-    if (currentCardId) disableButtonsInCard(currentCardId);
-    currentCardId = `card-${iterIdx}`;
-
-    const html = `
-    <div class="sim-card fade-in" id="${currentCardId}">
-        <div class="sim-header">
-            <b>Iterasi ke-${iterIdx}</b>
-            <p class="exp-text"></p>
-        </div>
+    const cardHTML = `
+    <div class="sim-card fade-in">
+        <div class="sim-header" style="font-size: 0.95rem; line-height: 1.5;">${explanationText}</div>
         <div class="sim-body">
-            <div class="file-container">
-                ${generateInitialDOM(data)}
+
+            <div class="file-container" id="container-${cardIdSuffix}">
+                ${renderFilesHTML([...arr], holeIdx, j, keyVal, cardIdSuffix)}
             </div>
-            <div class="action-buttons"></div>
+
+            <div class="action-buttons" id="action-btn-${cardIdSuffix}">
+                ${btn1HTML}
+                ${btn2HTML}
+            </div>
+
+            <div id="explanation-${cardIdSuffix}" class="mt-3 p-3 rounded-3 bg-success bg-opacity-10 border border-success border-opacity-25" style="display: none;">
+            </div>
+
         </div>
     </div>`;
 
-    container.insertAdjacentHTML('beforeend', html);
-}
+    container.insertAdjacentHTML('beforeend', cardHTML);
 
-function generateInitialDOM(data) {
-    const total = data.filter(Boolean).length;
-
-    return data.map((item, idx) => {
-        if (!item) return '';
-        const left = getCenteredLeft(idx, total);
-        return `
-        <div class="file-wrap" id="${currentCardId}-${item.id}" style="left:${left}px">
-            <img src="${IMG_PATH}${item.val.toLowerCase()}.png">
-            <span class="file-label">${item.val}</span>
-        </div>`;
-    }).join('');
-}
-
-function updateVisuals(text, btnLabel, btnFunc, btnClass, v) {
-    const card = document.getElementById(currentCardId);
-    if (!card) return;
-
-    card.querySelector('.exp-text').innerHTML = text;
-
-    // 🔥 FIX DI SINI
-    if (btnFunc) {
-        // kalau single button
-        card.querySelector('.action-buttons').innerHTML =
-            `<button class="${btnClass}" onclick="${btnFunc}">${btnLabel}</button>`;
-    } else {
-        // kalau multiple button (Ya / Tidak)
-        card.querySelector('.action-buttons').innerHTML = btnLabel;
-    }
-
-    const total = arr.filter(Boolean).length;
-
-    arr.forEach((item, idx) => {
-        if (!item) return;
-        const el = document.getElementById(`${currentCardId}-${item.id}`);
-        if (!el) return;
-
-        el.className = 'file-wrap';
-        el.style.left = `${getCenteredLeft(idx, total)}px`;
-
-        if (idx <= v.sortedLimit) el.classList.add('is-sorted');
-        if (idx === v.compareIndex) el.classList.add('comparing');
+    requestAnimationFrame(() => {
+        const lastCard = container.lastElementChild;
+        if (lastCard) lastCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
-
-    if (v.keyId) {
-        const keyEl = document.getElementById(`${currentCardId}-${v.keyId}`);
-        if (keyEl) {
-            keyEl.className = 'file-wrap is-key';
-            const target = currentState === STATE.PICK_KEY ? i : j + 1;
-            keyEl.style.left = `${getCenteredLeft(target, total)}px`;
-        }
-    }
 }
 
+function checkAnswer(userChoice, key, valSort, cardIdSuffix, event) {
+    if (isProcessing) return;
+    isProcessing = true;
 
-function disableButtonsInCard(id) {
-    const card = document.getElementById(id);
-    if (card) {
-        card.querySelector('.action-buttons').innerHTML =
-            `<small class="text-muted">✓ Selesai</small>`;
-    }
-}
+    // Logika Insertion Sort
+    let correctAnswer = (valSort > key); 
+    let expectedAction = correctAnswer ? 'GESER' : 'SISIP';
+    let chosenAction = userChoice ? 'GESER' : 'SISIP';
 
-function answerCompare(userChoice) {
+    const actionContainer = document.getElementById(`action-btn-${cardIdSuffix}`);
+    const explanationBox = document.getElementById(`explanation-${cardIdSuffix}`);
 
-    const condition =
-        j >= 0 &&
-        arr[j] &&
-        arr[j].val.localeCompare(keyObj.val, 'id') > 0;
-
-    if (userChoice === condition) {
-
-        Swal.fire({
-            icon: 'success',
-            title: 'Benar!',
-            timer: 800,
-            showConfirmButton: false
-        }).then(() => {
-
-            if (condition) {
-                currentState = STATE.SHIFT;
-            } else {
-                currentState = STATE.INSERT;
-            }
-
-            nextStep();
+    if (chosenAction === expectedAction) {
+        const btnLanjut = event.currentTarget;
+        const allBtns = actionContainer.querySelectorAll('.btn-sim');
+        allBtns.forEach(btn => {
+            btn.disabled = true;
+            btn.style.opacity = '0.6';
+            btn.style.cursor = 'not-allowed';
+            if (btn !== btnLanjut) btn.style.display = 'none'; 
         });
 
-    } else {
+        let explText = "";
+        if (expectedAction === 'GESER') {
+            explText = `
+                <div class="text-success fw-bold mb-2"><i class="fa-solid fa-circle-check fs-5 me-1 align-middle"></i> Analisis Tepat!</div>
+                <div class="text-dark" style="font-size: 0.9rem;">
+                    Secara alfabetis, abjad awal <strong>${valSort}</strong> lebih akhir daripada <strong>${key}</strong> (${valSort} > ${key}). 
+                    Oleh karena itu, Kartu ${valSort} wajib digeser ke kanan untuk memberikan ruang untuk menyisipkan kartu nama  ${key}.
+                </div>`;
+        } else {
+            explText = `
+                <div class="text-success fw-bold mb-2"><i class="fa-solid fa-circle-check fs-5 me-1 align-middle"></i> Analisis Tepat!</div>
+                <div class="text-dark" style="font-size: 0.9rem;">
+                    Secara alfabetis, abjad awal <strong>${valSort}</strong> lebih awal atau sama dengan <strong>${key}</strong>. 
+                    Pencarian posisi selesai. Kartu target (${key}) akan langsung disisipkan di sebelah kanannya.
+                </div>`;
+        }
 
+        explText += `
+            <div class="mt-3 text-end">
+                <button class="btn btn-sm btn-success px-4 rounded-pill fw-bold" onclick="proceedAnimation('${expectedAction}', '${cardIdSuffix}', event)">
+                    Jalankan Animasi <i class="fa-solid fa-play ms-1"></i>
+                </button>
+            </div>
+        `;
+
+        explanationBox.innerHTML = explText;
+        explanationBox.style.display = 'block';
+        isProcessing = false;
+
+    } else {
         Swal.fire({
             icon: 'error',
             title: 'Kurang Tepat',
-            text: 'Perhatikan kembali urutan alfabetnya.',
-            confirmButtonColor: '#d33'
+            text: 'Perhatikan urutan alfabetnya. Jika abjad nama di area hijau lebih akhir dari target (Misal S > B), maka ia wajib digeser ke kanan.',
+            confirmButtonColor: '#e74c3c'
+        }).then(() => {
+            isProcessing = false;
         });
-
     }
 }
 
+function proceedAnimation(action, cardIdSuffix, event) {
+    if (isProcessing) return;
+    isProcessing = true;
 
-/* ===============================
-   AUTO START
-   =============================== */
-setTimeout(nextStep, 400);
+    const btnLanjut = event.currentTarget;
+    btnLanjut.disabled = true;
+    btnLanjut.style.opacity = '0.6';
+    btnLanjut.style.cursor = 'not-allowed';
+
+    let startX = 20;  // Posisi mulai dari kiri dalam kontainer 670px
+    let gap = 130;    // Jarak lebar antar kartu
+
+    if (action === 'GESER') {
+        let elToShift = document.getElementById(`file-${cardIdSuffix}-${j}`);
+        let elKey = document.getElementById(`file-${cardIdSuffix}-key`);
+
+        if (elToShift) elToShift.style.left = `${(holeIdx * gap) + startX}px`;
+        if (elKey) elKey.style.left = `${(j * gap) + startX}px`;
+
+        setTimeout(() => {
+            arr[holeIdx] = arr[j]; 
+            holeIdx = j;           
+            j--;
+
+            if (j < 0) {
+                arr[holeIdx] = keyVal;
+                container.insertAdjacentHTML('beforeend', `<div class="text-center text-muted my-3" style="font-size:0.85rem; font-style:italic;">--- Kartu Nama ${keyVal} disisipkan di awal. Iterasi ${i} Selesai ---</div>`);
+                i++;
+                if(i < arr.length) { keyVal = arr[i]; holeIdx = i; j = i - 1; }
+            }
+            isProcessing = false;
+            nextStep();
+        }, 600); 
+    } 
+    else if (action === 'SISIP') {
+        let elKey = document.getElementById(`file-${cardIdSuffix}-key`);
+        
+        if (elKey) {
+            elKey.classList.remove('is-key');
+            elKey.classList.add('is-sorted');
+        }
+
+        setTimeout(() => {
+            arr[holeIdx] = keyVal; 
+            container.insertAdjacentHTML('beforeend', `<div class="text-center text-muted my-3" style="font-size:0.85rem; font-style:italic;">--- Kartu Nama ${keyVal} disisipkan. Iterasi ${i} Selesai ---</div>`);
+            
+            i++;
+            if(i < arr.length) { keyVal = arr[i]; holeIdx = i; j = i - 1; }
+            
+            isProcessing = false;
+            nextStep();
+        }, 600);
+    }
+}
+
+// --- RENDER HTML (KEMBALI KE VERSI BERSIH TANPA JS WRAPPER) ---
+function renderFilesHTML(arrData, currentHole, compareIdx, keyString, suffix) {
+    let html = '';
+    let startX = 20; 
+    let gap = 130; 
+
+    arrData.forEach((val, idx) => {
+        let leftPos = startX + (idx * gap);
+        
+        if (idx === currentHole) {
+            html += `
+            <div class="file-wrap is-key" id="file-${suffix}-key" style="left: ${leftPos}px;">
+                <img src="${IMG_PATH}${keyString.toLowerCase()}.png" alt="${keyString}">
+                <div class="file-label text-primary">${keyString}</div>
+            </div>`;
+        } else {
+            let cls = '';
+            if (idx === compareIdx) cls = 'comparing';
+            else if (idx < i) cls = 'is-sorted'; 
+
+            html += `
+            <div class="file-wrap ${cls}" id="file-${suffix}-${idx}" style="left: ${leftPos}px;">
+                <img src="${IMG_PATH}${val.toLowerCase()}.png" alt="${val}">
+                <div class="file-label">${val}</div>
+            </div>`;
+        }
+    });
+
+    return html;
+}
+
+function showFinishMessage() {
+    const finishMsg = document.getElementById('finish-message');
+    if(finishMsg) finishMsg.style.display = 'block';
+    window.scrollTo(0, document.body.scrollHeight);
+}
+
+// --- AUTO START ---
+resetSimulation();
