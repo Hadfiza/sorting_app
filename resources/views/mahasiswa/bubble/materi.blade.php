@@ -127,7 +127,7 @@
 </div>
 
 <div class="materi-page">
-    {{-- MATERI ASLI 1: TUJUAN PEMBELAJARAN --}}
+    {{-- MATERI 1: TUJUAN PEMBELAJARAN --}}
     <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
             <h5 class="card-title">Tujuan Pembelajaran</h5> 
@@ -140,7 +140,7 @@
         </div>
     </div>
 
-    {{-- MATERI ASLI 2: PENGERTIAN --}}
+    {{-- MATERI 2: PENGERTIAN --}}
     <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
             <div class="materi-header">
@@ -155,7 +155,7 @@
         </div>
     </div>
 
-    {{-- TAMBAHAN: ILUSTRASI VISUALISASI INTERAKTIF --}}
+    {{-- ILUSTRASI VISUALISASI INTERAKTIF --}}
     <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
             <div class="materi-header">
@@ -169,8 +169,7 @@
                     <span>Space Complexity: O(1)</span>
                 </div>
 
-                <div id="visualizer-content" class="visualizer-area">
-                    </div>
+                <div id="visualizer-content" class="visualizer-area"></div>
 
                 <div class="legend-row">
                     <div class="legend-item"><div class="color-box" style="background: #f85149;"></div> Belum Terurut</div>
@@ -205,14 +204,101 @@
             </p>
         </div>
     </div>
-</div>
+
+    <div class="card mb-4 materi-box mt-4" id="quizActivity">
+        <div class="card-body materi-text">
+
+            <div class="materi-header mb-3">
+                <span class="materi-badge">Aktivitas 2.1: Uji Pemahaman</span>
+            </div>
+
+            <p class="card-text mb-4 text-danger fw-bold">
+                Jawablah pertanyaan berikut secara berurutan dengan benar untuk membuka akses ke materi selanjutnya!
+            </p>
+
+            <div class="quiz-container">
+                <div class="mb-4 fade-in" id="q1-container">
+                    <p class="fw-semibold mb-2">1. Bagaimana prinsip utama cara kerja algoritma Bubble Sort?</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq1" id="bq1a" value="A">
+                        <label class="form-check-label" for="bq1a">A. Membagi data menjadi dua bagian yang lebih kecil secara terus menerus</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq1" id="bq1b" value="B">
+                        <label class="form-check-label" for="bq1b">B. Membandingkan dan menukar elemen yang bersebelahan jika urutannya salah</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq1" id="bq1c" value="C">
+                        <label class="form-check-label" for="bq1c">C. Mencari nilai terkecil dan meletakkannya di posisi paling awal</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq1" id="bq1d" value="D">
+                        <label class="form-check-label" for="bq1d">D. Menggabungkan dua array yang sudah terurut menjadi satu array</label>
+                    </div>
+                </div>
+
+                <div class="mb-4 fade-in d-none" id="q2-container">
+                    <p class="fw-semibold mb-2">2. Berdasarkan penjelasan materi, apa yang dijamin terjadi setelah satu kali iterasi (siklus) selesai dilakukan pada Bubble Sort (Ascending)?</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq2" id="bq2a" value="A">
+                        <label class="form-check-label" for="bq2a">A. Elemen terbesar akan berada di posisi paling akhir</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq2" id="bq2b" value="B">
+                        <label class="form-check-label" for="bq2b">B. Seluruh data langsung terurut dengan sempurna</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq2" id="bq2c" value="C">
+                        <label class="form-check-label" for="bq2c">C. Elemen terkecil akan berada di posisi paling akhir</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq2" id="bq2d" value="D">
+                        <label class="form-check-label" for="bq2d">D. Data terbagi menjadi dua kelompok besar dan kecil</label>
+                    </div>
+                </div>
+
+                <div class="mb-4 fade-in d-none" id="q3-container">
+                    <p class="fw-semibold mb-2">3. Jika terdapat n data, berapakah jumlah perbandingan yang dilakukan dalam satu iterasi?</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq3" id="bq3a" value="A">
+                        <label class="form-check-label" for="bq3a">A. n kali</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq3" id="bq3b" value="B">
+                        <label class="form-check-label" for="bq3b">B. n-1 kali</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq3" id="bq3c" value="C">
+                        <label class="form-check-label" for="bq3c">C. n+1 kali</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq3" id="bq3d" value="D">
+                        <label class="form-check-label" for="bq3d">D. n/2 kali</label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="bubbleQuizFeedback" class="alert d-none mt-3"></div>
+            <div class="text-start mt-3">
+                <button id="btnCheckBubbleQuiz" class="btn btn-primary d-none">
+                    Periksa Jawaban
+                </button>
+            </div>
+
+        </div>
+    </div>
+    </div>
 
 <div class="d-flex justify-content-center gap-3 mt-4 pt-3 border-top">
     <a href="#" class="btn btn-outline-secondary">Sebelumnya</a>
-    <a href="{{ route('mahasiswa.aktivitas.show',['bubble','simulasi']) }}" class="btn btn-primary">Selanjutnya</a>
+    
+    <a href="{{ route('mahasiswa.aktivitas.show',['bubble','simulasi']) }}" 
+       class="btn btn-success disabled" id="btnNextBubble" tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;">
+        Selanjutnya
+    </a>
 </div>
 
-{{-- SCRIPT VISUALISASI --}}
+{{-- LOGIKA ILUSTRASI --}}
 <script>
     let vData = [];
     const vCont = document.getElementById("visualizer-content");
@@ -268,6 +354,78 @@
     document.addEventListener('DOMContentLoaded', initV);
 </script>
 
+{{-- LOGIKA AKTIVITAS QUIZ --}}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const q1Inputs = document.querySelectorAll('input[name="bq1"]');
+    const q2Inputs = document.querySelectorAll('input[name="bq2"]');
+    const q3Inputs = document.querySelectorAll('input[name="bq3"]');
+    
+    const q2Container = document.getElementById('q2-container');
+    const q3Container = document.getElementById('q3-container');
+    const btnCheck = document.getElementById('btnCheckBubbleQuiz');
+    
+    const feedback = document.getElementById('bubbleQuizFeedback');
+    const btnNext = document.getElementById('btnNextBubble');
+
+    // Memunculkan soal 2 saat soal 1 dipilih
+    q1Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q2Container.classList.remove('d-none');
+        });
+    });
+
+    // Memunculkan soal 3 saat soal 2 dipilih
+    q2Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q3Container.classList.remove('d-none');
+        });
+    });
+
+    // Memunculkan tombol periksa saat soal 3 dipilih
+    q3Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            btnCheck.classList.remove('d-none');
+        });
+    });
+
+    // Pengecekan Jawaban Akhir
+    btnCheck.addEventListener('click', function() {
+        const q1 = document.querySelector('input[name="bq1"]:checked');
+        const q2 = document.querySelector('input[name="bq2"]:checked');
+        const q3 = document.querySelector('input[name="bq3"]:checked');
+
+        if (!q1 || !q2 || !q3) {
+            feedback.className = 'alert alert-warning mt-3';
+            feedback.innerHTML = 'Harap pilih jawaban untuk semua soal terlebih dahulu!';
+            feedback.classList.remove('d-none');
+            return;
+        }
+
+        let correctCount = 0;
+        if (q1.value === 'B') correctCount++; 
+        if (q2.value === 'A') correctCount++; 
+        if (q3.value === 'B') correctCount++; 
+
+        if (correctCount === 3) {
+            feedback.className = 'alert alert-success mt-3';
+            feedback.innerHTML = '<strong>Luar Biasa!</strong> Pemahaman Anda tentang Bubble Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
+            feedback.classList.remove('d-none');
+            
+            btnNext.classList.remove('disabled');
+            btnNext.removeAttribute('tabindex');
+            btnNext.removeAttribute('aria-disabled');
+            btnNext.style.pointerEvents = 'auto'; 
+            btnNext.style.opacity = '1';          
+
+        } else {
+            feedback.className = 'alert alert-danger mt-3';
+            feedback.innerHTML = '<strong>Kurang Tepat!</strong> Ada jawaban yang masih salah. Coba baca kembali materi di atas.';
+            feedback.classList.remove('d-none');
+        }
+    });
+});
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>

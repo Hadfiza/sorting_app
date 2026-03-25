@@ -1,6 +1,6 @@
 @extends('layouts.hlmns')
 
-@section('title','BubbleSort')
+@section('title','Kode Program BubbleSort')
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/bubble.css') }}">
@@ -102,10 +102,38 @@
     border-radius: 4px;
     font-weight: bold;
 }
+
+/* === KODE TAMBAHAN DARI AI MULAI: CSS INPUT KODE === */
+.code-input {
+    background: #2d2d2d;
+    border: 1px solid #555;
+    color: #569cd6; /* Warna font biru ala VSCode */
+    font-family: 'Courier New', monospace;
+    padding: 2px 6px;
+    border-radius: 4px;
+    outline: none;
+    font-size: 14px;
+    transition: 0.3s ease;
+}
+
+.code-input:focus {
+    border-color: #007acc;
+    background: #1e1e1e;
+}
+
+.code-input.correct {
+    border-color: #28a745 !important;
+    background: rgba(40, 167, 69, 0.2) !important;
+    color: #28a745;
+}
+
+.code-input.wrong {
+    border-color: #dc3545 !important;
+    background: rgba(220, 53, 69, 0.2) !important;
+    color: #dc3545;
+}
+/* === KODE TAMBAHAN DARI AI SELESAI === */
 </style>
-
-@section('content')
-
 
 <div class="card title-card mb-4">
     <div class="card-body">
@@ -152,8 +180,8 @@
                     </pre>
                     </div>
             </div>
-            
-            <p>Penjelasan:</p>
+
+            {{-- <p>Penjelasan:</p>
              <ul>
                 <li>
                     Baris <code>def bubblesort(list)</code> : Menyatakan bahwa program mendefinisikan sebuah fungsi bernama <code>bubblesort</code> yang menerima satu parameter berupa list angka yang akan diurutkan.
@@ -173,13 +201,12 @@
                 <li>
                     <strong>Pemanggilan fungsi & keluaran</strong> : Pada bagian akhir program, list awal didefinisikan (<code>angka = [4, 2, 5, 1, 3]</code>), kemudian fungsi <code>bubblesort(angka)</code> dipanggil untuk menjalankan proses pengurutan dan menampilkan hasil sebelum serta sesudah sorting.
                 </li>
-            </ul>
+            </ul> --}}
 
             <hr class="my-4">
 
             <h5 class="fw-bold">Penjelasan Per Blok</h5>
 
-            <!-- BLOK 1 -->
             <div class="mb-4">
                 <h6 class="fw-semibold">1. Deklarasi Fungsi</h6>
 
@@ -196,7 +223,6 @@
             </div>
 
 
-            <!-- BLOK 2 -->
             <div class="mb-4">
                 <h6 class="fw-semibold">2. Perulangan Luar (Outer Loop)</h6>
 
@@ -214,7 +240,6 @@
             </div>
 
 
-            <!-- BLOK 3 -->
             <div class="mb-4">
                 <h6 class="fw-semibold">3. Perulangan Dalam (Inner Loop)</h6>
 
@@ -232,7 +257,6 @@
             </div>
 
 
-            <!-- BLOK 4 -->
             <div class="mb-4">
                 <h6 class="fw-semibold">4. Proses Pertukaran (Swap)</h6>
 
@@ -285,13 +309,39 @@
                     </li>
                 </ul>
             </div>
-
-                        
         </div>
     </div>
 
 
+    <div class="card mb-4 materi-box mt-4" id="fillCodeActivity">
+        <div class="card-body materi-text">
+            <div class="materi-header mb-3">
+                <i class="fas fa-keyboard"></i>
+                <span class="materi-badge">Aktivitas 2.2: Melengkapi Kode Program</span>
+            </div>
+            
+            <p class="card-text mb-4 text-danger fw-bold">
+                Sebelum lanjut, lengkapi bagian kode yang kosong di bawah ini dengan benar untuk membuka akses ke Quiz!
+            </p>
 
+            <div class="code-container" style="background: #1e1e1e; padding: 20px; border-radius: 8px; color: #d4d4d4; font-family: 'Courier New', monospace; font-size: 14px; line-height: 2;">
+                <span style="color: #569cd6;">def</span> <span style="color: #dcdcaa;">bubblesort</span>(list):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">for</span> i <span style="color: #c586c0;">in</span> <span style="color: #dcdcaa;">range</span>(<input type="text" id="blank1" class="code-input" placeholder="..." style="width: 130px;">, <span style="color: #b5cea8;">0</span>, <span style="color: #b5cea8;">-1</span>): <span style="color: #6a9955;"># Tentukan panjang iterasi berdasarkan list</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">for</span> j <span style="color: #c586c0;">in</span> <span style="color: #dcdcaa;">range</span>(<span style="color: #b5cea8;">0</span>, i, <span style="color: #b5cea8;">1</span>):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">if</span> list[j] <input type="text" id="blank2" class="code-input" placeholder="..." style="width: 40px; text-align: center;"> list[j+1]: <span style="color: #6a9955;"># Kondisi pertukaran (Ascending)</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp = list[j+1]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;list[j+1] = list[j]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;list[j] = <input type="text" id="blank3" class="code-input" placeholder="..." style="width: 80px;"> <span style="color: #6a9955;"># Selesaikan logika swap</span><br>
+            </div>
+
+            <div id="fillCodeFeedback" class="alert d-none mt-3"></div>
+            <div class="text-start mt-3">
+                <button id="btnCheckCode" class="btn btn-primary">
+                    Periksa Kode
+                </button>
+            </div>
+        </div>
+    </div>
     <div class="card mb-4">
         <div class="card-body materi-text">
             <p>Cobalah jalankan kode Bubble Sort di bawah ini untuk melihat bagaimana Python memproses datanya.</p>
@@ -300,7 +350,6 @@
                 <header class="editor-header">
                     <h1>Python Editor</h1>
                     <div>
-                        {{-- <span id="status" style="font-size: 0.8rem; color: #aaa;">⏳ Loading Pyodide...</span> --}}
                         <button id="runBtn" class="btn-run" disabled>▶ Run Code</button>
                     </div>
                 </header>
@@ -329,21 +378,78 @@
     </a>
 
     <a href="{{ route('mahasiswa.aktivitas.show',['bubble','quiz']) }}" 
-       class="btn btn-primary">
+       class="btn btn-success disabled" id="btnNextBubble" tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;">
         Lanjut Quiz
     </a>
-
-</div>
-
+    </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const btnCheckCode = document.getElementById('btnCheckCode');
+    const feedbackCode = document.getElementById('fillCodeFeedback');
+    const btnNext = document.getElementById('btnNextBubble');
+    const lockIcon = document.getElementById('lockIconBubble');
+
+    btnCheckCode.addEventListener('click', function() {
+        // Ambil nilai dan hilangkan spasi untuk mencegah error akibat spasi berlebih
+        const b1 = document.getElementById('blank1').value.replace(/\s+/g, ''); // Jawaban: len(list)-1
+        const b2 = document.getElementById('blank2').value.trim(); // Jawaban: >
+        const b3 = document.getElementById('blank3').value.trim(); // Jawaban: temp
+
+        let correctCount = 0;
+
+        // Validasi Blank 1
+        if (b1 === 'len(list)-1') {
+            document.getElementById('blank1').className = 'code-input correct';
+            correctCount++;
+        } else {
+            document.getElementById('blank1').className = 'code-input wrong';
+        }
+
+        // Validasi Blank 2
+        if (b2 === '>') {
+            document.getElementById('blank2').className = 'code-input correct';
+            correctCount++;
+        } else {
+            document.getElementById('blank2').className = 'code-input wrong';
+        }
+
+        // Validasi Blank 3
+        if (b3 === 'temp') {
+            document.getElementById('blank3').className = 'code-input correct';
+            correctCount++;
+        } else {
+            document.getElementById('blank3').className = 'code-input wrong';
+        }
+
+        // Output Feedback
+        if (correctCount === 3) {
+            feedbackCode.className = 'alert alert-success mt-3';
+            feedbackCode.innerHTML = '<i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Logika Anda sangat tepat. Tombol Lanjut Quiz telah dibuka. Silakan coba kode ini pada Live Editor di bawah!';
+            feedbackCode.classList.remove('d-none');
+            
+            // Buka gembok tombol Selanjutnya
+            btnNext.classList.remove('disabled');
+            btnNext.removeAttribute('tabindex');
+            btnNext.removeAttribute('aria-disabled');
+            btnNext.style.pointerEvents = 'auto';
+            btnNext.style.opacity = '1';          
+            lockIcon.className = 'fa-solid fa-unlock me-1';
+        } else {
+            feedbackCode.className = 'alert alert-danger mt-3';
+            feedbackCode.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> <strong>Kurang Tepat!</strong> Ada bagian kode yang salah (kotak warna merah). Perhatikan kembali materi dan logika pertukaran datanya.';
+            feedbackCode.classList.remove('d-none');
+        }
+    });
+});
+</script>
 <script>
 window.IMG_PATH = "{{ asset('images/buku') }}/";
 </script>
 <script src="{{ asset('js/editor.js') }}"></script>
-{{-- <script src="{{ asset('js/bubblesort.js') }}"></script> --}}
-
 
 @endsection

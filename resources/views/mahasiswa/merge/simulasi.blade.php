@@ -5,7 +5,7 @@
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/merge.css') }}">
 @endsection
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @section('content')
 
 
@@ -24,7 +24,7 @@
 </div>
 
 <!-- ===== Ilustrasi ===== -->
-<div class="materi-page d-none">
+<div class="materi-page">
     <div class="card mb-4">
         <div class="card-body materi-text">
             <div class="materi-header">

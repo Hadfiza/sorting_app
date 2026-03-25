@@ -159,7 +159,7 @@
         </div>
     </div>
 
-    {{-- TAMBAHAN: ILUSTRASI VISUALISASI --}}
+    {{-- ILUSTRASI VISUALISASI --}}
     <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
             <div class="materi-header">
@@ -210,12 +210,99 @@
             </p>
         </div>
     </div>
-</div>
+
+    <div class="card mb-4 materi-box mt-4" id="quizActivity">
+        <div class="card-body materi-text">
+
+            <div class="materi-header mb-3">
+                <span class="materi-badge">Aktivitas 2.1: Uji Pemahaman Selection Sort</span>
+            </div>
+
+            <p class="card-text mb-4 text-danger fw-bold">
+                Jawablah pertanyaan berikut secara berurutan dengan benar untuk membuka akses ke materi selanjutnya!
+            </p>
+
+            <div class="quiz-container">
+                <div class="mb-4 fade-in" id="q1-container">
+                    <p class="fw-semibold mb-2">1. Bagaimana prinsip utama cara kerja algoritma Selection Sort (Ascending)?</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq1" id="sq1a" value="A">
+                        <label class="form-check-label" for="sq1a">A. Membandingkan elemen bersebelahan dan menukarnya secara terus menerus.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq1" id="sq1b" value="B">
+                        <label class="form-check-label" for="sq1b">B. Memilih elemen terkecil dari data yang belum terurut dan menempatkannya di posisi awal.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq1" id="sq1c" value="C">
+                        <label class="form-check-label" for="sq1c">C. Memecah data menjadi dua bagian hingga tersisa satu elemen.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq1" id="sq1d" value="D">
+                        <label class="form-check-label" for="sq1d">D. Menyisipkan elemen ke posisi yang tepat pada bagian yang sudah terurut.</label>
+                    </div>
+                </div>
+
+                <div class="mb-4 fade-in d-none" id="q2-container">
+                    <p class="fw-semibold mb-2">2. Berapa jumlah maksimal pertukaran (swap) yang dilakukan Selection Sort untuk mengurutkan n data?</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq2" id="sq2a" value="A">
+                        <label class="form-check-label" for="sq2a">A. n kali</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq2" id="sq2b" value="B">
+                        <label class="form-check-label" for="sq2b">B. n - 1 kali</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq2" id="sq2c" value="C">
+                        <label class="form-check-label" for="sq2c">C. n² kali</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq2" id="sq2d" value="D">
+                        <label class="form-check-label" for="sq2d">D. n/2 kali</label>
+                    </div>
+                </div>
+
+                <div class="mb-4 fade-in d-none" id="q3-container">
+                    <p class="fw-semibold mb-2">3. Mengapa kompleksitas waktu Selection Sort tetap O(n²) meskipun jumlah pertukarannya lebih sedikit dari Bubble Sort?</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq3" id="sq3a" value="A">
+                        <label class="form-check-label" for="sq3a">A. Karena memerlukan ruang memori tambahan yang besar untuk menyimpan nilai minimum.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq3" id="sq3b" value="B">
+                        <label class="form-check-label" for="sq3b">B. Karena algoritma ini tetap melakukan proses pencarian minimum pada setiap iterasi yang membandingkan semua sisa elemen.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq3" id="sq3c" value="C">
+                        <label class="form-check-label" for="sq3c">C. Karena array selalu dipecah menjadi dua bagian yang tidak seimbang.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq3" id="sq3d" value="D">
+                        <label class="form-check-label" for="sq3d">D. Karena pertukaran selalu dilakukan dengan elemen yang berada di posisi paling akhir.</label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="selectionQuizFeedback" class="alert d-none mt-3"></div>
+            <div class="text-start mt-3">
+                <button id="btnCheckSelectionQuiz" class="btn btn-primary d-none">
+                    Periksa Jawaban
+                </button>
+            </div>
+
+        </div>
+    </div>
+    </div>
 
 <div class="d-flex justify-content-center gap-3 mt-4 pt-3 border-top">
     <a href="#" class="btn btn-outline-secondary">Sebelumnya</a>
-    <a href="{{ route('mahasiswa.aktivitas.show',['selection','simulasi']) }}" class="btn btn-primary">Selanjutnya</a>
-</div>
+    
+    <a href="{{ route('mahasiswa.aktivitas.show',['selection','simulasi']) }}" 
+       class="btn btn-success disabled" id="btnNextSelection" tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;">
+        Selanjutnya
+    </a>
+    </div>
 
 {{-- SCRIPT VISUALISASI SELECTION SORT --}}
 <script>
@@ -285,17 +372,83 @@
         renderS(-1, -1, sortedIndices);
         sResetBtn.disabled = false;
         
-        Swal.fire({
-            title: 'Selesai!',
-            text: 'Selection Sort berhasil divisualisasikan.',
-            icon: 'success',
-            timer: 2000
-        });
+        // Menghapus sweetalert "Selesai!" agar tidak ada alert bawaan.
     }
 
     document.addEventListener('DOMContentLoaded', initS);
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const q1Inputs = document.querySelectorAll('input[name="sq1"]');
+    const q2Inputs = document.querySelectorAll('input[name="sq2"]');
+    const q3Inputs = document.querySelectorAll('input[name="sq3"]');
+    
+    const q2Container = document.getElementById('q2-container');
+    const q3Container = document.getElementById('q3-container');
+    const btnCheck = document.getElementById('btnCheckSelectionQuiz');
+    
+    const feedback = document.getElementById('selectionQuizFeedback');
+    const btnNext = document.getElementById('btnNextSelection');
+
+    // Memunculkan soal 2 saat soal 1 dipilih
+    q1Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q2Container.classList.remove('d-none');
+        });
+    });
+
+    // Memunculkan soal 3 saat soal 2 dipilih
+    q2Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q3Container.classList.remove('d-none');
+        });
+    });
+
+    // Memunculkan tombol periksa saat soal 3 dipilih
+    q3Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            btnCheck.classList.remove('d-none');
+        });
+    });
+
+    // Pengecekan Jawaban Akhir
+    btnCheck.addEventListener('click', function() {
+        const q1 = document.querySelector('input[name="sq1"]:checked');
+        const q2 = document.querySelector('input[name="sq2"]:checked');
+        const q3 = document.querySelector('input[name="sq3"]:checked');
+
+        if (!q1 || !q2 || !q3) {
+            feedback.className = 'alert alert-warning mt-3';
+            feedback.innerHTML = 'Harap pilih jawaban untuk semua soal terlebih dahulu!';
+            feedback.classList.remove('d-none');
+            return;
+        }
+
+        let correctCount = 0;
+        if (q1.value === 'B') correctCount++; 
+        if (q2.value === 'B') correctCount++; 
+        if (q3.value === 'B') correctCount++; 
+
+        if (correctCount === 3) {
+            feedback.className = 'alert alert-success mt-3';
+            feedback.innerHTML = '<strong>Luar Biasa!</strong> Pemahaman Anda tentang Selection Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
+            feedback.classList.remove('d-none');
+            
+            btnNext.classList.remove('disabled');
+            btnNext.removeAttribute('tabindex');
+            btnNext.removeAttribute('aria-disabled');
+            btnNext.style.pointerEvents = 'auto'; 
+            btnNext.style.opacity = '1';          
+
+        } else {
+            feedback.className = 'alert alert-danger mt-3';
+            feedback.innerHTML = '<strong>Kurang Tepat!</strong> Ada jawaban yang masih salah. Coba baca kembali materi di atas.';
+            feedback.classList.remove('d-none');
+        }
+    });
+});
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>

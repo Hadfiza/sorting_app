@@ -160,7 +160,7 @@
         </div>
     </div>
 
-    {{-- TAMBAHAN: ILUSTRASI VISUALISASI INTERAKTIF --}}
+    {{-- ILUSTRASI VISUALISASI INTERAKTIF --}}
     <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
             <div class="materi-header">
@@ -214,12 +214,99 @@
             </p>
         </div>
     </div>
-</div>
+
+    <div class="card mb-4 materi-box mt-4" id="quizActivity">
+        <div class="card-body materi-text">
+
+            <div class="materi-header mb-3">
+                <span class="materi-badge">Aktivitas 2.1: Uji Pemahaman Insertion Sort</span>
+            </div>
+
+            <p class="card-text mb-4 text-danger fw-bold">
+                Jawablah pertanyaan berikut secara berurutan dengan benar untuk membuka akses ke materi selanjutnya!
+            </p>
+
+            <div class="quiz-container">
+                <div class="mb-4 fade-in" id="q1-container">
+                    <p class="fw-semibold mb-2">1. Bagaimana analogi yang paling tepat untuk menggambarkan cara kerja Insertion Sort?</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq1" id="iq1a" value="A">
+                        <label class="form-check-label" for="iq1a">A. Memilih nilai terkecil dari sisa data dan menaruhnya di awal.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq1" id="iq1b" value="B">
+                        <label class="form-check-label" for="iq1b">B. Menggelembungkan nilai terbesar ke posisi paling akhir secara bertahap.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq1" id="iq1c" value="C">
+                        <label class="form-check-label" for="iq1c">C. Menyusun kartu di tangan dengan menyisipkan kartu baru ke posisi yang tepat.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq1" id="iq1d" value="D">
+                        <label class="form-check-label" for="iq1d">D. Memecah barisan data menjadi dua bagian yang lebih kecil terus menerus.</label>
+                    </div>
+                </div>
+
+                <div class="mb-4 fade-in d-none" id="q2-container">
+                    <p class="fw-semibold mb-2">2. Mengapa Insertion Sort dianggap lebih efisien untuk data yang hampir terurut (nearly sorted)?</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq2" id="iq2a" value="A">
+                        <label class="form-check-label" for="iq2a">A. Karena jumlah pertukaran dan pergeseran elemen yang dibutuhkan menjadi sangat sedikit.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq2" id="iq2b" value="B">
+                        <label class="form-check-label" for="iq2b">B. Karena algoritma ini secara otomatis mengubah kompleksitas waktunya menjadi O(1).</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq2" id="iq2c" value="C">
+                        <label class="form-check-label" for="iq2c">C. Karena membagi data menjadi kelompok-kelompok kecil mempercepat proses komputasi.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq2" id="iq2d" value="D">
+                        <label class="form-check-label" for="iq2d">D. Karena algoritma ini tidak menggunakan proses perulangan bersarang (nested loop).</label>
+                    </div>
+                </div>
+
+                <div class="mb-4 fade-in d-none" id="q3-container">
+                    <p class="fw-semibold mb-2">3. Apa yang dilakukan algoritma Insertion Sort (Ascending) jika menemukan elemen di sebelah kiri yang lebih besar dari elemen yang disisipkan (key)?</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq3" id="iq3a" value="A">
+                        <label class="form-check-label" for="iq3a">A. Menghapus elemen yang lebih besar tersebut dari daftar.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq3" id="iq3b" value="B">
+                        <label class="form-check-label" for="iq3b">B. Menukar posisinya secara langsung dengan elemen yang paling akhir.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq3" id="iq3c" value="C">
+                        <label class="form-check-label" for="iq3c">C. Membatalkan proses pengurutan karena urutan dianggap salah dari awal.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq3" id="iq3d" value="D">
+                        <label class="form-check-label" for="iq3d">D. Menggeser elemen yang lebih besar ke kanan untuk memberi ruang bagi elemen key.</label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="insertionQuizFeedback" class="alert d-none mt-3"></div>
+            <div class="text-start mt-3">
+                <button id="btnCheckInsertionQuiz" class="btn btn-primary d-none">
+                    Periksa Jawaban
+                </button>
+            </div>
+
+        </div>
+    </div>
+    </div>
 
 <div class="d-flex justify-content-center gap-3 mt-4 pt-3 border-top">
     <a href="#" class="btn btn-outline-secondary">Sebelumnya</a>
-    <a href="{{ route('mahasiswa.aktivitas.show',['insertion','simulasi']) }}" class="btn btn-primary">Selanjutnya</a>
-</div>
+    
+    <a href="{{ route('mahasiswa.aktivitas.show',['insertion','simulasi']) }}" 
+       class="btn btn-success disabled" id="btnNextInsertion" tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;">
+        Selanjutnya
+    </a>
+    </div>
 
 {{-- SCRIPT VISUALISASI INSERTION SORT --}}
 <script>
@@ -288,17 +375,86 @@
         }
 
         iResetBtn.disabled = false;
-        Swal.fire({
-            title: 'Selesai!',
-            text: 'Insertion Sort berhasil diurutkan.',
-            icon: 'success',
-            timer: 2000
-        });
+        
+        // === KODE YANG DIEDIT AI MULAI: MENGHAPUS SWEETALERT ===
+        // Menghapus notifikasi SweetAlert "Selesai!" agar tidak mengganggu fokus.
+        // === KODE YANG DIEDIT AI SELESAI ===
     }
 
     document.addEventListener('DOMContentLoaded', initI);
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const q1Inputs = document.querySelectorAll('input[name="iq1"]');
+    const q2Inputs = document.querySelectorAll('input[name="iq2"]');
+    const q3Inputs = document.querySelectorAll('input[name="iq3"]');
+    
+    const q2Container = document.getElementById('q2-container');
+    const q3Container = document.getElementById('q3-container');
+    const btnCheck = document.getElementById('btnCheckInsertionQuiz');
+    
+    const feedback = document.getElementById('insertionQuizFeedback');
+    const btnNext = document.getElementById('btnNextInsertion');
+
+    // Memunculkan soal 2 saat soal 1 dipilih
+    q1Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q2Container.classList.remove('d-none');
+        });
+    });
+
+    // Memunculkan soal 3 saat soal 2 dipilih
+    q2Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q3Container.classList.remove('d-none');
+        });
+    });
+
+    // Memunculkan tombol periksa saat soal 3 dipilih
+    q3Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            btnCheck.classList.remove('d-none');
+        });
+    });
+
+    // Pengecekan Jawaban Akhir
+    btnCheck.addEventListener('click', function() {
+        const q1 = document.querySelector('input[name="iq1"]:checked');
+        const q2 = document.querySelector('input[name="iq2"]:checked');
+        const q3 = document.querySelector('input[name="iq3"]:checked');
+
+        if (!q1 || !q2 || !q3) {
+            feedback.className = 'alert alert-warning mt-3';
+            feedback.innerHTML = 'Harap pilih jawaban untuk semua soal terlebih dahulu!';
+            feedback.classList.remove('d-none');
+            return;
+        }
+
+        let correctCount = 0;
+        if (q1.value === 'C') correctCount++; // Jawaban: Menyusun kartu di tangan...
+        if (q2.value === 'A') correctCount++; // Jawaban: Jumlah pertukaran dan pergeseran sedikit...
+        if (q3.value === 'D') correctCount++; // Jawaban: Menggeser elemen yang lebih besar ke kanan...
+
+        if (correctCount === 3) {
+            feedback.className = 'alert alert-success mt-3';
+            feedback.innerHTML = 'Luar Biasa! Pemahaman Anda tentang Insertion Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
+            feedback.classList.remove('d-none');
+            
+            btnNext.classList.remove('disabled');
+            btnNext.removeAttribute('tabindex');
+            btnNext.removeAttribute('aria-disabled');
+            btnNext.style.pointerEvents = 'auto'; 
+            btnNext.style.opacity = '1';          
+
+        } else {
+            feedback.className = 'alert alert-danger mt-3';
+            feedback.innerHTML = 'Kurang Tepat! Ada jawaban yang masih salah. Coba baca kembali materi di atas.';
+            feedback.classList.remove('d-none');
+        }
+    });
+});
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
