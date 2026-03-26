@@ -104,6 +104,50 @@
     border-radius: 4px;
     font-weight: bold;
 }
+
+/* ========================================= */
+/* ===== TABEL SORTING MODERN =====          */
+/* ========================================= */
+.praktikum-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 16px;
+    font-size: 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.praktikum-table th {
+    background: #f8fafc;
+    color: #1e293b;
+    font-weight: 700;
+    padding: 12px;
+    text-align: center;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.praktikum-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #f1f5f9;
+    background: white;
+}
+
+.praktikum-table td:first-child,
+.praktikum-table th:first-child {
+    text-align: left;
+    font-weight: 600;
+}
+
+/* Gaya khusus untuk Big O notation */
+.praktikum-table td:not(:first-child) {
+    font-family: 'Courier New', Courier, monospace;
+    color: #2563eb;
+    font-weight: 700;
+}
+
 </style>
 
 <div class="card title-card mb-4">
@@ -144,6 +188,51 @@
                     style="max-width: 300px;"
                 >
             </div>
+
+            {{-- <div class="table-responsive">
+                <table class="praktikum-table">
+                    <thead>
+                        <tr>
+                            <th>Algoritma</th>
+                            <th>Best Case</th>
+                            <th>Average Case</th>
+                            <th>Worst Case</th>
+                            <th>Space Complexity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Bubble Sort</td>
+                            <td>O(n)</td>
+                            <td>O(n²)</td>
+                            <td>O(n²)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Selection Sort</td>
+                            <td>O(n²)</td>
+                            <td>O(n²)</td>
+                            <td>O(n²)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Insertion Sort</td>
+                            <td>O(n)</td>
+                            <td>O(n²)</td>
+                            <td>O(n²)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Merge Sort</td>
+                            <td>O(n log n)</td>
+                            <td>O(n log n)</td>
+                            <td>O(n log n)</td>
+                            <td>O(n)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>   --}}
+
             <p class="card-text text-justify">
                 Data mahasiswa yang tersedia seperti gambar diatas.<br>
                 Bagian akademik meminta Anda membuat program Python untuk:<br>

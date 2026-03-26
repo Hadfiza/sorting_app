@@ -1,8 +1,9 @@
 @extends('layouts.hlmns')
 
-@section('title','BubbleSort')
+@section('title','MergeSort')
 
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 {{-- ===========================================================
      CSS KHUSUS ILUSTRASI (Diambil dari kode simulasi Anda)
@@ -167,7 +168,8 @@
                     <h1>Python Editor</h1>
                     <div>
                         {{-- <span id="status" style="font-size: 0.8rem; color: #aaa;">⏳ Loading Pyodide...</span> --}}
-                        <button id="runBtn" class="btn-run" disabled>▶ Run Code</button>
+                        <button id="runBtn" class="btn-run" disabled>Run Code</button>
+                        <button id="submitBtn" class="btn-run" style="background:#007bff;">Submit</button>
                     </div>
                 </header>
                 <div class="split-container">
@@ -183,19 +185,26 @@
                 </div>
             </div>
         </div>
+
+        <div class="mt-4">
+            <label class="form-label"><strong>Penjelasan Kode</strong></label>
+            <textarea 
+                id="penjelasanMahasiswa"
+                class="form-control"
+                rows="4"
+                placeholder="Jelaskan bagaimana algoritma Bubble Sort Anda bekerja..."
+            ></textarea>
+        </div>
     </div>
 </div>
-
-
-
-
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
 <script>
-window.IMG_PATH = "{{ asset('images/buku') }}/";
+const PRAKTIKUM_ID = 4;
+const SUBMIT_URL = "{{ route('mahasiswa.praktikum.submit') }}";
 </script>
 <script src="{{ asset('js/editor.js') }}"></script>
 

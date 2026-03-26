@@ -154,3 +154,43 @@
     color: #555;
     margin-top: 10px;
 }
+
+
+
+
+
+.code-container {
+    background: #1e1e2f;
+    border-radius: 16px;
+    padding: 20px;
+    overflow-x: auto;
+}
+
+.code-box {
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    font-size: 15px;
+    line-height: 1.4;
+    color: #f8f8f2;
+    user-select: none;
+}
+
+.refleksi-alert {
+    background: #eef3ff;          /* biru lembut */
+    border: 1px solid #d6e2ff;
+    padding: 20px 25px;
+    border-radius: 12px;
+}
+
+.refleksi-alert h5 {
+    color: #1f3c88;
+}
+
+.refleksi-alert ul {
+    padding-left: 18px;
+}
+
+.refleksi-alert li {
+    line-height: 1.6;
+}
+

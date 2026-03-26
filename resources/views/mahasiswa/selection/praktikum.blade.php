@@ -164,14 +164,15 @@
 
     <div class="card mb-4">
         <div class="card-body materi-text">
-            <p>Cobalah jalankan kode Bubble Sort di bawah ini untuk melihat bagaimana Python memproses datanya.</p>
+            <p>Cobalah jalankan kode Selection Sort di bawah ini untuk melihat bagaimana Python memproses datanya.</p>
           
             <div class="live-editor">
                 <header class="editor-header">
                     <h1>Python Editor</h1>
                     <div>
                         {{-- <span id="status" style="font-size: 0.8rem; color: #aaa;">⏳ Loading Pyodide...</span> --}}
-                        <button id="runBtn" class="btn-run" disabled>▶ Run Code</button>
+                        <button id="runBtn" class="btn-run" disabled>Run Code</button>
+                        <button id="submitBtn" class="btn-run" style="background:#007bff;">Submit</button>
                     </div>
                 </header>
                 <div class="split-container">
@@ -187,19 +188,26 @@
                 </div>
             </div>
         </div>
+
+        <div class="mt-4">
+            <label class="form-label"><strong>Penjelasan Kode</strong></label>
+            <textarea 
+                id="penjelasanMahasiswa"
+                class="form-control"
+                rows="4"
+                placeholder="Jelaskan bagaimana algoritma Bubble Sort Anda bekerja..."
+            ></textarea>
+        </div>
     </div>
 </div>
-
-
-
-
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
 <script>
-window.IMG_PATH = "{{ asset('images/buku') }}/";
+const PRAKTIKUM_ID = 2;
+const SUBMIT_URL = "{{ route('mahasiswa.praktikum.submit') }}";
 </script>
 <script src="{{ asset('js/editor.js') }}"></script>
 

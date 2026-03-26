@@ -101,9 +101,39 @@
     border-radius: 4px;
     font-weight: bold;
 }
+
+/* === KODE TAMBAHAN DARI AI MULAI: CSS INPUT KODE === */
+.code-input {
+    background: #2d2d2d;
+    border: 1px solid #555;
+    color: #569cd6; 
+    font-family: 'Courier New', monospace;
+    padding: 2px 6px;
+    border-radius: 4px;
+    outline: none;
+    font-size: 14px;
+    transition: 0.3s ease;
+}
+
+.code-input:focus {
+    border-color: #007acc;
+    background: #1e1e1e;
+}
+
+.code-input.correct {
+    border-color: #28a745 !important;
+    background: rgba(40, 167, 69, 0.2) !important;
+    color: #28a745;
+}
+
+.code-input.wrong {
+    border-color: #dc3545 !important;
+    background: rgba(220, 53, 69, 0.2) !important;
+    color: #dc3545;
+}
+/* === KODE TAMBAHAN DARI AI SELESAI === */
 </style>
 
-<!-- ===== Judul Materi dengan Box ===== -->
 <div class="card title-card mb-4">
     <div class="card-body">
         <div class="d-flex align-items-center">
@@ -117,7 +147,6 @@
     </div>
 </div>
 
-<!-- ===== Program ===== -->
 <div class="materi-page">
         <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
@@ -126,53 +155,155 @@
                 <span class="materi-badge">Program InsertionSort</span>
             </div>
 
-            <div class="text-center my-4">
-                <img 
-                    src="{{ asset('images/insertion/insertion.png') }}" 
-                    alt="Code BubbleSort"
-                    class="img-fluid"
-                    style="max-width: 700px;"
-                >
+            <div class="my-4 text-start">
+                <div class="alert alert-warning mb-3">
+                    <strong>Instruksi:</strong> Amati kode berikut dengan saksama,
+                    kemudian ketik ulang pada fitur <em>Live Coding</em> di bawah tanpa melakukan copy–paste.
+                </div>
+
+                <div class="code-container">
+<pre class="code-box">
+def insertion_sort(data):
+    n = len(data)
+    for i in range(1, n):
+        key = data[i]
+        j = i - 1
+        
+        while j >= 0 and data[j] > key:
+            data[j + 1] = data[j]
+            j -= 1
+            
+        data[j + 1] = key
+        print(f"Hasil setelah langkah ke-{i}: {data}")
+
+angka = [4, 2, 5, 1, 3]
+print("Sebelum sorting:", angka)
+insertion_sort(angka)
+print("Setelah sorting:", angka)
+</pre>
+                </div>
             </div>
-            <p>Penjelasan:</p>
-            <ul>
-                <li>
-                    Baris <code>def insertion_sort(data)</code> : Menyatakan bahwa program mendefinisikan sebuah fungsi bernama <code>insertion_sort</code> yang menerima satu parameter berupa list angka yang akan diurutkan.
-                </li>
-                <li>
-                    Baris <code>n = len(data)</code> : Digunakan untuk menghitung panjang data dan menyimpan jumlah elemen pada list ke dalam variabel <code>n</code>, sehingga dapat digunakan dalam proses perulangan.
-                </li>
-                <li>
-                    Baris <code>for i in range(1, n)</code> : Merupakan perulangan utama yang mengatur proses pengurutan dimulai dari elemen kedua. Pada setiap iterasi, elemen ke-<code>i</code> akan disisipkan ke posisi yang benar pada bagian list sebelah kiri yang sudah terurut.
-                </li>
-                <li>
-                    Baris <code>key = data[i]</code> : Digunakan untuk menyimpan elemen yang sedang diproses dan akan dibandingkan serta disisipkan ke posisi yang sesuai. Elemen ini disebut sebagai <em>key</em>.
-                </li>
-                <li>
-                    Baris <code>j = i - 1</code> : Menyimpan indeks elemen sebelumnya (sebelah kiri <code>key</code>) yang akan digunakan untuk membandingkan dan menentukan posisi penyisipan.
-                </li>
-                <li>
-                    Baris <code>while j &gt;= 0 and data[j] &gt; key</code>, <code>data[j + 1] = data[j]</code>, dan <code>j -= 1</code> : Merupakan proses pergeseran elemen. Selama elemen di sebelah kiri lebih besar dari <code>key</code>, elemen tersebut akan digeser satu posisi ke kanan hingga ditemukan posisi yang tepat.
-                </li>
-                <li>
-                    Baris <code>data[j + 1] = key</code> : Digunakan untuk menyisipkan <code>key</code> ke posisi yang benar setelah semua elemen yang lebih besar digeser. Pada tahap ini, bagian kiri list kembali dalam keadaan terurut.
-                </li>
-                <li>
-                    Baris <code>print(f"Hasil setelah langkah ke-{i}: {data}")</code> : Menampilkan kondisi list setelah setiap langkah penyisipan selesai, sehingga mahasiswa dapat mengamati proses pengurutan secara bertahap.
-                </li>
-                <li>
-                    Pemanggilan fungsi & keluaran : Pada bagian akhir program, list awal didefinisikan (<code>angka = [4, 2, 5, 1, 3]</code>), kemudian fungsi <code>insertion_sort(angka)</code> dipanggil untuk menampilkan kondisi data sebelum dan sesudah proses pengurutan.
-                </li>
-            </ul>
+            
+            <hr class="my-4">
+
+            <h5 class="fw-bold">Penjelasan Per Blok</h5>
+
+            <div class="mb-4">
+                <h6 class="fw-semibold">1. Deklarasi Fungsi dan Panjang Data</h6>
+                <div class="code-container mt-2">
+<pre class="code-box"><code>
+<span>def insertion_sort(data):</span>
+<span>    n = len(data)</span>
+</code></pre>
+                </div>
+                <p class="mt-2">
+                    Baris ini mendefinisikan sebuah fungsi bernama <code>insertion_sort</code> yang menerima satu parameter berupa <code>data</code>. Variabel <code>n</code> digunakan untuk menghitung dan menyimpan total panjang atau jumlah elemen dari list tersebut agar dapat digunakan sebagai batas dalam proses perulangan.
+                </p>
+            </div>
+
+            <div class="mb-4">
+                <h6 class="fw-semibold">2. Perulangan Utama dan Penentuan Key</h6>
+                <div class="code-container mt-2">
+<pre class="code-box"><code>
+<span>for i in range(1, n):</span>
+<span>    key = data[i]</span>
+<span>    j = i - 1</span>
+</code></pre>
+                </div>
+                <p class="mt-2">
+                    Perulangan dimulai dari indeks <code>1</code> (elemen kedua), karena elemen di indeks <code>0</code> dianggap sudah berada di bagian yang terurut. Pada setiap iterasi, elemen ke-<code>i</code> disimpan ke dalam variabel <code>key</code>. Variabel <code>j</code> diatur menunjuk pada indeks tepat di sebelah kiri <code>key</code> untuk memulai proses perbandingan bergerak mundur.
+                </p>
+            </div>
+
+            <div class="mb-4">
+                <h6 class="fw-semibold">3. Perulangan Dalam (Proses Pergeseran)</h6>
+                <div class="code-container mt-2">
+<pre class="code-box"><code>
+<span>while j >= 0 and data[j] > key:</span>
+<span>    data[j + 1] = data[j]</span>
+<span>    j -= 1</span>
+</code></pre>
+                </div>
+                <p class="mt-2">
+                    Perulangan <code>while</code> akan terus berjalan selama <code>j</code> belum melewati batas kiri array (>= 0) <strong>dan</strong> elemen di kiri (<code>data[j]</code>) masih lebih besar dari nilai <code>key</code>. Jika kondisi ini terpenuhi, maka elemen yang lebih besar tersebut akan <strong>digeser satu posisi ke kanan</strong> (<code>data[j + 1] = data[j]</code>). Setelah itu, indeks <code>j</code> dikurangi 1 untuk membandingkan dengan elemen sebelumnya lagi.
+                </p>
+            </div>
+
+            <div class="mb-4">
+                <h6 class="fw-semibold">4. Penyisipan Key (Insert)</h6>
+                <div class="code-container mt-2">
+<pre class="code-box"><code>
+<span>data[j + 1] = key</span>
+<span>print(f"Hasil setelah langkah ke-{i}: {data}")</span>
+</code></pre>
+                </div>
+                <p class="mt-2">
+                    Setelah proses pergeseran dihentikan (artinya kita sudah menemukan elemen yang lebih kecil dari <code>key</code> atau sudah mencapai ujung paling kiri), kita <strong>menyisipkan</strong> nilai <code>key</code> ke posisi kosong yang telah disiapkan (<code>data[j + 1] = key</code>). Kemudian, sistem mencetak kondisi array untuk memantau perubahan secara bertahap.
+                </p>
+            </div>
+
+            <div class="refleksi-alert mt-4">
+                <h5 class="fw-bold mb-3">
+                    Refleksi Konseptual
+                </h5>
+
+                <p class="mb-3">
+                    Sebelum melanjutkan, pastikan Anda memahami hal berikut:
+                </p>
+
+                <ul class="mb-0">
+                    <li class="mb-3">
+                        <strong>Mengapa perulangan utama dimulai dari indeks 1, bukan 0?</strong><br>
+                        Karena prinsip dasar Insertion Sort adalah menganggap bahwa elemen pertama (indeks 0) sudah berada di kelompok yang terurut. Oleh karena itu, kita mulai mengambil elemen kedua (indeks 1) untuk disisipkan ke kelompok tersebut.
+                    </li>
+
+                    <li class="mb-3">
+                        <strong>Apa peran penting dari variabel <code>key</code>?</strong><br>
+                        Saat elemen yang lebih besar digeser ke kanan (<code>data[j + 1] = data[j]</code>), nilai asli di indeks tersebut akan tertimpa. Menyimpan nilai tersebut di dalam variabel <code>key</code> mencegah data hilang dan memungkinkan kita untuk menyisipkannya kembali saat posisi yang tepat telah ditemukan.
+                    </li>
+                </ul>
+            </div>
 
         </div>
     </div>
 
 
+    <div class="card mb-4 materi-box mt-4" id="fillCodeActivity">
+        <div class="card-body materi-text">
+            <div class="materi-header mb-3">
+                <i class="fas fa-keyboard"></i>
+                <span class="materi-badge">Aktivitas 4.2: Melengkapi Kode Program</span>
+            </div>
+            
+            <p class="card-text mb-4 text-danger fw-bold">
+                <i class="fa-solid fa-lock me-1"></i> Sebelum lanjut, lengkapi bagian kode yang kosong di bawah ini dengan benar untuk membuka akses ke Quiz!
+            </p>
 
+            <div class="code-container" style="background: #1e1e1e; padding: 20px; border-radius: 8px; color: #d4d4d4; font-family: 'Courier New', monospace; font-size: 14px; line-height: 2;">
+                <span style="color: #569cd6;">def</span> <span style="color: #dcdcaa;">insertion_sort</span>(data):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;n = <span style="color: #dcdcaa;">len</span>(data)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">for</span> i <span style="color: #c586c0;">in</span> <span style="color: #dcdcaa;">range</span>(<input type="text" id="i_blank1" class="code-input" placeholder="..." style="width: 40px; text-align: center;">, n): <span style="color: #6a9955;"># Mulai dari elemen kedua</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key = data[i]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j = i - <span style="color: #b5cea8;">1</span><br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">while</span> j >= <span style="color: #b5cea8;">0</span> <span style="color: #c586c0;">and</span> data[j] <input type="text" id="i_blank2" class="code-input" placeholder="..." style="width: 40px; text-align: center;"> key: <span style="color: #6a9955;"># Cek apakah elemen kiri lebih besar</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[j + <span style="color: #b5cea8;">1</span>] = data[j]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j -= <span style="color: #b5cea8;">1</span><br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[j + <span style="color: #b5cea8;">1</span>] = <input type="text" id="i_blank3" class="code-input" placeholder="..." style="width: 60px; text-align: center;"> <span style="color: #6a9955;"># Sisipkan elemen ke posisi yang tepat</span><br>
+            </div>
+
+            <div id="fillCodeFeedback" class="alert d-none mt-3"></div>
+            <div class="text-start mt-3">
+                <button id="btnCheckCode" class="btn btn-primary">
+                    <i class="fa-solid fa-check-double me-1"></i> Periksa Kode
+                </button>
+            </div>
+        </div>
+    </div>
     <div class="card mb-4">
         <div class="card-body materi-text">
-            <p>Cobalah jalankan kode Bubble Sort di bawah ini untuk melihat bagaimana Python memproses datanya.</p>
+            <p>Cobalah jalankan kode Insertion Sort di bawah ini untuk melihat bagaimana Python memproses datanya.</p>
           
             <div class="live-editor">
                 <header class="editor-header">
@@ -207,20 +338,79 @@
     </a>
 
     <a href="{{ route('mahasiswa.aktivitas.show',['insertion','quiz']) }}" 
-       class="btn btn-primary">
-        Lanjut Quiz
+       class="btn btn-success disabled" id="btnNextInsertion" tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;">
+        <i class="fa-solid fa-lock me-1" id="lockIconInsertion"></i> Lanjut Quiz
     </a>
-
-</div>
+    </div>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const btnCheckCode = document.getElementById('btnCheckCode');
+    const feedbackCode = document.getElementById('fillCodeFeedback');
+    const btnNext = document.getElementById('btnNextInsertion');
+    const lockIcon = document.getElementById('lockIconInsertion');
+
+    btnCheckCode.addEventListener('click', function() {
+        // Ambil nilai input
+        const b1 = document.getElementById('i_blank1').value.trim(); // Jawaban: 1
+        const b2 = document.getElementById('i_blank2').value.trim(); // Jawaban: >
+        const b3 = document.getElementById('i_blank3').value.trim(); // Jawaban: key
+
+        let correctCount = 0;
+
+        // Validasi Blank 1
+        if (b1 === '1') {
+            document.getElementById('i_blank1').className = 'code-input correct';
+            correctCount++;
+        } else {
+            document.getElementById('i_blank1').className = 'code-input wrong';
+        }
+
+        // Validasi Blank 2
+        if (b2 === '>') {
+            document.getElementById('i_blank2').className = 'code-input correct';
+            correctCount++;
+        } else {
+            document.getElementById('i_blank2').className = 'code-input wrong';
+        }
+
+        // Validasi Blank 3
+        if (b3 === 'key') {
+            document.getElementById('i_blank3').className = 'code-input correct';
+            correctCount++;
+        } else {
+            document.getElementById('i_blank3').className = 'code-input wrong';
+        }
+
+        // Output Feedback
+        if (correctCount === 3) {
+            feedbackCode.className = 'alert alert-success mt-3';
+            feedbackCode.innerHTML = '<i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Logika Insertion Sort Anda sudah tepat. Tombol Lanjut Quiz telah dibuka. Silakan coba kode tersebut pada Live Editor!';
+            feedbackCode.classList.remove('d-none');
+            
+            // Buka gembok tombol Selanjutnya
+            btnNext.classList.remove('disabled');
+            btnNext.removeAttribute('tabindex');
+            btnNext.removeAttribute('aria-disabled');
+            btnNext.style.pointerEvents = 'auto';
+            btnNext.style.opacity = '1';          
+            lockIcon.className = 'fa-solid fa-unlock me-1';
+        } else {
+            feedbackCode.className = 'alert alert-danger mt-3';
+            feedbackCode.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> <strong>Kurang Tepat!</strong> Ada bagian kode yang salah (kotak merah). Perhatikan kembali materi cara kerjanya.';
+            feedbackCode.classList.remove('d-none');
+        }
+    });
+});
+</script>
 <script>
 window.IMG_PATH = "{{ asset('images/aset/nama') }}/";
 </script>
 <script src="{{ asset('js/editor.js') }}"></script>
-{{-- <script src="{{ asset('js/insertionsort.js') }}"></script> --}}
 
 @endsection
