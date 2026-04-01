@@ -123,6 +123,22 @@
     background: rgba(220, 53, 69, 0.2) !important;
     color: #dc3545;
 }
+
+/* Tambahan CSS Khusus untuk Tab Pills agar lebih estetik */
+.nav-pills .nav-link {
+    color: #495057;
+    background-color: transparent;
+    transition: all 0.3s ease;
+}
+.nav-pills .nav-link:hover {
+    background-color: #e9ecef;
+}
+.nav-pills .nav-link.active {
+    background-color: #0d6efd;
+    color: white;
+    box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2);
+}
+
 </style>
 
 <div class="card title-card mb-4">
@@ -140,13 +156,38 @@
 
 <div class="materi-page ">
     <div class="card mb-4 materi-box">
-        <div class="card-body materi-text">
+        <div class="card-header bg-transparent pt-4 pb-2 border-0">
             <div class="materi-header">
                 <i class="fa-solid fa-code"></i>
                 <span class="materi-badge">Program SelectionSort</span>
             </div>
 
-            <div class="my-4 text-start">
+            <ul class="nav nav-pills nav-fill gap-2 p-1 bg-light rounded-pill border shadow-sm" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active rounded-pill fw-bold" id="pills-list-tab" data-bs-toggle="pill" data-bs-target="#pills-list" type="button" role="tab" aria-controls="pills-list" aria-selected="true">
+                        <i class="bi bi-1-circle me-1"></i> 1. Contoh List Angka
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link rounded-pill fw-bold" id="pills-dict-tab" data-bs-toggle="pill" data-bs-target="#pills-dict" type="button" role="tab" aria-controls="pills-dict" aria-selected="false">
+                        <i class="bi bi-2-circle me-1"></i> 2. Contoh List of Dictionary
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link rounded-pill fw-bold" id="pills-oflist-tab" data-bs-toggle="pill" data-bs-target="#pills-oflist" type="button" role="tab" aria-controls="pills-oflist" aria-selected="false">
+                        <i class="bi bi-3-circle me-1"></i> 3. Contoh List of List
+                    </button>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="card-body materi-text pt-2">
+                
+            <div class="tab-content" id="pills-tabContent">
+                
+                <div class="tab-pane fade show active" id="pills-list" role="tabpanel" aria-labelledby="pills-list-tab">
+
+                <div class="my-4 text-start">
                 <div class="alert alert-warning mb-3">
                     <strong>Instruksi:</strong> Amati kode berikut dengan saksama,
                     kemudian ketik ulang pada fitur <em>Live Coding</em> di bawah tanpa melakukan copy–paste.
@@ -229,7 +270,7 @@ print("Setelah sorting:", angka)
                     Setelah perulangan dalam selesai memeriksa seluruh sisa elemen, <code>min_index</code> kini pasti menyimpan indeks dari elemen terkecil yang sebenarnya. Elemen terkecil tersebut kemudian ditukar posisinya dengan elemen di indeks <code>i</code>. Dengan cara ini (hanya 1 kali swap per siklus), satu elemen terkecil akan selalu dikunci di bagian kiri list.
                 </p>
             </div>
-            <div class="refleksi-alert mt-4">
+        
                 <h5 class="fw-bold mb-3">
                     Refleksi Konseptual
                 </h5>
@@ -249,9 +290,143 @@ print("Setelah sorting:", angka)
                         Berbeda dengan Bubble Sort yang melakukan swap terus-menerus, Selection Sort <strong>hanya melakukan satu kali swap</strong> di akhir setiap iterasi luar (setelah nilai minimum benar-benar ditemukan di seluruh sisa data).
                     </li>
                 </ul>
-            </div>
-        </div>
+
+            </div> <div class="tab-pane fade" id="pills-dict" role="tabpanel" aria-labelledby="pills-dict-tab">
+                    
+                    <div class="my-4 text-start">
+                        <div class="alert alert-info mb-3">
+                            <strong>Perhatian:</strong> Di dunia nyata, data seringkali berbentuk kumpulan kamus (Dictionary). Perhatikan bagaimana algoritma dimodifikasi agar bisa mengurutkan data berdasarkan kunci (key) tertentu.
+                        </div>
+
+                            <div class="code-container">
+<pre class="code-box">
+def selectionLoD(data):
+    n = len(data)
+    for i in range(n - 1):
+        print("Langkah ke-", i + 1, ":", data)
+        indeks_terkecil = i
+        for j in range(i + 1, n):
+            if data[j]['harga'] < data[indeks_terkecil]['harga']:
+                indeks_terkecil = j
+        data[i], data[indeks_terkecil] = data[indeks_terkecil], data[i]
+
+
+data_produk = [
+    {'produk': 'Pensil', 'harga': 2500},
+    {'produk': 'Pulpen', 'harga': 3000},
+    {'produk': 'Penghapus', 'harga': 1500},
+    {'produk': 'Penggaris', 'harga': 2000}
+]
+
+print("Sebelum disortir:")
+for m in data_produk:
+    print(m)
+
+selectionLoD(data_produk)
+
+print("\nSetelah disortir:")
+for m in data_produk:
+    print(m)
+</pre>
+                            </div>
+                    </div>
+
+                    <h5 class="fw-bold mt-4">Penjelasan: Apa yang Berbeda pada Metode List of Dictionary?</h5>
+                    <p>Pada variasi ini, kita mengurutkan struktur data yang sangat menyerupai format data di dunia nyata (seperti data dari <em>database</em> atau <em>API</em>), yaitu <strong>List of Dictionary</strong> (sebuah <em>list</em> yang berisi sekumpulan kamus data). Berikut adalah rincian perbedaannya:</p>
+
+                    <ul>
+                        <li class="mb-2">
+                            <strong>Mengakses Nilai Menggunakan Kata Kunci (<em>Key</em>):</strong><br>
+                            Perhatikan baris <code>if data[j]['harga'] &lt; data[indeks_terkecil]['harga']:</code>. <br>
+                            Karena setiap elemen di dalam <em>list</em> merupakan sebuah <em>dictionary</em>, kita tidak bisa membandingkan elemennya secara langsung. Kita wajib menyebutkan dengan spesifik atribut apa yang ingin dibandingkan. Dalam kasus ini, kita membandingkan nilai yang ada di dalam kunci <code>['harga']</code>.
+                        </li>
+                        
+                        <li class="mb-2">
+                            <strong>Melacak Posisi Harga Termurah:</strong><br>
+                            Sama halnya dengan algoritma Selection Sort pada umumnya, program bertugas menelusuri data untuk mencari elemen dengan nilai terkecil. Di sini, variabel <code>indeks_terkecil</code> berfungsi untuk mengingat posisi (indeks) dari barang yang memiliki harga paling murah pada setiap iterasi.
+                        </li>
+
+                        <li>
+                            <strong>Proses Pertukaran Satu Kesatuan (<em>Swap</em>):</strong><br>
+                            Pada baris pertukaran <code>data[i], data[indeks_terkecil] = data[indeks_terkecil], data[i]</code>, kita menukar <strong>seluruh <em>dictionary</em></strong> secara utuh. Hal ini sangat penting untuk menjamin bahwa data "Pensil" akan selalu berpasangan dengan harga 2500, dan tidak akan tertukar dengan harga milik produk lain saat posisinya dipindahkan.
+                        </li>
+                    </ul>
+
+                    <div class="alert alert-success mt-3">
+                        <i class="bi bi-lightbulb-fill text-warning me-2"></i>
+                        <strong>Tips Eksperimen:</strong> Cobalah ubah tanda lebih kecil (<code>&lt;</code>) menjadi tanda lebih besar (<code>&gt;</code>) pada baris logika <code>if</code> di fitur <em>Live Editor</em> dan amatilah perbedaannya. 
+                    </div>
+            
+            </div><div class="tab-pane fade" id="pills-oflist" role="tabpanel" aria-labelledby="pills-oflist-tab">
+                    
+                    <div class="my-4 text-start">
+                        <div class="alert alert-success mb-3">
+                            <strong>Instruksi:</strong> Amati kode berikut dengan saksama,
+                            kemudian ketik ulang pada fitur <em>Live Coding</em> di bawah tanpa melakukan copy–paste.
+                        </div>
+
+                        <p>Anda bisa menambahkan penjelasan, list, atau gambar di sini persis seperti tab lainnya.</p>
+
+                        <div class="code-container">
+<pre class="code-box">
+def selectionLoL(data):
+    n = len(data)
+    for i in range(n - 1):
+        print("Langkah ke-", i + 1, ":", data)
+        indeks_terkecil = i
+        for j in range(i + 1, n):
+            if data[j][1] < data[indeks_terkecil][1]:
+                indeks_terkecil = j
+        data[i], data[indeks_terkecil] = data[indeks_terkecil], data[i]
+
+
+data_produk = [
+    ['Pensil', 2500],
+    ['Pulpen', 3000],
+    ['Penghapus', 1500],
+    ['Penggaris', 2000]
+]
+
+print("Sebelum disortir:")
+for m in data_produk:
+    print(m)
+
+selectionLoL(data_produk)
+
+print("\nSetelah disortir:")
+for m in data_produk:
+    print(m)
+</pre>
+                    </div>
+
+                    <h5 class="fw-bold mt-4">Penjelasan: Apa yang Berbeda pada Metode List of List?</h5>
+                    <p>Pada contoh ini, kita menggunakan struktur data <strong>List of List</strong> (List dua dimensi). Berbeda dengan <em>Dictionary</em> yang menggunakan kata kunci pengenal (<em>key</em>), <em>List</em> murni menggunakan urutan angka (indeks). Berikut adalah rincian penjelasannya:</p>
+
+                    <ul>
+                        <li class="mb-2">
+                            <strong>Mengakses Elemen Berdasarkan Indeks Angka:</strong><br>
+                            Struktur data yang kita gunakan memiliki format <code>['Nama Barang', Harga]</code>. Hal ini berarti indeks ke-<code>[0]</code> berisi teks nama barang, dan indeks ke-<code>[1]</code> berisi angka harga barang. <br>
+                            Oleh karena itu, pada baris <code>if data[j][1] &lt; data[indeks_terkecil][1]:</code>, kita secara spesifik memerintahkan program untuk hanya membandingkan nilai pada indeks ke-1 (yakni harganya).
+                        </li>
+                        
+                        <li class="mb-2">
+                            <strong>Pencarian Nilai Minimum:</strong><br>
+                            Sama seperti konsep dasar algoritma Selection Sort, program akan menelusuri sisa data yang belum terurut untuk mencari barang dengan harga paling murah. Posisi (indeks utama) dari barang termurah tersebut akan disimpan di dalam variabel <code>indeks_terkecil</code>.
+                        </li>
+
+                        <li>
+                            <strong>Proses Pertukaran Satu Kesatuan (Swap):</strong><br>
+                            Meskipun elemen yang kita bandingkan hanyalah harganya (indeks ke-1), saat menukar posisi pada baris <code>data[i], data[indeks_terkecil] = data[indeks_terkecil], data[i]</code>, kita memindahkan <strong>seluruh isi list bagian dalam</strong> (nama dan harga sekaligus). Hal ini dilakukan agar data nama barang dan harganya tetap berpasangan dengan benar dan tidak tumpang tindih.
+                        </li>
+                    </ul>
+                </div>
+
+
+
+        </div></div></div>
     </div>
+
+
 
 
     <div class="card mb-4 materi-box mt-4" id="fillCodeActivity">

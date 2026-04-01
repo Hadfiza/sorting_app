@@ -163,6 +163,8 @@
                 <span class="materi-badge">Ilustrasi Visualisasi</span>
             </div>
             
+            <p>Berikut adalah simulasi interaktif untuk membantu Anda memahami cara kerja algoritma secara langsung. Klik tombol <strong> Mulai Visualisasi </strong> untuk mengamati proses pengurutan langkah demi langkah, atau tekan tombol <strong> Acak Data </strong> untuk mencoba simulasi dengan susunan angka yang baru. Pastikan Anda memperhatikan perubahan warna pada balok sesuai dengan keterangan status di bagian bawah.</p>
+            
             <div class="sim-visual-container">
                 <div class="stats-row">
                     <span>Time Complexity: O(n²)</span>

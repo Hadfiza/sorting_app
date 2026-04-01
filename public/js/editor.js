@@ -87,6 +87,21 @@ document.addEventListener("DOMContentLoaded", async function () {
                 return;
             }
 
+            if (!output || !output.trim() || output.trim() === "") {
+                alert("Output tidak boleh kosong! Klik RUN dulu sebelum submit.");
+                return;
+            }
+
+            if (output.toLowerCase().includes("error")) {
+                alert("Masih ada error pada program! Perbaiki dulu sebelum submit.");
+                return;
+            }
+
+            if (!output.trim()) {
+                alert("Output tidak boleh kosong! Jalankan kode dulu.");
+                return;
+            }
+
             if (typeof PRAKTIKUM_ID === "undefined") {
                 alert("Praktikum ID tidak ditemukan!");
                 return;

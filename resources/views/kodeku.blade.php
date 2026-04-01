@@ -181,16 +181,13 @@
                     <a class="nav-link" href="/">Beranda</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/fitur">Fitur</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('mahasiswa.pendahuluan.materi') }}">Materi</a>
+                    <a class="nav-link" href="{{ route('mahasiswa.aktivitas.show',['pendahuluan','sorting']) }}">Materi</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active fw-bold text-primary" href="{{ route('kodeku') }}">Kodeku</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/kontak">Kontak</a>
+                    <a class="nav-link" href="/kontak">Petunjuk Penggunaan</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/bantuan">Bantuan</a>

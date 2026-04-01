@@ -131,7 +131,21 @@
     background: rgba(220, 53, 69, 0.2) !important;
     color: #dc3545;
 }
-/* === KODE TAMBAHAN DARI AI SELESAI === */
+
+/* Tambahan CSS Khusus untuk Tab Pills agar lebih estetik */
+.nav-pills .nav-link {
+    color: #495057;
+    background-color: transparent;
+    transition: all 0.3s ease;
+}
+.nav-pills .nav-link:hover {
+    background-color: #e9ecef;
+}
+.nav-pills .nav-link.active {
+    background-color: #0d6efd;
+    color: white;
+    box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2);
+}
 </style>
 
 <div class="card title-card mb-4">
@@ -155,13 +169,34 @@
                 <span class="materi-badge">Program MergeSort</span>
             </div>
 
-            <div class="my-4 text-start">
-                <div class="alert alert-warning mb-3">
-                    <strong>Instruksi:</strong> Amati kode berikut dengan saksama,
-                    kemudian ketik ulang pada fitur <em>Live Coding</em> di bawah tanpa melakukan copy–paste.
-                </div>
 
-                <div class="code-container">
+            <ul class="nav nav-pills nav-fill gap-2 p-1 bg-light rounded-pill border shadow-sm" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active rounded-pill fw-bold" id="pills-list-tab" data-bs-toggle="pill" data-bs-target="#pills-list" type="button" role="tab" aria-controls="pills-list" aria-selected="true">
+                        <i class="bi bi-1-circle me-1"></i> 1. Contoh List Angka
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link rounded-pill fw-bold" id="pills-dict-tab" data-bs-toggle="pill" data-bs-target="#pills-dict" type="button" role="tab" aria-controls="pills-dict" aria-selected="false">
+                        <i class="bi bi-2-circle me-1"></i> 2. Contoh List of Dictionary
+                    </button>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="card-body materi-text pt-2">
+                
+            <div class="tab-content" id="pills-tabContent">
+                
+                <div class="tab-pane fade show active" id="pills-list" role="tabpanel" aria-labelledby="pills-list-tab">
+
+                <div class="my-4 text-start">
+                    <div class="alert alert-warning mb-3">
+                        <strong>Instruksi:</strong> Amati kode berikut dengan saksama,
+                        kemudian ketik ulang pada fitur <em>Live Coding</em> di bawah tanpa melakukan copy–paste.
+                    </div>
+
+                    <div class="code-container">
 <pre class="code-box">
 def merge_sort(data):
     if len(data) > 1:
@@ -303,8 +338,92 @@ print("Setelah sorting:", angka)
                         Pembagian bulat menghasilkan bilangan bulat utuh tanpa koma (desimal), yang mana sangat diperlukan karena indeks array tidak boleh menggunakan bilangan pecahan.
                     </li>
                 </ul>
-            </div>
-            </div>
+
+            </div></div>
+
+            <div class="tab-pane fade" id="pills-dict" role="tabpanel" aria-labelledby="pills-dict-tab">
+                    
+                    <div class="my-4 text-start">
+                        <div class="alert alert-info mb-3">
+                            <strong>Perhatian:</strong> Di dunia nyata, data seringkali berbentuk kumpulan kamus (Dictionary). Perhatikan bagaimana algoritma dimodifikasi agar bisa mengurutkan data berdasarkan kunci (key) tertentu.
+                    </div>
+
+                    <div class="code-container">
+<pre class="code-box">
+def merge_sort_dict(arr, key="value"):
+    if len(arr) > 1:
+        mid = len(arr) // 2
+        left_half = arr[:mid]
+        right_half = arr[mid:]
+
+        # Rekursif sorting
+        merge_sort_dict(left_half, key)
+        merge_sort_dict(right_half, key)
+
+        i = j = k = 0
+
+        # Merge proses
+        while i < len(left_half) and j < len(right_half):
+            if left_half[i][key] < right_half[j][key]:
+                arr[k] = left_half[i]
+                i += 1
+            else:
+                arr[k] = right_half[j]
+                j += 1
+            k += 1
+
+        # Sisa elemen dari left half
+        while i < len(left_half):
+            arr[k] = left_half[i]
+            i += 1
+            k += 1
+
+        # Sisa elemen di kanan
+        while j < len(right_half):
+            arr[k] = right_half[j]
+            j += 1
+            k += 1
+
+# Contoh data
+data = [
+    {"value": 6},
+    {"value": 5},
+    {"value": 12},
+    {"value": 10},
+    {"value": 9},
+    {"value": 1}
+]
+
+print("Sebelum diurutkan:", data)
+merge_sort_dict(data)
+print("Setelah diurutkan:", data)
+</pre>
+                    </div>
+
+                    <h5 class="fw-bold mt-4">Penjelasan: Pemrosesan List of Dictionary pada Merge Sort</h5>
+                    <p>Pada algoritma Merge Sort ini, kita tetap menerapkan prinsip dasar <em>Divide and Conquer</em> (membagi dan menaklukkan), namun kali ini diterapkan pada struktur data <strong>List of Dictionary</strong>. Berikut adalah poin-poin penting perbedaannya:</p>
+
+                    <ul>
+                        <li class="mb-2">
+                            <strong>Penggunaan Parameter Opsional (<em>Default Parameter</em>):</strong><br>
+                            Perhatikan baris deklarasi <code>def merge_sort_dict(arr, key="value"):</code>. Fungsi ini dirancang agar lebih dinamis. Secara bawaan (<em>default</em>), program akan mengurutkan data berdasarkan kunci (<em>key</em>) bernama <code>"value"</code>. Namun, Anda dapat dengan mudah menyesuaikannya saat pemanggilan fungsi jika data Anda memiliki atribut lain, misalnya <code>merge_sort_dict(data, "harga")</code>.
+                        </li>
+                        
+                        <li class="mb-2">
+                            <strong>Perbandingan Spesifik pada Proses Penggabungan (<em>Merge</em>):</strong><br>
+                            Tahap paling krusial terjadi saat program menggabungkan kembali (<em>merge</em>) bagian kiri dan kanan yang telah dipecah. Pada baris <code>if left_half[i][key] &lt; right_half[j][key]:</code>, kita secara eksplisit menginstruksikan program untuk membandingkan nilai atribut tertentu yang ada di dalam <em>dictionary</em>, bukan membandingkan <em>dictionary</em> itu sendiri secara utuh.
+                        </li>
+
+                        <li>
+                            <strong>Penempatan Kembali Kesatuan Data:</strong><br>
+                            Meskipun pembandingan dilakukan hanya pada nilai atribut spesifik, saat program menyusun ulang data (contohnya pada baris <code>arr[k] = left_half[i]</code>), program memindahkan <strong>seluruh isi <em>dictionary</em></strong> ke posisi yang baru. Hal ini sangat penting agar seluruh kelengkapan informasi di dalam kamus data tersebut tidak terpisah atau saling tertukar.
+                        </li>
+                    </ul>
+
+                    </div>
+                    </div>
+
+        </div></div></div>
     </div>
 
     <div class="card mb-4 materi-box mt-4" id="fillCodeActivity">

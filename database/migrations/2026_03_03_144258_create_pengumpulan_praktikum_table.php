@@ -16,11 +16,11 @@ return new class extends Migration
 
             // Relasi
             $table->foreignId('id_praktikum')->constrained('praktikum')->onDelete('cascade');
-            $table->foreignId('id_mahasiswa')->constrained('users')->onDelete('cascade');
+            $table->foreignId('id_mahasiswa')->constrained('mahasiswa')->onDelete('cascade');
 
             // Isi Submission
             $table->longText('kode_program');
-            $table->longText('output')->nullable();
+            $table->longText('output');
             $table->text('penjelasan');
 
             // Penilaian

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Kelas;
 use App\Models\PengumpulanPraktikum;
 use App\Models\Praktikum;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class PraktikumController extends Controller
         $praktikum = $query->get();
 
         // Ambil daftar kelas untuk dropdown
-        $kelases = \App\Models\Kelas::all();
+        $kelases = Kelas::all();
 
         return view('dosen.praktikum.index', compact('praktikum','kelases'));
     }
@@ -48,15 +49,14 @@ class PraktikumController extends Controller
 
 public function submit(Request $request)
     {
-        // 1. Validasi Input
         $request->validate([
             'kode_program' => 'required',
             'penjelasan'   => 'required',
+            'output' => 'required',
             'praktikum_id' => 'required'
         ]);
 
         try {
-            // 2. Ambil profil Mahasiswa (Bukan User)
             $mahasiswa = auth()->user()->mahasiswa;
             
             if (!$mahasiswa) {
@@ -66,19 +66,16 @@ public function submit(Request $request)
                 ], 404);
             }
 
-            // 3. Simpan ke database menggunakan ID MAHASISWA (Kembali seperti awal)
-            \App\Models\PengumpulanPraktikum::updateOrCreate(
+            PengumpulanPraktikum::updateOrCreate(
             [
                 'id_praktikum' => $request->praktikum_id,
-                'id_mahasiswa' => $mahasiswa->id // <-- KEMBALI MENGGUNAKAN $mahasiswa->id
+                'id_mahasiswa' => $mahasiswa->id // <-- Menggunakan ID tabel mahasiswa
             ],
             [
                 'kode_program'   => $request->kode_program,
-                'output'         => $request->output ?? '-',
+                'output'         => $request->output,
                 'penjelasan'     => $request->penjelasan,
                 'status'         => 'submitted',
-                
-                // Beri nilai null agar aman dari error
                 'nilai'          => null, 
                 'feedback_dosen' => null  
             ]);
@@ -96,11 +93,16 @@ public function submit(Request $request)
     //Halaman Dosen
     public function dosenShow($id)
     {
-        $praktikum = \App\Models\Praktikum::findOrFail($id);
+        // 1. Cari data pengumpulan yang SPESIFIK berdasarkan ID Pengumpulan yang diklik
+        $item = PengumpulanPraktikum::with(['praktikum', 'mahasiswa.user', 'mahasiswa.kelas'])
+                ->findOrFail($id);
 
-        $pengumpulan = \App\Models\PengumpulanPraktikum::where('id_praktikum', $id)
-            ->with('mahasiswa')
-            ->get();
+        // 2. Ambil informasi praktikum (judul, dll) dari relasi data tersebut
+        $praktikum = $item->praktikum;
+
+        // 3. Bungkus $item ke dalam array agar file view show.blade.php 
+        //    (yang menggunakan perulangan @foreach) tetap bisa berjalan normal tanpa error.
+        $pengumpulan = [$item];
 
         return view('dosen.praktikum.show', compact('praktikum', 'pengumpulan'));
     }

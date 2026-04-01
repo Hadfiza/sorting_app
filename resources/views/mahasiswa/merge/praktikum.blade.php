@@ -1,19 +1,25 @@
 @extends('layouts.hlmns')
 
-@section('title','MergeSort')
+@section('title','BubbleSort')
 
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-{{-- ===========================================================
-     CSS KHUSUS ILUSTRASI (Diambil dari kode simulasi Anda)
-     Saya hapus style 'body' agar tidak merusak layout utama
-   =========================================================== --}}
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
 
-
+@php
+    // 1. Ambil relasi mahasiswa dari user yang sedang login
+    $mahasiswa = auth()->user()->mahasiswa;
+    
+    // 2. Cari pengumpulan menggunakan ID Mahasiswa (Bukan ID User)
+    $submission = null;
+    if ($mahasiswa) {
+        $submission = \App\Models\PengumpulanPraktikum::where('id_mahasiswa', $mahasiswa->id)
+                        ->where('id_praktikum', 4)
+                        ->first();
+    }
+@endphp
 <style>
 /* =========================
    CODEMIRROR
@@ -104,6 +110,48 @@
     border-radius: 4px;
     font-weight: bold;
 }
+
+/* ========================================= */
+/* ===== TABEL SORTING MODERN =====          */
+/* ========================================= */
+.praktikum-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 16px;
+    font-size: 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.praktikum-table th {
+    background: #f8fafc;
+    color: #1e293b;
+    font-weight: 700;
+    padding: 12px;
+    text-align: center;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.praktikum-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #f1f5f9;
+    background: white;
+}
+
+.praktikum-table td:first-child,
+.praktikum-table th:first-child {
+    text-align: left;
+    font-weight: 600;
+}
+
+.praktikum-table td:not(:first-child) {
+    font-family: 'Courier New', Courier, monospace;
+    color: #2563eb;
+    font-weight: 700;
+}
 </style>
 
 <div class="card title-card mb-4">
@@ -118,8 +166,6 @@
         </div>
     </div>
 </div>
-
-
 
 <div class="materi-page">
     <div class="card mb-4 materi-box">
@@ -144,6 +190,51 @@
                     style="max-width: 300px;"
                 >
             </div>
+
+            {{-- <div class="table-responsive">
+                <table class="praktikum-table">
+                    <thead>
+                        <tr>
+                            <th>Algoritma</th>
+                            <th>Best Case</th>
+                            <th>Average Case</th>
+                            <th>Worst Case</th>
+                            <th>Space Complexity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Bubble Sort</td>
+                            <td>O(n)</td>
+                            <td>O(n²)</td>
+                            <td>O(n²)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Selection Sort</td>
+                            <td>O(n²)</td>
+                            <td>O(n²)</td>
+                            <td>O(n²)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Insertion Sort</td>
+                            <td>O(n)</td>
+                            <td>O(n²)</td>
+                            <td>O(n²)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Merge Sort</td>
+                            <td>O(n log n)</td>
+                            <td>O(n log n)</td>
+                            <td>O(n log n)</td>
+                            <td>O(n)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>   --}}
+
             <p class="card-text text-justify">
                 Data mahasiswa yang tersedia seperti gambar diatas.<br>
                 Bagian akademik meminta Anda membuat program Python untuk:<br>
@@ -157,8 +248,6 @@
         </div>
     </div>
 
-
-
     <div class="card mb-4">
         <div class="card-body materi-text">
             <p>Cobalah jalankan kode Bubble Sort di bawah ini untuk melihat bagaimana Python memproses datanya.</p>
@@ -167,16 +256,14 @@
                 <header class="editor-header">
                     <h1>Python Editor</h1>
                     <div>
-                        {{-- <span id="status" style="font-size: 0.8rem; color: #aaa;">⏳ Loading Pyodide...</span> --}}
                         <button id="runBtn" class="btn-run" disabled>Run Code</button>
-                        <button id="submitBtn" class="btn-run" style="background:#007bff;">Submit</button>
                     </div>
                 </header>
                 <div class="split-container">
                     <div class="panel-left">
                         <div class="panel-label">Input Kode</div>
-                        <textarea id="code"></textarea>
-                    </div>
+                        <textarea id="code">{{ $submission ? $submission->kode_program : '' }}</textarea>
+                        </div>
 
                     <div class="panel-right">
                         <div class="panel-label">Console Output</div>
@@ -185,19 +272,53 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="mt-4">
-            <label class="form-label"><strong>Penjelasan Kode</strong></label>
-            <textarea 
-                id="penjelasanMahasiswa"
-                class="form-control"
-                rows="4"
-                placeholder="Jelaskan bagaimana algoritma Bubble Sort Anda bekerja..."
-            ></textarea>
+    <div class="card mb-4 materi-box">
+        <div class="card-body materi-text">
+            <div class="materi-header mb-3">
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span class="materi-badge">Penjelasan Kode & Pengumpulan</span>
+            </div>
+
+            @if($submission)
+                <div class="alert alert-success mb-4">
+                    <i class="fa-solid fa-check-circle me-1"></i> <strong>Praktikum telah dikumpulkan!</strong> 
+                    Kode program dan penjelasan Anda sudah tersimpan dengan aman. Anda masih dapat memperbaruinya jika diinginkan.
+                    
+                    @if($submission->status == 'dinilai')
+                        <hr>
+                        <div class="mt-2">
+                            <span class="badge bg-primary fs-6 me-2">Nilai: {{ $submission->nilai }}</span>
+                            <strong>Catatan Dosen:</strong> {{ $submission->feedback_dosen ?? 'Tidak ada catatan.' }}
+                        </div>
+                    @endif
+                </div>
+            @else
+                <div class="alert alert-info mb-4">
+                    <strong>Instruksi:</strong> Tuliskan penjelasan mengenai alur kerja algoritma Merge Sort yang telah Anda buat pada kode di atas. Jika sudah yakin, klik tombol <strong>Submit Praktikum</strong> untuk mengumpulkan jawaban Anda.
+                </div>
+            @endif
+            <div class="mb-4">
+                <label for="penjelasanMahasiswa" class="form-label fw-bold">Penjelasan Kode Algoritma:</label>
+                <textarea 
+                    id="penjelasanMahasiswa"
+                    class="form-control"
+                    rows="6"
+                    placeholder="Jelaskan secara singkat namun jelas bagaimana algoritma Merge Sort Anda bekerja..."
+                >{{ $submission ? $submission->penjelasan : '' }}</textarea>
+                </div>
+
+            <div class="text-end">
+                <button id="submitBtn" class="btn {{ $submission ? 'btn-secondary' : 'btn-primary' }} px-4 py-2" style="font-weight: 600;" {{ $submission ? 'disabled' : '' }}>
+                    <i class="fa-solid {{ $submission ? 'fa-lock' : 'fa-paper-plane' }} me-1"></i> 
+                    {{ $submission ? 'Telah Dikumpulkan' : 'Submit Praktikum' }}
+                </button>
+            </div>
         </div>
     </div>
+    
 </div>
-
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
@@ -207,6 +328,5 @@ const PRAKTIKUM_ID = 4;
 const SUBMIT_URL = "{{ route('mahasiswa.praktikum.submit') }}";
 </script>
 <script src="{{ asset('js/editor.js') }}"></script>
-
 
 @endsection

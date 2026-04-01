@@ -31,19 +31,16 @@
                     <a class="nav-link" href="/">Beranda</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/fitur">Fitur</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="{{ route('login') }}">Materi</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('kodeku') }}">Kodeku</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/kontak">Kontak</a>
+                    <a class="nav-link" href="/kontak">Petunjuk Penggunaan</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/bantuan">Bantuan</a>
+                    <a class="nav-link" href="/bantuan">Tentang</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('login') }}">Masuk</a>
