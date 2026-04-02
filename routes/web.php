@@ -26,6 +26,10 @@ Route::middleware('guest')->group(function () {
         return view('kodeku');
     })->name('kodeku');
 
+    Route::get('/tentang', function () {
+        return view('tentang');
+    })->name('tentang');
+
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
