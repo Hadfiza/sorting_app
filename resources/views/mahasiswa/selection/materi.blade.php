@@ -292,6 +292,12 @@
                     Periksa Jawaban
                 </button>
             </div>
+            @else
+                <div class="alert alert-success mt-2 mb-0">
+                    <i class="bi bi-check-circle-fill me-2"></i> 
+                    <strong>Selesai!</strong> Anda sudah menyelesaikan uji pemahaman ini. Tombol navigasi di bawah telah terbuka.
+                </div>
+            @endif
 
         </div>
     </div>
@@ -301,7 +307,9 @@
     <a href="#" class="btn btn-outline-secondary">Sebelumnya</a>
     
     <a href="{{ route('mahasiswa.aktivitas.show',['selection','simulasi']) }}" 
-       class="btn btn-success disabled" id="btnNextSelection" tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;">
+       id="btnNextSelection" 
+       class="btn btn-success {{ $isSelesai ? '' : 'disabled' }}" 
+       {!! $isSelesai ? '' : 'tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;"' !!}>
         Selanjutnya
     </a>
     </div>
@@ -437,11 +445,35 @@ document.addEventListener('DOMContentLoaded', function() {
             feedback.innerHTML = '<strong>Luar Biasa!</strong> Pemahaman Anda tentang Selection Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
             feedback.classList.remove('d-none');
             
-            btnNext.classList.remove('disabled');
-            btnNext.removeAttribute('tabindex');
-            btnNext.removeAttribute('aria-disabled');
-            btnNext.style.pointerEvents = 'auto'; 
-            btnNext.style.opacity = '1';          
+            // Tembak data ke database tanpa reload halaman (AJAX)
+            fetch("{{ route('mahasiswa.aktivitas.tandai_selesai') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    id_aktivitas: {{ $item->id }} // Mengirim ID aktivitas saat ini
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    feedback.innerHTML = '<strong>Luar Biasa!</strong> Pemahaman Anda tentang Bubble Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
+                    
+                    // Buka kunci tombol Selanjutnya
+                    btnNext.classList.remove('disabled');
+                    btnNext.removeAttribute('tabindex');
+                    btnNext.removeAttribute('aria-disabled');
+                    btnNext.style.pointerEvents = 'auto'; 
+                    btnNext.style.opacity = '1';          
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                feedback.innerHTML = 'Gagal menyimpan progres, silakan periksa koneksi Anda.';
+            });
 
         } else {
             feedback.className = 'alert alert-danger mt-3';

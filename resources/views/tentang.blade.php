@@ -19,22 +19,22 @@
 
             <div class="row mb-3">
                 <div class="col-md-3 label">Nama</div>
-                <div class="col-md-9">Muhammad Azimi</div>
+                <div class="col-md-9">HADFIZA</div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-3 label">NIM</div>
-                <div class="col-md-9">2210131210021</div>
+                <div class="col-md-9">2210131210012</div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-3 label">Dosen Pembimbing 1</div>
-                <div class="col-md-9">Dr. Harja Santana Purba, M.Kom.</div>
+                <div class="col-md-9">Muhammad Hifdzi Adini, S.Kom., M.T.</div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-3 label">Dosen Pembimbing 2</div>
-                <div class="col-md-9">Novan Alkaf Bahrain Saputra, S.Kom., M.T.</div>
+                <div class="col-md-9">Ihdalhubbi Maulida, S.Kom., M.Kom</div>
             </div>
 
             <div class="row mb-3">
@@ -55,7 +55,7 @@
             <div class="row mb-3">
                 <div class="col-md-3 label">Judul Media</div>
                 <div class="col-md-9">
-                    Pengembangan Media Pembelajaran Interaktif Berbasis Web Materi Melatih dan Menguji AI dengan Model Tutorial
+                    Pengembangan Media Pembelajaran Interaktif Berbasis Web Materi Sorting Struktur Data dengan Model Tutorial
                 </div>
             </div>
 

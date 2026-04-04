@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Akun Baru</title>
+    <title>Daftar Akun Dosen</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -29,9 +29,8 @@
             display: flex;
         }
 
-        /* Bagian Kiri (Form Register) */
         .auth-form-section {
-            padding: 12px 20px;
+            padding: 40px 50px;
             width: 60%;
         }
 
@@ -60,19 +59,15 @@
             border-radius: 8px;
             border: 1px solid #cbd5e1;
             font-size: 0.9rem;
-            padding-right: 40px; /* Space for the icon */
+            padding-right: 40px; 
         }
 
-        /* === UBAH FOKUS MENJADI BIRU === */
         .form-control:focus {
             border-color: #2563eb;
             box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.15);
         }
 
-        /* CSS Untuk Ikon Mata */
-        .password-wrapper {
-            position: relative;
-        }
+        .password-wrapper { position: relative; }
 
         .password-toggle-btn {
             position: absolute;
@@ -90,13 +85,11 @@
             transition: color 0.2s;
         }
 
-        /* === UBAH HOVER IKON MATA MENJADI BIRU === */
         .password-toggle-btn:hover, .password-toggle-btn:focus {
             color: #2563eb;
             outline: none;
         }
 
-        /* === UBAH TOMBOL PRIMARY MENJADI BIRU === */
         .btn-primary {
             background-color: #2563eb;
             border: none;
@@ -119,7 +112,6 @@
             color: #64748b;
         }
 
-        /* === UBAH LINK FOOTER MENJADI BIRU === */
         .auth-footer a {
             color: #2563eb;
             font-weight: 600;
@@ -130,7 +122,6 @@
             text-decoration: underline;
         }
 
-        /* Bagian Kanan (Gambar & Background Biru) */
         .auth-image-section {
             width: 40%;
             background : linear-gradient(135deg, #1f5ed6, #3f7cff);
@@ -146,7 +137,6 @@
             object-fit: contain; 
             border-radius: 8px; 
         }
-
 
         @media (max-width: 768px) {
             .auth-container {
@@ -170,8 +160,8 @@
     <div class="auth-container">
         
         <div class="auth-form-section">
-            <h2 class="auth-title">Daftar Akun Baru</h2>
-            <p class="auth-subtitle">Isi data di bawah ini untuk membuat akun Mahasiswa.</p>
+            <h2 class="auth-title">Daftar Akun Dosen</h2>
+            <p class="auth-subtitle">Isi data di bawah ini untuk membuat akun sebagai pengajar.</p>
 
             @if ($errors->any())
                 <div class="alert alert-danger py-2 px-3 small">
@@ -183,28 +173,17 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('register.process') }}">
+            <form method="POST" action="{{ route('register.dosen.process') }}">
                 @csrf
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Nama Lengkap</label>
-                        <input type="text" name="nama" class="form-control" value="{{ old('nama') }}" required placeholder="Nama Lengkap">
+                        <input type="text" name="nama" class="form-control" value="{{ old('nama') }}" required placeholder="Nama Lengkap & Gelar">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Nomor Induk (NIM)</label>
-                        <input type="text" name="nim" class="form-control" value="{{ old('nim') }}" required placeholder="Contoh: 123456">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-7 mb-3">
-                        <label class="form-label text-primary fw-bold">Token Kelas <span class="text-danger">*</span></label>
-                        <input type="text" name="token_kelas" class="form-control border-primary bg-primary-subtle" value="{{ old('token_kelas') }}" required placeholder="Contoh: X7Y8Z9" style="text-transform: uppercase;">
-                    </div>
-                    <div class="col-md-5 mb-3">
-                        <label class="form-label">Tahun Angkatan</label>
-                        <input type="number" name="angkatan" class="form-control" value="{{ old('angkatan') }}" required placeholder="Contoh: 2023" min="2000" max="2100">
+                        <label class="form-label">Nomor Induk Pegawai (NIP)</label>
+                        <input type="text" name="nip" class="form-control" value="{{ old('nip') }}" required placeholder="Contoh: 19800101...">
                     </div>
                 </div>
 
@@ -235,14 +214,14 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100">
-                    Daftar Sekarang
+                    Daftar
                 </button>
 
                 <div class="auth-footer">
                     <span>Sudah memiliki akun?</span> 
                     <a href="{{ route('login') }}">Login di sini</a>
                     <br>
-                    <span class="text-muted small">Daftar sebagai Dosen? <a href="{{ route('register.dosen') }}">Daftar di sini</a></span>
+                    <span class="text-muted small">Mahasiswa? <a href="{{ route('register') }}">Daftar di sini</a></span>
                 </div>
             </form>
         </div>

@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('folder'); // contoh: bubble
             $table->string('slug');   // contoh: quiz
             $table->integer('urutan');
-            $table->enum('tipe', ['materi','quiz','praktikum']);
+            $table->enum('tipe', ['materi','quiz','praktikum', 'evaluasi']);
             $table->integer('durasi')->nullable(); // menit
 
             $table->timestamps();

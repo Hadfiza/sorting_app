@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dosen;
+use App\Models\Kelas;
 use App\Models\Mahasiswa;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -80,7 +82,8 @@ class AuthController extends Controller
         $user = \App\Models\User::create([
             'nama'     => $request->nama, 
             'email'    => $request->email,
-            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'password' => Hash::make($request->password),
+            // 'password' => \Illuminate\Support\Facades\Hash::make($request->password),
             'role'     => 'mahasiswa'
         ]);
 
@@ -94,6 +97,44 @@ class AuthController extends Controller
 
         // 5. Arahkan kembali dengan pesan sukses
         return redirect()->route('login')->with('success', 'Berhasil mendaftar dan tergabung di kelas ' . $kelas->nama_kelas . '! Silakan login.');
+    }
+
+    // Show Register Dosen
+    public function showRegisterDosen()
+    {
+        return view('auth.register_dosen');
+    }
+
+    public function registerDosen(Request $request)
+    {
+        // 1. Validasi Input
+        $request->validate([
+            'nama'     => 'required|string|max:255',
+            'nip'      => 'required|string|max:50|unique:dosen,nip',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|min:6|confirmed'
+        ], [
+            'email.unique'       => 'Email ini sudah terdaftar.',
+            'nip.unique'         => 'NIP ini sudah terdaftar.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.'
+        ]);
+
+        // 2. Buat Akun user
+        $user = User::create([
+            'nama'   => $request->nama,
+            'email'  => $request->email,
+            'password' => Hash::make($request->pasword),
+            'role'     => 'dosen'
+        ]);
+
+        // 3. Buat profil dosen
+        Dosen::create([
+            'id_user'   => $user->id,
+            'nip'   => $request->nip,
+        ]);
+
+        // 4. Arahkan kembali ke login dengan pesan sukses
+        return redirect()->route('login')->with('success', 'Berhasil mendaftar sebagai Dosen! Silakan login.');
     }
 
     public function logout(Request $request)

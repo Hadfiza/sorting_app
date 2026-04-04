@@ -6,12 +6,6 @@
 <link rel="stylesheet" href="{{ asset('css/selection.css') }}">
 @endsection
 
-@section('content')
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <style>
 
 /* ===============================
@@ -128,6 +122,19 @@
 
 </style>
 
+@section('content')
+
+@php
+    // Cek apakah aktivitas simulasi ini sudah berstatus 'selesai' di database
+    $isSelesai = isset($progresSelesai) && in_array($item->id, $progresSelesai);
+@endphp
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
 <!-- ===== Judul Materi dengan Box ===== -->
 <div class="card title-card mb-4">
     <div class="card-body">
@@ -169,6 +176,13 @@
     </div>
 </div>
 
+@if($isSelesai)
+    <div class="alert alert-success mt-3 mb-0">
+        <i class="bi bi-check-circle-fill me-2"></i> 
+        <strong>Selesai!</strong> Kamu sudah pernah menyelesaikan simulasi ini. Tombol navigasi di bawah sudah terbuka.
+    </div>
+@endif
+
 <div class="d-flex justify-content-center gap-3 mt-4 pt-3 border-top">
 
     <a href="{{ route('mahasiswa.aktivitas.show',['selection','materi']) }}" 
@@ -177,15 +191,75 @@
     </a>
 
     <a href="{{ route('mahasiswa.aktivitas.show',['selection','program']) }}" 
-       class="btn btn-primary">
+       id="btnNextSelectionSim"
+       class="btn btn-primary {{ $isSelesai ? '' : 'disabled' }}" 
+       {!! $isSelesai ? '' : 'tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;"' !!}>
         Selanjutnya
     </a>
-
 </div>
 
 <script>
 window.IMG_PATH = "{{ asset('images/aset/kaleng') }}/";
 </script>
 <script src="{{ asset('js/selectionsort.js') }}"></script>
+
+@if(!$isSelesai)
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Tangkap elemen kotak pesan selesai dan tombol selanjutnya
+    const finishMessage = document.getElementById('finish-message');
+    const btnNext = document.getElementById('btnNextSelectionSim');
+
+    // Buat pemantau (Observer) untuk melihat perubahan pada atribut "style"
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.attributeName === "style") {
+                // Cek apakah pesan selesai sudah tidak disembunyikan (display != none)
+                const displayStyle = window.getComputedStyle(finishMessage).display;
+                if (displayStyle !== 'none') {
+                    simpanProgresSimulasi(); // Simpan progres
+                    observer.disconnect();   // Matikan pemantau agar tidak dipanggil berkali-kali
+                }
+            }
+        });
+    });
+
+    // Mulai memantau div finish-message
+    if(finishMessage) {
+        observer.observe(finishMessage, { attributes: true });
+    }
+
+    // Fungsi AJAX untuk menembak ke database
+    function simpanProgresSimulasi() {
+        fetch("{{ route('mahasiswa.aktivitas.tandai_selesai') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                id_aktivitas: {{ $item->id }} // Mengirimkan ID materi simulasi saat ini
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                // BUKA GEMBOK TOMBOL SELANJUTNYA
+                btnNext.classList.remove('disabled');
+                btnNext.removeAttribute('tabindex');
+                btnNext.removeAttribute('aria-disabled');
+                btnNext.style.pointerEvents = 'auto';
+                btnNext.style.opacity = '1';
+                
+                // Tambahkan efek visual halus
+                btnNext.classList.add('shadow-lg');
+            }
+        })
+        .catch(error => console.error("Gagal menyimpan progres:", error));
+    }
+});
+</script>
+@endif
 
 @endsection

@@ -37,6 +37,10 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.process');
 
+    // === Route Register Dosen ===
+    Route::get('/register-dosen', [AuthController::class, 'showRegisterDosen'])->name('register.dosen');
+    Route::post('/register-dosen', [AuthController::class, 'registerDosen'])->name('register.dosen.process');
+
 });
 
 
@@ -77,8 +81,13 @@ Route::prefix('mahasiswa')
     )->name('quiz.submit');
 
     Route::get('/{folder}/{slug}',
-        [AktivitasController::class,'show']
-    )->name('aktivitas.show');
+        [AktivitasController::class,'show'])
+    ->name('aktivitas.show');
+
+
+    Route::post('/aktivitas/tandai-selesai', 
+        [AktivitasController::class, 'tandaiSelesai'])
+    ->name('aktivitas.tandai_selesai');
 
 });
 

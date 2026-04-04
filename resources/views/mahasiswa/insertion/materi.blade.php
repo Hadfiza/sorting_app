@@ -114,6 +114,11 @@
 
 @section('content')
 
+@php
+    // Mengecek apakah materi ini sudah pernah diselesaikan
+    $isSelesai = isset($progresSelesai) && in_array($item->id, $progresSelesai);
+@endphp
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
@@ -224,6 +229,7 @@
                 <span class="materi-badge">Aktivitas 2.1: Uji Pemahaman Insertion Sort</span>
             </div>
 
+            @if(!$isSelesai)
             <p class="card-text mb-4 text-danger fw-bold">
                 Jawablah pertanyaan berikut secara berurutan dengan benar untuk membuka akses ke materi selanjutnya!
             </p>
@@ -296,6 +302,12 @@
                     Periksa Jawaban
                 </button>
             </div>
+            @else
+                <div class="alert alert-success mt-2 mb-0">
+                    <i class="bi bi-check-circle-fill me-2"></i> 
+                    <strong>Selesai!</strong> Anda sudah menyelesaikan uji pemahaman ini. Tombol navigasi di bawah telah terbuka.
+                </div>
+            @endif
 
         </div>
     </div>
@@ -305,7 +317,9 @@
     <a href="#" class="btn btn-outline-secondary">Sebelumnya</a>
     
     <a href="{{ route('mahasiswa.aktivitas.show',['insertion','simulasi']) }}" 
-       class="btn btn-success disabled" id="btnNextInsertion" tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;">
+       id="btnNextInsertion" 
+       class="btn btn-success {{ $isSelesai ? '' : 'disabled' }}" 
+       {!! $isSelesai ? '' : 'tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;"' !!}>
         Selanjutnya
     </a>
     </div>
@@ -443,11 +457,35 @@ document.addEventListener('DOMContentLoaded', function() {
             feedback.innerHTML = 'Luar Biasa! Pemahaman Anda tentang Insertion Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
             feedback.classList.remove('d-none');
             
-            btnNext.classList.remove('disabled');
-            btnNext.removeAttribute('tabindex');
-            btnNext.removeAttribute('aria-disabled');
-            btnNext.style.pointerEvents = 'auto'; 
-            btnNext.style.opacity = '1';          
+            // Tembak data ke database tanpa reload halaman (AJAX)
+            fetch("{{ route('mahasiswa.aktivitas.tandai_selesai') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    id_aktivitas: {{ $item->id }} // Mengirim ID aktivitas saat ini
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    feedback.innerHTML = '<strong>Luar Biasa!</strong> Pemahaman Anda tentang Bubble Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
+                    
+                    // Buka kunci tombol Selanjutnya
+                    btnNext.classList.remove('disabled');
+                    btnNext.removeAttribute('tabindex');
+                    btnNext.removeAttribute('aria-disabled');
+                    btnNext.style.pointerEvents = 'auto'; 
+                    btnNext.style.opacity = '1';          
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                feedback.innerHTML = 'Gagal menyimpan progres, silakan periksa koneksi Anda.';
+            });
 
         } else {
             feedback.className = 'alert alert-danger mt-3';
