@@ -8,6 +8,12 @@
 
 @section('content')
 
+@php
+    // Mengecek apakah materi ini sudah pernah diselesaikan
+    $isSelesai = isset($progresSelesai) && in_array($item->id, $progresSelesai);
+@endphp
+
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
 
@@ -459,12 +465,19 @@ print("Setelah diurutkan:", data)
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k += <span style="color: #b5cea8;">1</span><br>
             </div>
 
-            <div id="fillCodeFeedback" class="alert d-none mt-3"></div>
+            <div id="fillCodeFeedback" class="alert {{ $isSelesai ? 'alert-success' : 'd-none' }} mt-3">
+                @if($isSelesai)
+                    <i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Logika Anda sangat tepat. Tombol Lanjut Quiz telah dibuka. Silakan coba kode ini pada Live Editor di bawah!
+                @endif
+            </div>
+            
             <div class="text-start mt-3">
-                <button id="btnCheckCode" class="btn btn-primary">
-                    <i class="fa-solid fa-check-double me-1"></i> Periksa Kode
+                <button id="btnCheckCode" class="btn btn-primary" {{ $isSelesai ? 'disabled' : '' }}>
+                    {{ $isSelesai ? 'Kode Sudah Benar' : 'Periksa Kode' }}
                 </button>
             </div>
+
+
         </div>
     </div>
     <div class="card mb-4">
@@ -502,8 +515,10 @@ print("Setelah diurutkan:", data)
     </a>
 
     <a href="{{ route('mahasiswa.aktivitas.show',['merge','quiz']) }}" 
-       class="btn btn-success disabled" id="btnNextMerge" tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;">
-        <i class="fa-solid fa-lock me-1" id="lockIconMerge"></i> Lanjut Quiz
+       class="btn btn-success {{ $isSelesai ? '' : 'disabled' }}" 
+       id="btnNextMerge" 
+       @if(!$isSelesai) tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;" @endif>
+       Lanjut Quiz
     </a>
     </div>
 
@@ -562,10 +577,55 @@ document.addEventListener('DOMContentLoaded', function() {
             btnNext.removeAttribute('aria-disabled');
             btnNext.style.pointerEvents = 'auto';
             btnNext.style.opacity = '1';          
-            lockIcon.className = 'fa-solid fa-unlock me-1';
+
+                // Kunci input dan tombol setelah berhasil
+                document.getElementById('blank1').readOnly = true;
+                document.getElementById('blank2').readOnly = true;
+                document.getElementById('blank3').readOnly = true;
+                btnCheckCode.disabled = true;
+                btnCheckCode.innerText = 'Kode Sudah Benar';
+
+                // Tembak data ke database tanpa reload halaman (AJAX yang sukses)
+                fetch("{{ route('mahasiswa.aktivitas.tandai_selesai') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                        "Accept": "application/json" // Header vital yang hilang sebelumnya
+                    },
+                    body: JSON.stringify({
+                        id_aktivitas: {{ $item->id }} // Mengirim ID aktivitas saat ini
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        feedbackCode.innerHTML = '<strong>Luar Biasa!</strong> Pemahaman Anda tentang Bubble Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
+                        feedbackCode.className = 'alert alert-success mt-3';
+                        feedbackCode.classList.remove('d-none');
+                        
+                        btnCheckCode.innerText = 'Kode Sudah Benar';
+                        
+                        // Buka kunci tombol Selanjutnya
+                        btnNext.classList.remove('disabled');
+                        btnNext.removeAttribute('tabindex');
+                        btnNext.removeAttribute('aria-disabled');
+                        btnNext.style.pointerEvents = 'auto'; 
+                        btnNext.style.opacity = '1';          
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    feedbackCode.innerHTML = 'Gagal menyimpan progres, silakan periksa koneksi Anda.';
+                    feedbackCode.className = 'alert alert-danger mt-3';
+                    feedbackCode.classList.remove('d-none');
+                    btnCheckCode.disabled = false;
+                    btnCheckCode.innerText = 'Coba Lagi';
+                });
+
         } else {
             feedbackCode.className = 'alert alert-danger mt-3';
-            feedbackCode.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> <strong>Kurang Tepat!</strong> Terdapat kesalahan pada kotak merah. Perhatikan kembali operator matematika Python dan nama variabelnya.';
+            feedbackCode.innerHTML = '<strong>Kurang Tepat!</strong> Ada jawaban yang masih salah. Coba baca kembali materi di atas.';
             feedbackCode.classList.remove('d-none');
         }
     });

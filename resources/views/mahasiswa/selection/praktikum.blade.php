@@ -9,17 +9,21 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
 
 @php
-    // 1. Ambil relasi mahasiswa dari user yang sedang login
+    // 1. Cek apakah aktivitas ini sudah masuk tabel progres_mahasiswa
+    $isSelesai = in_array($item->id, $progresSelesai);
+
+    // 2. Ambil relasi mahasiswa dari user yang sedang login
     $mahasiswa = auth()->user()->mahasiswa;
     
-    // 2. Cari pengumpulan menggunakan ID Mahasiswa (Bukan ID User)
+    // 3. Cari data pengumpulan praktikum mahasiswa ini
     $submission = null;
     if ($mahasiswa) {
         $submission = \App\Models\PengumpulanPraktikum::where('id_mahasiswa', $mahasiswa->id)
-                        ->where('id_praktikum', 2)
+                        ->where('id_praktikum', 3) // Sesuaikan ID praktikumnya
                         ->first();
     }
 @endphp
+
 <style>
 /* =========================
    CODEMIRROR
@@ -320,11 +324,27 @@
     
 </div>
 
+<div class="d-flex justify-content-center gap-3 mt-4 pt-3 border-top">
+    <a href="{{ route('mahasiswa.aktivitas.show',['selection','quiz']) }}" 
+       class="btn btn-outline-secondary">
+       Sebelumnya
+    </a>
+
+    <a href="{{ route('mahasiswa.aktivitas.show',['insertion','materi']) }}" 
+       class="btn btn-success {{ $isSelesai ? '' : 'disabled' }}" 
+       id="btnNextPraktikum" 
+       @if(!$isSelesai) tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;" @endif>
+       Lanjut
+    </a>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
 <script>
 const PRAKTIKUM_ID = 2;
+const AKTIVITAS_ID = {{ $item->id }};
+const TANDAI_SELESAI_URL = "{{ route('mahasiswa.aktivitas.tandai_selesai') }}";
 const SUBMIT_URL = "{{ route('mahasiswa.praktikum.submit') }}";
 </script>
 <script src="{{ asset('js/editor.js') }}"></script>

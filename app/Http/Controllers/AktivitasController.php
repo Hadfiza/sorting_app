@@ -31,7 +31,7 @@ class AktivitasController extends Controller
         $progresSelesai = ProgresMahasiswa::where('id_mahasiswa', $mahasiswa->id)
             ->where('status', 'selesai')
             ->pluck('id_aktivitas')
-            ->toArray();
+            ->toArray(); // mengirimkan data progres menggunakan variabel $progresSelesai, yang bentuknya adalah Array berisi kumpulan ID aktivitas (pluck('id_aktivitas')->toArray()).
 
         return view("mahasiswa.$folder.$slug", compact(
             'item',

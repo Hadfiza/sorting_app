@@ -8,6 +8,12 @@
 
 @section('content')
 
+@php
+    // Mengecek apakah materi ini sudah pernah diselesaikan
+    $isSelesai = isset($progresSelesai) && in_array($item->id, $progresSelesai);
+@endphp
+
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
@@ -455,12 +461,18 @@ for m in data_produk:
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[min_idx] = <input type="text" id="s_blank3" class="code-input" placeholder="..." style="width: 80px;"> <span style="color: #6a9955;"># Selesaikan logika swap</span><br>
             </div>
 
-            <div id="fillCodeFeedback" class="alert d-none mt-3"></div>
+            <div id="fillCodeFeedback" class="alert {{ $isSelesai ? 'alert-success' : 'd-none' }} mt-3">
+                @if($isSelesai)
+                    <i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Logika Anda sangat tepat. Tombol Lanjut Quiz telah dibuka. Silakan coba kode ini pada Live Editor di bawah!
+                @endif
+            </div>
+            
             <div class="text-start mt-3">
-                <button id="btnCheckCode" class="btn btn-primary">
-                    <i class="fa-solid fa-check-double me-1"></i> Periksa Kode
+                <button id="btnCheckCode" class="btn btn-primary" {{ $isSelesai ? 'disabled' : '' }}>
+                    {{ $isSelesai ? 'Kode Sudah Benar' : 'Periksa Kode' }}
                 </button>
             </div>
+
         </div>
     </div>
 
@@ -501,8 +513,10 @@ for m in data_produk:
     </a>
 
     <a href="{{ route('mahasiswa.aktivitas.show',['selection','quiz']) }}" 
-       class="btn btn-success disabled" id="btnNextSelection" tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;">
-        <i class="fa-solid fa-lock me-1" id="lockIconSelection"></i> Lanjut Quiz
+       class="btn btn-success {{ $isSelesai ? '' : 'disabled' }}" 
+       id="btnNextSelection" 
+       @if(!$isSelesai) tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;" @endif>
+       Lanjut Quiz
     </a>
 
 </div>
