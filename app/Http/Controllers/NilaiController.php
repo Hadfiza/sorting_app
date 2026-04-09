@@ -4,25 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Mahasiswa;
 use App\Models\Kelas;
+use App\Models\Dosen; 
+use App\Models\Setting; 
 use Illuminate\Http\Request;
 
 class NilaiController extends Controller
 {
     public function index(Request $request)
     {
-        // 1. Ambil ID Dosen yang sedang login
-        $idDosen = auth()->user()->dosen->id ?? auth()->id();
+        $dosen = Dosen::where('id_user', auth()->id())->first();
+        $idDosen = $dosen->id ?? null;
         
-        // 2. Ambil data kelas untuk filter
         $kelases = Kelas::where('id_dosen', $idDosen)->get();
 
-        // 3. Panggil relasi 'jawaban' (kuis) dan 'pengumpulanPraktikum'
+        // AMBIL KKM SEBAGAI ARRAY (Kunci = id_aktivitas, Value = KKM)
+        $kkmSettings = Setting::where('id_dosen', $idDosen)->pluck('kkm', 'id_aktivitas')->toArray();
+
         $query = Mahasiswa::with(['user', 'kelas', 'jawaban', 'pengumpulanPraktikum'])
             ->whereHas('kelas', function ($q) use ($idDosen) {
                 $q->where('id_dosen', $idDosen);
             });
 
-        // 4. Logika Pencarian Nama
         if ($request->filled('search')) {
             $query->whereHas('user', function($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%')
@@ -30,14 +32,13 @@ class NilaiController extends Controller
             });
         }
 
-        // 5. Logika Filter Kelas
         if ($request->filled('kelas_id')) {
             $query->where('id_kelas', $request->kelas_id);
         }
 
-        // 6. Eksekusi query
         $mahasiswas = $query->latest()->get();
 
-        return view('dosen.nilai.index', compact('mahasiswas', 'kelases'));
+        // Kirim variabel kkmSettings
+        return view('dosen.nilai.index', compact('mahasiswas', 'kelases', 'kkmSettings'));
     }
 }

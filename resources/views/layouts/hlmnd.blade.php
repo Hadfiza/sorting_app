@@ -63,7 +63,7 @@
     $mahasiswa = request()->routeIs('dosen.datamahasiswa.*');
     $praktikum = request()->routeIs('dosen.praktikum.*');
     $kelas     = request()->routeIs('dosen.kelas.*');
-    $setting   = request()->routeIs('dosen.setting');
+    $setting   = request()->routeIs('dosen.kkm');
     $soal = request()->routeIs('dosen.soal.*');
 @endphp
 
@@ -120,13 +120,22 @@
         </a>
     </div>
 
+
+
     <!-- Setting -->
-    <div class="menu-item {{ $setting ? 'active' : '' }}">
+    <div class="menu-item {{ request()->routeIs('dosen.kkm.*') ? 'active' : '' }}">
+        <a href="{{ route('dosen.kkm.index') }}" class="menu-btn">
+            <i class="fa-solid fa-gear me-2"></i>
+            Pengaturan KKM
+        </a>
+    </div>
+
+    {{-- <div class="menu-item {{ $setting ? 'active' : '' }}">
         <a href="{{ route('dosen.setting') }}" class="menu-btn">
             <i class="fa-solid fa-gear me-2"></i>
             Setting
         </a>
-    </div>
+    </div> --}}
 
 </div>
 

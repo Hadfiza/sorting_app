@@ -103,13 +103,28 @@
                             $id_k_evaluasi = 24; 
 
                             $jawaban = $mahasiswa->jawaban;
+
+                            // AMBIL NILAI KKM DARI DATABASE (Gunakan variabel $kkmSettings dari Controller)
+                            $kkmKuis1 = $kkmSettings[3] ?? 75; 
+                            $kkmKuis2 = $kkmSettings[7] ?? 75; 
+                            $kkmKuis3 = $kkmSettings[12] ?? 75; 
+                            $kkmKuis4 = $kkmSettings[17] ?? 75; 
+                            $kkmKuis5 = $kkmSettings[22] ?? 75; 
+
+                            $kkmPrak1 = $kkmSettings[8] ?? 75; 
+                            $kkmPrak2 = $kkmSettings[13] ?? 75; 
+                            $kkmPrak3 = $kkmSettings[18] ?? 75; 
+                            $kkmPrak4 = $kkmSettings[23] ?? 75; 
                             
+                            $kkmEvaluasi = $kkmSettings[24] ?? 75;
+                            $kkmRataRata = 75; 
+                        
                             $list_modul = [
-                                ['id' => $id_k_pendahuluan, 'nama' => 'Q1 (Pendahuluan)'],
-                                ['id' => $id_k_bubble, 'nama' => 'Q2 (Bubble Sort)'],
-                                ['id' => $id_k_selection, 'nama' => 'Q3 (Selection Sort)'],
-                                ['id' => $id_k_insertion, 'nama' => 'Q4 (Insertion Sort)'],
-                                ['id' => $id_k_merge, 'nama' => 'Q5 (Merge Sort)'],
+                                ['id' => $id_k_pendahuluan, 'nama' => 'Q1 (Pendahuluan)', 'kkm' => $kkmKuis1],
+                                ['id' => $id_k_bubble, 'nama' => 'Q2 (Bubble Sort)', 'kkm' => $kkmKuis2],
+                                ['id' => $id_k_selection, 'nama' => 'Q3 (Selection Sort)', 'kkm' => $kkmKuis3],
+                                ['id' => $id_k_insertion, 'nama' => 'Q4 (Insertion Sort)', 'kkm' => $kkmKuis4],
+                                ['id' => $id_k_merge, 'nama' => 'Q5 (Merge Sort)', 'kkm' => $kkmKuis5],
                             ];
 
                             $detail_kuis_array = [];
@@ -138,35 +153,25 @@
                                         $jawaban_status = array_fill(0, 10, null);
 
                                         foreach ($raw_detail as $key => $jawabanUser) {
-
                                             $nomor = (int) str_replace('q', '', $key);
-
                                             $soal = \App\Models\ButirSoal::where('id_aktivitas', $modul['id'])
                                                         ->where('nomor', $nomor)
                                                         ->first();
 
                                             if($soal){
-$raw = $soal->jawaban_benar;
-$decoded = json_decode($raw, true);
+                                                $raw = $soal->jawaban_benar;
+                                                $decoded = json_decode($raw, true);
 
-// ===== DRAGDROP =====
-if (is_array($decoded) && isset($decoded['correct'])) {
-
-    $kunciArr = $decoded['correct'];
-    $userArr  = json_decode($jawabanUser, true);
-
-    $jawaban_status[$nomor-1] = ($userArr === $kunciArr);
-
-// ===== NORMAL =====
-} else {
-
-    $kunci = strtolower(trim($raw));
-    $user  = strtolower(trim($jawabanUser));
-
-    $jawaban_status[$nomor-1] = ($user === $kunci);
-}
+                                                if (is_array($decoded) && isset($decoded['correct'])) {
+                                                    $kunciArr = $decoded['correct'];
+                                                    $userArr  = json_decode($jawabanUser, true);
+                                                    $jawaban_status[$nomor-1] = ($userArr === $kunciArr);
+                                                } else {
+                                                    $kunci = strtolower(trim($raw));
+                                                    $user  = strtolower(trim($jawabanUser));
+                                                    $jawaban_status[$nomor-1] = ($user === $kunci);
+                                                }
                                             }
-
                                         }
 
                                         $attempts_data[] = [
@@ -175,7 +180,7 @@ if (is_array($decoded) && isset($decoded['correct'])) {
                                             'selesai' => $waktu_selesai,
                                             'durasi'  => $durasi,
                                             'skor'    => $attempt->skor,
-                                            'detail_soal' => $jawaban_status // Array berisi boolean benar/salah
+                                            'detail_soal' => $jawaban_status
                                         ];
                                     }
                                 }
@@ -187,7 +192,8 @@ if (is_array($decoded) && isset($decoded['correct'])) {
                                     'nama'          => $modul['nama'],
                                     'total_attempt' => $total_attempt,
                                     'skor_terakhir' => $skor_terakhir,
-                                    'attempts'      => $attempts_data
+                                    'attempts'      => $attempts_data,
+                                    'kkm'           => $modul['kkm']
                                 ];
                             }
                             
@@ -230,19 +236,19 @@ if (is_array($decoded) && isset($decoded['correct'])) {
                                 </span>
                             </td>
 
-                            <td class="text-center border-0 border-bottom border-end"><span class="{{ $detail_kuis_array[0]['skor_terakhir'] >= 70 ? 'text-success' : 'text-danger' }} fw-bold">{{ $detail_kuis_array[0]['skor_terakhir'] }}</span></td>
-                            <td class="text-center border-0 border-bottom border-end"><span class="{{ $detail_kuis_array[1]['skor_terakhir'] >= 70 ? 'text-success' : 'text-danger' }} fw-bold">{{ $detail_kuis_array[1]['skor_terakhir'] }}</span></td>
-                            <td class="text-center border-0 border-bottom border-end"><span class="{{ $detail_kuis_array[2]['skor_terakhir'] >= 70 ? 'text-success' : 'text-danger' }} fw-bold">{{ $detail_kuis_array[2]['skor_terakhir'] }}</span></td>
-                            <td class="text-center border-0 border-bottom border-end"><span class="{{ $detail_kuis_array[3]['skor_terakhir'] >= 70 ? 'text-success' : 'text-danger' }} fw-bold">{{ $detail_kuis_array[3]['skor_terakhir'] }}</span></td>
-                            <td class="text-center border-0 border-bottom border-end bg-light"><span class="{{ $detail_kuis_array[4]['skor_terakhir'] >= 70 ? 'text-success' : 'text-danger' }} fw-bold">{{ $detail_kuis_array[4]['skor_terakhir'] }}</span></td>
+                            <td class="text-center border-0 border-bottom border-end"><span class="{{ $detail_kuis_array[0]['skor_terakhir'] >= $kkmKuis1 ? 'text-success' : 'text-danger' }} fw-bold">{{ $detail_kuis_array[0]['skor_terakhir'] }}</span></td>
+                            <td class="text-center border-0 border-bottom border-end"><span class="{{ $detail_kuis_array[1]['skor_terakhir'] >= $kkmKuis2 ? 'text-success' : 'text-danger' }} fw-bold">{{ $detail_kuis_array[1]['skor_terakhir'] }}</span></td>
+                            <td class="text-center border-0 border-bottom border-end"><span class="{{ $detail_kuis_array[2]['skor_terakhir'] >= $kkmKuis3 ? 'text-success' : 'text-danger' }} fw-bold">{{ $detail_kuis_array[2]['skor_terakhir'] }}</span></td>
+                            <td class="text-center border-0 border-bottom border-end"><span class="{{ $detail_kuis_array[3]['skor_terakhir'] >= $kkmKuis4 ? 'text-success' : 'text-danger' }} fw-bold">{{ $detail_kuis_array[3]['skor_terakhir'] }}</span></td>
+                            <td class="text-center border-0 border-bottom border-end bg-light"><span class="{{ $detail_kuis_array[4]['skor_terakhir'] >= $kkmKuis5 ? 'text-success' : 'text-danger' }} fw-bold">{{ $detail_kuis_array[4]['skor_terakhir'] }}</span></td>
 
-                            <td class="text-center border-0 border-bottom border-end"><span class="{{ $p1 >= 70 ? 'text-primary' : 'text-secondary' }} fw-bold">{{ $p1 }}</span></td>
-                            <td class="text-center border-0 border-bottom border-end"><span class="{{ $p2 >= 70 ? 'text-primary' : 'text-secondary' }} fw-bold">{{ $p2 }}</span></td>
-                            <td class="text-center border-0 border-bottom border-end"><span class="{{ $p3 >= 70 ? 'text-primary' : 'text-secondary' }} fw-bold">{{ $p3 }}</span></td>
-                            <td class="text-center border-0 border-bottom border-end bg-light"><span class="{{ $p4 >= 70 ? 'text-primary' : 'text-secondary' }} fw-bold">{{ $p4 }}</span></td>
+                            <td class="text-center border-0 border-bottom border-end"><span class="{{ $p1 >= $kkmPrak1 ? 'text-primary' : 'text-secondary' }} fw-bold">{{ $p1 }}</span></td>
+                            <td class="text-center border-0 border-bottom border-end"><span class="{{ $p2 >= $kkmPrak2 ? 'text-primary' : 'text-secondary' }} fw-bold">{{ $p2 }}</span></td>
+                            <td class="text-center border-0 border-bottom border-end"><span class="{{ $p3 >= $kkmPrak3 ? 'text-primary' : 'text-secondary' }} fw-bold">{{ $p3 }}</span></td>
+                            <td class="text-center border-0 border-bottom border-end bg-light"><span class="{{ $p4 >= $kkmPrak4 ? 'text-primary' : 'text-secondary' }} fw-bold">{{ $p4 }}</span></td>
 
-                            <td class="text-center border-0 border-bottom border-end"><span class="fw-bold {{ $evaluasi >= 70 ? 'text-success' : 'text-danger' }}">{{ $evaluasi }}</span></td>
-                            <td class="text-center border-0 border-bottom border-end"><span class="badge {{ $rataAkhir >= 70 ? 'bg-success' : 'bg-warning text-dark' }} fs-6 shadow-sm">{{ $formatRata }}</span></td>
+                            <td class="text-center border-0 border-bottom border-end"><span class="fw-bold {{ $evaluasi >= $kkmEvaluasi ? 'text-success' : 'text-danger' }}">{{ $evaluasi }}</span></td>
+                            <td class="text-center border-0 border-bottom border-end"><span class="badge {{ $rataAkhir >= $kkmRataRata ? 'bg-success' : 'bg-warning text-dark' }} fs-6 shadow-sm">{{ $formatRata }}</span></td>
 
                             <td class="text-center border-0 border-bottom">
                                 <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-medium"
@@ -250,6 +256,7 @@ if (is_array($decoded) && isset($decoded['correct'])) {
                                         data-nim="{{ $mahasiswa->nim }}"
                                         data-kelas="{{ $mahasiswa->kelas->nama_kelas ?? '-' }}"
                                         data-evaluasi="{{ $evaluasi }}"
+                                        data-kkm-evaluasi="{{ $kkmEvaluasi }}"
                                         data-kuis-detail="{{ json_encode($detail_kuis_array) }}"
                                         onclick="openDetailModal(this)" title="Lihat Rincian Attempt & Evaluasi">
                                     <i class="fa-solid fa-expand"></i> Detail
@@ -290,14 +297,13 @@ if (is_array($decoded) && isset($decoded['correct'])) {
 
                 <div class="mb-4">
                     <label class="fw-bold text-secondary small text-uppercase tracking-wide mb-2">Riwayat Percobaan & Detail Jawaban</label>
-                    <div class="accordion" id="accordionKuisDetail">
-                        </div>
+                    <div class="accordion" id="accordionKuisDetail"></div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mx-auto">
                         <div class="bg-secondary bg-opacity-10 border border-secondary border-opacity-25 rounded-4 p-3 text-center">
-                            <small class="fw-bold text-secondary text-uppercase tracking-wide">Nilai Ujian Evaluasi Akhir</small><br>
+                            <small class="fw-bold text-secondary text-uppercase tracking-wide" id="lbl_kkm_evaluasi">Nilai Ujian Evaluasi Akhir</small><br>
                             <span class="fs-1 fw-bold text-dark" id="mdl_evaluasi">0</span>
                         </div>
                     </div>
@@ -320,23 +326,38 @@ if (is_array($decoded) && isset($decoded['correct'])) {
         document.getElementById('mdl_nim').innerText = btn.getAttribute('data-nim');
         document.getElementById('mdl_kelas').innerText = btn.getAttribute('data-kelas');
         document.getElementById('mdl_inisial').innerText = nama ? nama.charAt(0).toUpperCase() : 'M';
-        document.getElementById('mdl_evaluasi').innerText = btn.getAttribute('data-evaluasi');
+        
+        // PERBAIKAN: Ambil KKM Evaluasi 
+        const kkmEvaluasi = parseInt(btn.getAttribute('data-kkm-evaluasi')) || 75;
+
+        // UPDATE MODAL EVALUASI
+        const nilaiEvaluasi = parseInt(btn.getAttribute('data-evaluasi')) || 0;
+        const elEvaluasi = document.getElementById('mdl_evaluasi');
+        elEvaluasi.innerText = nilaiEvaluasi;
+        document.getElementById('lbl_kkm_evaluasi').innerText = `Nilai Ujian Evaluasi Akhir (KKM: ${kkmEvaluasi})`;
+
+        if (nilaiEvaluasi >= kkmEvaluasi) {
+            elEvaluasi.className = "fs-1 fw-bold text-success";
+        } else {
+            elEvaluasi.className = "fs-1 fw-bold text-danger";
+        }
 
         const kuisData = JSON.parse(btn.getAttribute('data-kuis-detail'));
         const accordionContainer = document.getElementById('accordionKuisDetail');
         accordionContainer.innerHTML = ''; 
 
         kuisData.forEach((modul, index) => {
-            let badgeMainClass = modul.skor_terakhir >= 70 ? 'success' : 'danger';
+            // PERBAIKAN: Menggunakan modul.kkm 
+            let badgeMainClass = modul.skor_terakhir >= modul.kkm ? 'success' : 'danger';
             let collapseId = `collapseKuis${index}`;
             let headingId = `headingKuis${index}`;
 
             let tableRows = '';
             if (modul.total_attempt > 0) {
                 modul.attempts.forEach(att => {
-                    let attBadge = att.skor >= 70 ? 'success' : 'danger';
+                    // PERBAIKAN: Menggunakan modul.kkm
+                    let attBadge = att.skor >= modul.kkm ? 'success' : 'danger';
                     
-                    // Generate Centang/Silang untuk 10 Soal
                     let detailHtml = '';
                     att.detail_soal.forEach(status => {
                         if (status === true) {
@@ -368,7 +389,10 @@ if (is_array($decoded) && isset($decoded['correct'])) {
                     <h2 class="accordion-header" id="${headingId}">
                         <button class="accordion-button collapsed border px-3 py-3" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}">
                             <div class="d-flex justify-content-between align-items-center w-100 me-2">
-                                <span class="fw-bold text-dark">${modul.nama}</span>
+                                <div>
+                                    <span class="fw-bold text-dark">${modul.nama}</span>
+                                    <span class="ms-2 badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25" style="font-size: 0.7rem;">KKM: ${modul.kkm}</span>
+                                </div>
                                 <div>
                                     <span class="badge bg-light text-secondary border me-1">${modul.total_attempt} Attempt</span>
                                     <span class="badge bg-${badgeMainClass}">Nilai Terakhir: ${modul.skor_terakhir}</span>

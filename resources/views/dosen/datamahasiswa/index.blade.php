@@ -145,7 +145,10 @@
                                 @php
                                     // Placeholder progres (Nanti bisa diganti dengan perhitungan dari database)
                                     // Misal: $progres = $mahasiswa->hitungProgres();
-                                    $progres = min(100, 40 + ($mahasiswa->id * 7) % 60);
+                                    $progres = $totalAktivitas > 0 
+                                        ? round(($mahasiswa->aktivitas_selesai / $totalAktivitas) * 100) 
+                                        : 0;
+
                                     $color = $progres >= 75 ? 'success' : ($progres >= 50 ? 'primary' : 'warning');
                                 @endphp
                                 <div class="d-flex justify-content-between align-items-center mb-1">

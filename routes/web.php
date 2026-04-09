@@ -20,7 +20,7 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/', function () {
         return view('landing');
-    });
+    })->name('home');
 
     Route::get('/kodeku', function () {
         return view('kodeku');
@@ -140,6 +140,9 @@ Route::prefix('mahasiswa')
     Route::put('/soal/{id}', [ButirSoalController::class, 'update'])->name('soal.update');
     Route::delete('/soal/{id}', [ButirSoalController::class, 'destroy'])->name('soal.destroy');
 
+
+    Route::get('/pengaturan-kkm', [SettingController::class, 'index'])->name('kkm.index');
+    Route::post('/pengaturan-kkm', [SettingController::class, 'update'])->name('kkm.update');
 
     Route::get('/rekap-nilai', [NilaiController::class, 'index'])
     ->name('nilai.index');

@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Aktivitas;
 use App\Models\ButirSoal;
+use App\Models\Mahasiswa;
 use App\Models\ProgresMahasiswa;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AktivitasController extends Controller
 {
@@ -48,7 +49,7 @@ class AktivitasController extends Controller
             'next_route' => 'nullable' // Nullable karena AJAX tidak butuh URL redirect
         ]);
 
-        $mahasiswa = Auth::user()->mahasiswa;
+        $mahasiswa = Mahasiswa::where('id_user', Auth::id())->first();
 
         // Simpan atau perbarui progres menjadi 'selesai'
         ProgresMahasiswa::updateOrCreate(

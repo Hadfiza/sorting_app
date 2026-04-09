@@ -29,7 +29,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->is('/') ? 'active fw-bold text-primary' : '' }}" href="landing">Beranda</a>
+                        <a class="nav-link {{ request()->routeIs('home') ? 'active fw-bold text-primary' : '' }}" 
+                        href="{{ route('home') }}">
+                        Beranda
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('login') }}">Materi</a>

@@ -6,8 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Aktivitas;
 use App\Models\ButirSoal;
 use App\Models\JawabanMahasiswa;
-// use App\Models\KategoriSoal;
-// use App\Models\Materi;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class KategoriSoalController extends Controller
@@ -90,7 +89,22 @@ public function start($id)
         }
 
         $skor = round($skor);
-        $statusLulus = $skor >= 60 ? 1 : 0;
+        // $statusLulus = $skor >= 60 ? 1 : 0;
+
+        // 1. Cari tahu siapa Dosen dari Mahasiswa yang sedang mengerjakan kuis
+        // (Asumsi relasi: Mahasiswa -> belongsTo Kelas -> belongsTo Dosen)
+        $id_dosen = $mahasiswa->kelas->id_dosen;
+
+        // 2. Ambil KKM dari tabel setting berdasarkan Dosen dan Kuis ini
+        $settingKkm = Setting::where('id_dosen', $id_dosen) 
+                        ->where('id_aktivitas', $id_aktivitas)
+                        ->first();
+
+        // 3. Jika dosen belum pernah mengatur KKM, gunakan default 75
+        $kkmDosen = $settingKkm ? $settingKkm->kkm : 75;
+
+        // 4. Tentukan status lulus berdasarkan KKM Dosen
+        $statusLulus = $skor >= $kkmDosen ? 1 : 0;
 
         // ================= SIMPAN =================
         $start = session('quiz_start_'.$id_aktivitas);
@@ -107,7 +121,9 @@ public function start($id)
         ]);
 
         return response()->json([
-            'skor' => $skor
+            'skor' => $skor,
+            'lulus' => $statusLulus == 1, // Opsional: Kirim balik status lulus ke AJAX view
+            'kkm' => $kkmDosen // Opsional: Beritahu mahasiswa KKM-nya berapa
         ]);
     }
 

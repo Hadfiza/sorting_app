@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\User;
+use App\Models\JawabanMahasiswa;
 use App\Models\Kelas;
+use App\Models\PengumpulanPraktikum;
+use App\Models\ProgresMahasiswa;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 
@@ -38,8 +41,8 @@ class Mahasiswa extends Model
         return $this->hasMany(PengumpulanPraktikum::class, 'id_mahasiswa');
     }
 
-    // public function progres()
-    // {
-    //     return $this->hasMany(ProgresMahasiswa::class, 'id_mahasiswa');
-    // }
+    public function progres()
+    {
+        return $this->hasMany(ProgresMahasiswa::class, 'id_mahasiswa');
+    }
 }
