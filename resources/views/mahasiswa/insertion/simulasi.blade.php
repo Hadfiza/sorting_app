@@ -160,7 +160,7 @@
             </div>
             
             <div class="simulation-wrapper">
-                <div class="sub-title"><strong>Studi kasus : </strong>Dalam sebuah sistem pengelolaan arsip digital, terdapat beberapa data yang diberi label nama bulan, yaitu April, Juni, September, Mei, dan Oktober. Data tersebut belum tersusun secara alfabet, sehingga menyulitkan proses pencarian. Untuk mengatasi masalah ini, digunakan algoritma Insertion Sort, yang mengurutkan data dengan cara mengambil satu elemen sebagai key lalu menyisipkannya ke posisi yang tepat di bagian data yang sudah terurut.</div>
+                <div class="sub-title"><strong>Studi kasus : </strong>Di sebuah kantor administrasi, seorang staf ingin merapikan kartu nama klien yang masih tersusun acak di atas meja agar mudah dicari berdasarkan urutan abjad. Ia tidak mengurutkannya sekaligus, melainkan mengambil satu kartu, membandingkannya dengan kartu di sebelah kiri, menggeser kartu yang lebih besar, lalu menyisipkannya ke posisi yang tepat hingga kartu-kartu tersusun rapi. Pada simulasi ini, kamu akan melihat proses tersebut berlangsung langkah demi langkah sampai semua kartu tersusun sesuai abjad menggunakan metode Insertion Sort.</div>
                 
                 <div id="simulation-container"></div>
                 

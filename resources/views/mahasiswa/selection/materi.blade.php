@@ -215,11 +215,13 @@
 
     <div class="card mb-4 materi-box mt-4" id="quizActivity">
         <div class="card-body materi-text">
-
+            
+            
             <div class="materi-header mb-3">
                 <span class="materi-badge">Aktivitas 2.1: Uji Pemahaman Selection Sort</span>
             </div>
 
+            @if(!$isSelesai)
             <p class="card-text mb-4 text-danger fw-bold">
                 Jawablah pertanyaan berikut secara berurutan dengan benar untuk membuka akses ke materi selanjutnya!
             </p>

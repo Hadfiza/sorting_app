@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Aktivitas;
 use App\Models\ButirSoal;
 use App\Models\JawabanMahasiswa;
+use App\Models\ProgresMahasiswa;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 
@@ -119,6 +120,22 @@ public function start($id)
             'waktu_mulai' => $start,
             'waktu_selesai' => now()
         ]);
+
+        // ==========================================================
+        // CATAT PROGRES JIKA LULUS KKM
+        // ==========================================================
+        if ($statusLulus == 1) {
+            ProgresMahasiswa::updateOrCreate(
+                [
+                    'id_mahasiswa' => $mahasiswa->id,
+                    'id_aktivitas' => $id_aktivitas
+                ],
+                [
+                    'status' => 'selesai'
+                ]
+            );
+        }
+        // ==========================================================
 
         return response()->json([
             'skor' => $skor,

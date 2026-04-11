@@ -42,11 +42,11 @@
                 
                 <div id="simulation-container"></div>
                 
-                <div id="finish-message" style="display:none; margin-top:30px;" class="text-center">
-                    <div class="alert alert-success">
-                        <h4><i class="fa fa-check-circle"></i> Selesai!</h4>
-                        <p>Seluruh data telah digabungkan dan terurut.</p>
-                        <button class="btn btn-outline-success" onclick="resetSimulation()">Ulangi Simulasi</button>
+                <div id="finish-message" style="display:none; margin-top:30px;" class="fade-in">
+                    <div class="sim-card" style="padding:30px; background:#eafaf1; border:2px solid #27ae60; border-radius:12px; text-align:center;">
+                        <h3 style="color:#1e8449;"><i class="fa fa-check-circle"></i> Pengurutan Merge Sort Selesai!</h3>
+                        <p class="text-muted">Seluruh karung telah digabungkan dan terurut dengan sempurna.</p>
+                        <button class="btn-sim active mt-3" style="background:#27ae60;" onclick="resetSimulation()">Ulangi Simulasi</button>
                     </div>
                 </div>
             </div>
@@ -68,7 +68,7 @@
         Sebelumnya
     </a>
 
-    <a href="{{ route('mahasiswa.aktivitas.show',['bubble','program']) }}" 
+    <a href="{{ route('mahasiswa.aktivitas.show',['merge','program']) }}" 
        id="btnNextMergeSim"
        class="btn btn-primary {{ $isSelesai ? '' : 'disabled' }}" 
        {!! $isSelesai ? '' : 'tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;"' !!}>

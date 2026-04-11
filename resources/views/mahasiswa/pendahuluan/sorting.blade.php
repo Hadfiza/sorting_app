@@ -284,13 +284,31 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackEl.classList.remove('d-none');
             activityBox.classList.add('completed');
 
-            // Buka Kunci Tombol Lanjut
+            // Buka tombol next
             btnNext.classList.remove('disabled');
             btnNext.removeAttribute('tabindex');
             btnNext.removeAttribute('aria-disabled');
             btnNext.style.pointerEvents = 'auto';
             btnNext.style.opacity = '1';
             lockIcon.className = 'fa-solid fa-unlock me-1';
+
+            // SIMPAN PROGRESS
+            fetch("{{ route('mahasiswa.aktivitas.tandai_selesai') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    id_aktivitas: {{ $item->id }} // Mengirim ID aktivitas saat ini
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Progress tersimpan:", data);
+            })
+            .catch(error => console.error("Error:", error));
         } else {
             feedbackEl.className = 'alert alert-danger py-3 mb-0 mt-3';
             feedbackEl.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <strong>Kurang Tepat!</strong> Ada klasifikasi yang salah (Benar: ${correct}/${totalItems}). Silakan klik Reset dan coba lagi.`;

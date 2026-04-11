@@ -183,14 +183,11 @@ function processNextTask() {
             if (btnArea) btnArea.remove(); 
         }
 
-        if (container) {
-            container.insertAdjacentHTML('beforeend', `
-                <div class="sim-card fade-in" style="margin-top:30px; padding:30px; background:#eafaf1; border:2px solid #27ae60; border-radius:12px; text-align:center;">
-                    <h3 style="color:#1e8449;"><i class="fa fa-check-circle"></i> Pengurutan Merge Sort Selesai!</h3>
-                    <button class="btn-sim active mt-3" style="background:#27ae60;" onclick="resetSimulation()">Ulangi Simulasi</button>
-                </div>
-            `);
+        const finishMsg = document.getElementById('finish-message');
+        if (finishMsg) {
+            finishMsg.style.display = 'block'; 
         }
+        
         window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
         return;
     }
@@ -638,6 +635,12 @@ function scrollToCard() {
             document.getElementById(currentCardId).scrollIntoView({ behavior: 'smooth', block: 'center' }); 
         }
     }, 150);
+}
+
+function showFinishMessage() {
+    const finishMsg = document.getElementById('finish-message');
+    if(finishMsg) finishMsg.style.display = 'block';
+    window.scrollTo(0, document.body.scrollHeight);
 }
 
 // ===============================

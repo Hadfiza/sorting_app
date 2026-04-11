@@ -164,12 +164,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnNext = document.getElementById('btnNextMateri');
     const lockIcon = document.getElementById('lockIcon');
 
+    // 🔥 HITUNG TOTAL SOAL OTOMATIS
+    const totalQuestions = document.querySelectorAll('.quiz-container > div').length;
+
     btnCheck.addEventListener('click', function() {
-        // Ambil jawaban yang dipilih mahasiswa
         const q1 = document.querySelector('input[name="q1"]:checked');
         const q2 = document.querySelector('input[name="q2"]:checked');
 
-        // Validasi jika ada yang belum dijawab
         if (!q1 || !q2) {
             feedback.className = 'alert alert-warning mt-3';
             feedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Harap pilih jawaban untuk semua soal terlebih dahulu!';
@@ -177,30 +178,45 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Cek Kebenaran (Kunci Jawaban: Q1 = Merge Sort, Q2 = Waktu eksekusi bertambah...)
         let correctCount = 0;
         if (q1.value === 'Merge Sort') correctCount++;
         if (q2.value === 'Waktu eksekusi bertambah secara kuadratik, kurang efisien untuk data besar') correctCount++;
 
-        // Tampilkan hasil
-        if (correctCount === 2) {
-            // JIKA BENAR SEMUA
+        // 🔥 PAKAI TOTAL DINAMIS
+        if (correctCount === totalQuestions) {
+
             feedback.className = 'alert alert-success mt-3';
-            feedback.innerHTML = '<i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Semua jawaban Anda benar. Tombol Selanjutnya telah dibuka.';
+            feedback.innerHTML = `<i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Semua jawaban benar (${correctCount}/${totalQuestions}).`;
             feedback.classList.remove('d-none');
             
-            // Buka gembok tombol Selanjutnya
             btnNext.classList.remove('disabled');
             btnNext.removeAttribute('tabindex');
             btnNext.removeAttribute('aria-disabled');
-            btnNext.style.pointerEvents = 'auto'; // Aktifkan klik
-            btnNext.style.opacity = '1';          // Normalkan warna
-            lockIcon.className = 'fa-solid fa-unlock me-1'; // Ganti icon gembok terbuka
+            btnNext.style.pointerEvents = 'auto';
+            btnNext.style.opacity = '1';
+            lockIcon.className = 'fa-solid fa-unlock me-1';
+
+            // 🔥 SIMPAN PROGRESS
+            fetch("{{ route('mahasiswa.aktivitas.tandai_selesai') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    id_aktivitas: {{ $item->id }} // Mengirim ID aktivitas saat ini
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Progress tersimpan:", data);
+            })
+            .catch(error => console.error("Error:", error));
 
         } else {
-            // JIKA ADA YANG SALAH
             feedback.className = 'alert alert-danger mt-3';
-            feedback.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> <strong>Kurang Tepat!</strong> Ada jawaban yang masih salah. Silakan perhatikan kembali tabel dan penjelasan di atas.';
+            feedback.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <strong>Kurang Tepat!</strong> (${correctCount}/${totalQuestions}) jawaban benar.`;
             feedback.classList.remove('d-none');
         }
     });

@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Aktivitas;
 use App\Models\ButirSoal;
-use App\Models\Mahasiswa;
 use App\Models\ProgresMahasiswa;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class AktivitasController extends Controller
 {
@@ -34,10 +33,13 @@ class AktivitasController extends Controller
             ->pluck('id_aktivitas')
             ->toArray(); // mengirimkan data progres menggunakan variabel $progresSelesai, yang bentuknya adalah Array berisi kumpulan ID aktivitas (pluck('id_aktivitas')->toArray()).
 
+        $isSelesai = in_array($item->id, $progresSelesai);
+            
         return view("mahasiswa.$folder.$slug", compact(
             'item',
             'aktivitas',
-            'progresSelesai' // 2. Kirim data ini ke tampilan (View)
+            'progresSelesai', // 2. Kirim data ini ke tampilan (View)
+            'isSelesai'
         ));
     }
 
@@ -49,7 +51,7 @@ class AktivitasController extends Controller
             'next_route' => 'nullable' // Nullable karena AJAX tidak butuh URL redirect
         ]);
 
-        $mahasiswa = Mahasiswa::where('id_user', Auth::id())->first();
+        $mahasiswa = Auth::user()->mahasiswa;
 
         // Simpan atau perbarui progres menjadi 'selesai'
         ProgresMahasiswa::updateOrCreate(
