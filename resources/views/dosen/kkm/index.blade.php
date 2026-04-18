@@ -19,7 +19,7 @@
                     </div>
                     <hr>
                 </div>
-                
+
                 <div class="card-body pt-2">
                     @if(session('success'))
                         <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
@@ -30,6 +30,12 @@
 
                     <form action="{{ route('dosen.kkm.update') }}" method="POST">
                         @csrf
+                        
+                        <div class="mb-4 p-3 bg-light rounded border">
+                            <label class="fw-bold text-dark mb-2"><i class="fa-solid fa-calendar-days me-2"></i>Pilih Tahun Ajaran Kelas:</label>
+                            <input type="number" name="tahun" class="form-control fw-bold" value="{{ date('Y') }}" required style="max-width: 200px;">
+                            <small class="text-muted mt-1 d-block">KKM yang Anda atur di bawah akan berlaku khusus untuk mahasiswa di kelas tahun ajaran ini.</small>
+                        </div>
                         <div class="row">
                             @forelse($aktivitas as $item)
                                 @php
@@ -41,9 +47,8 @@
                                         <div class="d-flex justify-content-between align-items-start mb-3">
                                             <h6 class="fw-bold mb-0 text-dark lh-base">
                                                 <i class="fa-solid fa-file-signature text-primary me-2"></i>{{ $item->judul }}
-                                                <span>{{ ucfirst($item->folder) }}</span>
+                                                <span class="d-block mt-1 text-muted small"><i class="fa-regular fa-folder-open me-1"></i>{{ ucfirst($item->folder) }}</span>
                                             </h6>
-                                            
                                         </div>
                                         
                                         <div class="mt-auto pt-3 border-top">

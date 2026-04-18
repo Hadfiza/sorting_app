@@ -12,6 +12,7 @@ class Setting extends Model
     protected $fillable = [
         'id_dosen', 
         'id_aktivitas', 
+        'tahun',
         'kkm'
     ];
 

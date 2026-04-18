@@ -29,16 +29,16 @@ class KategoriSoalController extends Controller
         ]);
     }
 
-public function start($id)
-{
-    session([
-        'quiz_start_'.$id => now()
-    ]);
+    public function start($id)
+    {
+        session([
+            'quiz_start_'.$id => now()
+        ]);
 
-    return response()->json(['status' => 'started']);
-}
+        return response()->json(['status' => 'started']);
+    }
 
-    public function submit(Request $request, $id_aktivitas)
+public function submit(Request $request, $id_aktivitas)
     {
         $aktivitas = Aktivitas::with('butirSoal')->findOrFail($id_aktivitas);
         $jawabanUser = $request->json('jawaban') ?? [];
@@ -90,24 +90,26 @@ public function start($id)
         }
 
         $skor = round($skor);
-        // $statusLulus = $skor >= 60 ? 1 : 0;
 
-        // 1. Cari tahu siapa Dosen dari Mahasiswa yang sedang mengerjakan kuis
-        // (Asumsi relasi: Mahasiswa -> belongsTo Kelas -> belongsTo Dosen)
+        // 1. Ambil Tahun Ajaran dari Kelas yang diikuti mahasiswa saat ini
+        $tahunKelas = $mahasiswa->kelas->tahun_ajaran; 
+
+        // 2. Cari tahu siapa Dosen dari Mahasiswa yang sedang mengerjakan kuis
         $id_dosen = $mahasiswa->kelas->id_dosen;
 
-        // 2. Ambil KKM dari tabel setting berdasarkan Dosen dan Kuis ini
+        // 3. Cari KKM dari tabel setting berdasarkan Dosen, Kuis ini, dan TAHUN KELAS
         $settingKkm = Setting::where('id_dosen', $id_dosen) 
                         ->where('id_aktivitas', $id_aktivitas)
+                        ->where('tahun', $tahunKelas) 
                         ->first();
 
-        // 3. Jika dosen belum pernah mengatur KKM, gunakan default 75
+        // 4. Jika dosen belum pernah mengatur KKM untuk tahun tersebut, gunakan default 75
         $kkmDosen = $settingKkm ? $settingKkm->kkm : 75;
 
-        // 4. Tentukan status lulus berdasarkan KKM Dosen
+        // 5. Tentukan status lulus berdasarkan KKM Dosen
         $statusLulus = $skor >= $kkmDosen ? 1 : 0;
 
-        // ================= SIMPAN =================
+        // ================= SIMPAN KE JAWABAN MAHASISWA =================
         $start = session('quiz_start_'.$id_aktivitas);
 
         JawabanMahasiswa::create([
@@ -139,8 +141,8 @@ public function start($id)
 
         return response()->json([
             'skor' => $skor,
-            'lulus' => $statusLulus == 1, // Opsional: Kirim balik status lulus ke AJAX view
-            'kkm' => $kkmDosen // Opsional: Beritahu mahasiswa KKM-nya berapa
+            'lulus' => $statusLulus == 1,
+            'kkm' => $kkmDosen
         ]);
     }
 

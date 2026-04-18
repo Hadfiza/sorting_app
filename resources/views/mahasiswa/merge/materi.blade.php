@@ -192,9 +192,32 @@
     <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
             <div class="materi-header">
+                <i class="fa-sharp-duotone fa-solid fa-shuffle"></i>
+                <span class="materi-badge">Cara Kerja</span>
+            </div>
+            <p class="card-text text-justify">
+                Algoritma Merge Sort bekerja dengan membagi daftar data menjadi dua bagian yang lebih kecil, mengurutkan masing-masing bagian tersebut, lalu menggabungkannya kembali menjadi satu daftar yang terurut. Proses ini menggunakan pendekatan rekursif, di mana fungsi memanggil dirinya sendiri untuk menangani sublist yang lebih kecil. <br><br> Tahapan prosesnya adalah sebagai berikut:
+            </p>
+            <ul class="card-text">
+                <li>Membagi (Divide): daftar data dibagi menjadi dua bagian dengan ukuran hampir sama.</li>
+                <li>Mengurutkan (Conguer): setiap bagian diurutkan kembali secara rekursif hingga hanya tersisa satu elemen di tiap sublist.</li>
+                <li>Menggabungkan (Merge): dua sublist yang sudah terurut digabungkan menjadi satu daftar baru dengan membandingkan elemen-elemen terkecil dari masing-masing sublist, lalu menyusunnya ke dalam urutan yang benar.</li>
+            </ul>
+            <p class="card-text text-justify">
+                Langkah-langkah di atas akan terus berulang sampai seluruh data tergabung kembali menjadi satu daftar lengkap yang sudah terurut sempurna. Dengan cara ini, Merge Sort dapat mengurutkan data secara efisien karena proses pengurutan dilakukan selama proses penggabungan (merging), bukan setelahnya.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="card mb-4 materi-box">
+        <div class="card-body materi-text">
+            <div class="materi-header">
                 <i class="fa-solid fa-play-circle"></i>
                 <span class="materi-badge">Ilustrasi Visualisasi (Divide & Conquer)</span>
             </div>
+
+            <p>Berikut adalah simulasi interaktif untuk membantu Anda memahami cara kerja algoritma secara langsung. Klik tombol <strong> Mulai Visualisasi </strong> untuk mengamati proses pengurutan langkah demi langkah, atau tekan tombol <strong> Acak Data </strong> untuk mencoba simulasi dengan susunan angka yang baru. Pastikan Anda memperhatikan perubahan warna pada balok sesuai dengan keterangan status di bagian bawah.</p>
 
             <div class="sim-visual-container">
                 <div class="stats-row">
@@ -231,25 +254,6 @@
         </div>
     </div>
 
-    <div class="card mb-4 materi-box">
-        <div class="card-body materi-text">
-            <div class="materi-header">
-                <i class="fa-sharp-duotone fa-solid fa-shuffle"></i>
-                <span class="materi-badge">Cara Kerja</span>
-            </div>
-            <p class="card-text text-justify">
-                Algoritma Merge Sort bekerja dengan membagi daftar data menjadi dua bagian yang lebih kecil, mengurutkan masing-masing bagian tersebut, lalu menggabungkannya kembali menjadi satu daftar yang terurut. Proses ini menggunakan pendekatan rekursif, di mana fungsi memanggil dirinya sendiri untuk menangani sublist yang lebih kecil. <br><br> Tahapan prosesnya adalah sebagai berikut:
-            </p>
-            <ul class="card-text">
-                <li>Membagi (Divide): daftar data dibagi menjadi dua bagian dengan ukuran hampir sama.</li>
-                <li>Mengurutkan (Conguer): setiap bagian diurutkan kembali secara rekursif hingga hanya tersisa satu elemen di tiap sublist.</li>
-                <li>Menggabungkan (Merge): dua sublist yang sudah terurut digabungkan menjadi satu daftar baru dengan membandingkan elemen-elemen terkecil dari masing-masing sublist, lalu menyusunnya ke dalam urutan yang benar.</li>
-            </ul>
-            <p class="card-text text-justify">
-                Langkah-langkah di atas akan terus berulang sampai seluruh data tergabung kembali menjadi satu daftar lengkap yang sudah terurut sempurna. Dengan cara ini, Merge Sort dapat mengurutkan data secara efisien karena proses pengurutan dilakukan selama proses penggabungan (merging), bukan setelahnya.
-            </p>
-        </div>
-    </div>
 
 
     <div class="card mb-4 materi-box mt-4" id="quizActivity">

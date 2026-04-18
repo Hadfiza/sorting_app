@@ -160,6 +160,26 @@
         </div>
     </div>
 
+    {{-- MATERI ASLI 3: CARA KERJA --}}
+    <div class="card mb-4 materi-box">
+        <div class="card-body materi-text">
+            <div class="materi-header">
+                <i class="fa-sharp-duotone fa-solid fa-shuffle"></i>
+                <span class="materi-badge">Cara Kerja</span>
+            </div>
+            <p class="card-text text-justify">
+                Pada setiap langkah, dua elemen yang bersebelahan akan dibandingkan:
+            </p>
+            <ul class="card-text">
+                <li>Jika elemen kiri lebih besar dari elemen kanan → tukar posisi.</li>
+                <li>Jika elemen sudah berurutan → tidak terjadi pertukaran.</li>
+            </ul>
+            <p class="card-text text-justify">
+                Langkah ini diulang dari awal sampai akhir kumpulan data. Setelah satu kali iterasi selesai, elemen terbesar akan berada di posisi paling akhir. Iterasi berikutnya dilakukan terhadap sisa data lainnya sampai semuanya terurut.
+            </p>
+        </div>
+    </div>
+
     {{-- ILUSTRASI VISUALISASI INTERAKTIF --}}
     <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
@@ -189,26 +209,6 @@
                     <button id="vStartBtn" class="btn-visual btn-start-v" onclick="startV()">Mulai Visualisasi</button>
                 </div>
             </div>
-        </div>
-    </div>
-
-    {{-- MATERI ASLI 3: CARA KERJA --}}
-    <div class="card mb-4 materi-box">
-        <div class="card-body materi-text">
-            <div class="materi-header">
-                <i class="fa-sharp-duotone fa-solid fa-shuffle"></i>
-                <span class="materi-badge">Cara Kerja</span>
-            </div>
-            <p class="card-text text-justify">
-                Pada setiap langkah, dua elemen yang bersebelahan akan dibandingkan:
-            </p>
-            <ul class="card-text">
-                <li>Jika elemen kiri lebih besar dari elemen kanan → tukar posisi.</li>
-                <li>Jika elemen sudah berurutan → tidak terjadi pertukaran.</li>
-            </ul>
-            <p class="card-text text-justify">
-                Langkah ini diulang dari awal sampai akhir kumpulan data. Setelah satu kali iterasi selesai, elemen terbesar akan berada di posisi paling akhir. Iterasi berikutnya dilakukan terhadap sisa data lainnya sampai semuanya terurut.
-            </p>
         </div>
     </div>
 

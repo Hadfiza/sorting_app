@@ -165,6 +165,29 @@
         </div>
     </div>
 
+    {{-- MATERI ASLI 3: CARA KERJA --}}
+    <div class="card mb-4 materi-box">
+        <div class="card-body materi-text">
+            <div class="materi-header">
+                <i class="fa-sharp-duotone fa-solid fa-shuffle"></i>
+                <span class="materi-badge">Cara Kerja</span>
+            </div>
+            <p class="card-text text-justify">
+                Pada algoritma Insertion Sort, proses pengurutan dilakukan dengan menyisipkan setiap elemen ke dalam posisi yang tepat di bagian data yang sudah terurut:
+            </p>
+            <ul class="card-text">
+                <li>Algoritma menganggap bahwa elemen pertama sudah berada pada posisi yang benar.</li>
+                <li>Elemen berikutnya akan dibandingkan dengan elemen-elemen sebelumnya untuk menemukan posisi yang sesuai.</li>
+                <li>Jika ditemukan elemen yang lebih besar di sebelah kiri, maka elemen-elemen tersebut digeser ke kanan untuk memberi ruang bagi elemen baru.</li>
+                <li>Elemen baru kemudian disisipkan di posisi yang tepat agar urutan tetap benar.</li>
+            </ul>
+            <p class="card-text text-justify">
+                Langkah-langkah tersebut diulang untuk seluruh elemen dalam daftar hingga semua data berada dalam keadaan terurut. <br>
+                Dengan cara ini, setiap iterasi menghasilkan bagian awal daftar yang selalu terjaga dalam kondisi terurut, sementara bagian sisanya menunggu untuk disisipkan.
+            </p>
+        </div>
+    </div>
+
     {{-- ILUSTRASI VISUALISASI INTERAKTIF --}}
     <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
@@ -199,28 +222,7 @@
         </div>
     </div>
 
-    {{-- MATERI ASLI 3: CARA KERJA --}}
-    <div class="card mb-4 materi-box">
-        <div class="card-body materi-text">
-            <div class="materi-header">
-                <i class="fa-sharp-duotone fa-solid fa-shuffle"></i>
-                <span class="materi-badge">Cara Kerja</span>
-            </div>
-            <p class="card-text text-justify">
-                Pada algoritma Insertion Sort, proses pengurutan dilakukan dengan menyisipkan setiap elemen ke dalam posisi yang tepat di bagian data yang sudah terurut:
-            </p>
-            <ul class="card-text">
-                <li>Algoritma menganggap bahwa elemen pertama sudah berada pada posisi yang benar.</li>
-                <li>Elemen berikutnya akan dibandingkan dengan elemen-elemen sebelumnya untuk menemukan posisi yang sesuai.</li>
-                <li>Jika ditemukan elemen yang lebih besar di sebelah kiri, maka elemen-elemen tersebut digeser ke kanan untuk memberi ruang bagi elemen baru.</li>
-                <li>Elemen baru kemudian disisipkan di posisi yang tepat agar urutan tetap benar.</li>
-            </ul>
-            <p class="card-text text-justify">
-                Langkah-langkah tersebut diulang untuk seluruh elemen dalam daftar hingga semua data berada dalam keadaan terurut. <br>
-                Dengan cara ini, setiap iterasi menghasilkan bagian awal daftar yang selalu terjaga dalam kondisi terurut, sementara bagian sisanya menunggu untuk disisipkan.
-            </p>
-        </div>
-    </div>
+
 
     <div class="card mb-4 materi-box mt-4" id="quizActivity">
         <div class="card-body materi-text">

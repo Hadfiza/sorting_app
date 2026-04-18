@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreignId('id_aktivitas')
                 ->constrained('aktivitas')
                 ->onDelete('cascade');
+                        
+            $table->integer('tahun')->nullable();
 
             // KKM spesifik untuk aktivitas tersebut
             $table->integer('kkm')->default(75);

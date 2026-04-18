@@ -43,7 +43,8 @@ class SettingController extends Controller
             Setting::updateOrCreate(
                 [
                     'id_dosen' => $dosen->id,
-                    'id_aktivitas' => $id_aktivitas
+                    'id_aktivitas' => $id_aktivitas,
+                    'tahun' => $request->tahun
                 ],
                 [
                     'kkm' => $nilai_kkm
@@ -60,6 +61,5 @@ class SettingController extends Controller
             }
         }
 
-        return back()->with('success', 'Pengaturan KKM berhasil disimpan dan status kelulusan mahasiswa telah diperbarui secara otomatis!');
-    }
+        return back()->with('success', 'KKM tahun ' . $request->tahun . ' berhasil disimpan.');    }
 }

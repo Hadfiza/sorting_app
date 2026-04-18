@@ -85,7 +85,7 @@
 
             <!-- Tombol -->
             <div class="flex gap-4 mt-10">
-                <a href="{{ route('mahasiswa.aktivitas.show',['pendahuluan','materi']) }}"
+                <a href="{{ route('mahasiswa.aktivitas.show',['pendahuluan','kompleksitas']) }}"
                 class="bg-blue-100 text-blue-700 px-6 py-3 rounded-xl font-bold hover:bg-blue-200 transition">
                      Kembali ke Materi
                 </a>
@@ -602,7 +602,7 @@ if (Array.isArray(kunciJawaban[key])) {
                         </div>
                     `,
                     icon: 'success',
-                    confirmButtonText: 'Kembali ke Materi',
+                    confirmButtonText: ' Materi Selanjutnya',
                     allowOutsideClick: false,
                     buttonsStyling: false,
                     customClass: {
@@ -611,7 +611,7 @@ if (Array.isArray(kunciJawaban[key])) {
 
                 }).then(() => {
 
-                    window.location.href = "{{ route('mahasiswa.aktivitas.show',['pendahuluan','materi']) }}";
+                    window.location.href = "{{ route('mahasiswa.aktivitas.show',['bubble','materi']) }}";
 
                 });
 

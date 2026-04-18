@@ -159,6 +159,27 @@
         </div>
     </div>
 
+    {{-- MATERI ASLI 3: CARA KERJA --}}
+    <div class="card mb-4 materi-box">
+        <div class="card-body materi-text">
+            <div class="materi-header">
+                <i class="fa-sharp-duotone fa-solid fa-shuffle"></i>
+                <span class="materi-badge">Cara Kerja</span>
+            </div>
+            <p class="card-text text-justify">
+                Pada setiap langkah, algoritma akan mencari elemen dengan nilai terkecil dari kumpulan data yang belum terurut:
+            </p>
+            <ul class="card-text">
+                <li>Setelah elemen terkecil ditemukan → tukar posisinya dengan elemen pertama dari bagian yang belum terurut.</li>
+                <li>Jika proses pencarian selesai → lanjutkan ke elemen berikutnya pada posisi kedua, dan ulangi langkah yang sama.</li>
+            </ul>
+            <p class="card-text text-justify">
+                Langkah ini diulang sampai seluruh elemen berada di posisi yang benar. Setelah setiap satu siklus seleksi selesai, elemen terkecil akan berada di posisi paling awal, dan bagian tersebut dianggap sudah terurut. Proses ini berlanjut hingga tidak ada lagi data yang tersisa untuk diseleksi.
+            </p>
+        </div>
+    </div>
+
+
     {{-- ILUSTRASI VISUALISASI --}}
     <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
@@ -193,25 +214,6 @@
         </div>
     </div>
 
-    {{-- MATERI ASLI 3: CARA KERJA --}}
-    <div class="card mb-4 materi-box">
-        <div class="card-body materi-text">
-            <div class="materi-header">
-                <i class="fa-sharp-duotone fa-solid fa-shuffle"></i>
-                <span class="materi-badge">Cara Kerja</span>
-            </div>
-            <p class="card-text text-justify">
-                Pada setiap langkah, algoritma akan mencari elemen dengan nilai terkecil dari kumpulan data yang belum terurut:
-            </p>
-            <ul class="card-text">
-                <li>Setelah elemen terkecil ditemukan → tukar posisinya dengan elemen pertama dari bagian yang belum terurut.</li>
-                <li>Jika proses pencarian selesai → lanjutkan ke elemen berikutnya pada posisi kedua, dan ulangi langkah yang sama.</li>
-            </ul>
-            <p class="card-text text-justify">
-                Langkah ini diulang sampai seluruh elemen berada di posisi yang benar. Setelah setiap satu siklus seleksi selesai, elemen terkecil akan berada di posisi paling awal, dan bagian tersebut dianggap sudah terurut. Proses ini berlanjut hingga tidak ada lagi data yang tersisa untuk diseleksi.
-            </p>
-        </div>
-    </div>
 
     <div class="card mb-4 materi-box mt-4" id="quizActivity">
         <div class="card-body materi-text">

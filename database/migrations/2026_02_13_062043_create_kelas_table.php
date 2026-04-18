@@ -16,6 +16,7 @@ return new class extends Migration
                   ->onDelete('cascade');
 
             $table->string('nama_kelas');
+            $table->integer('tahun_ajaran')->nullable();
             $table->string('token')->nullable();
 
             $table->timestamps();
