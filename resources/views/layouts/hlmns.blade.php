@@ -192,13 +192,13 @@
 
     <div class="menu-item {{ request()->routeIs('mahasiswa.evaluasi') ? 'active' : '' }}">
         @if(!$evaluasiLocked)
-            <a href="#" class="menu-btn fw-bold">
+            <a href="{{ route('mahasiswa.aktivitas.show', ['evaluasi', 'quiz']) }}" class="menu-btn fw-bold">
                 <i class="fa-solid fa-file-pen me-2"></i> Evaluasi Akhir
             </a>
         @else
-            <a href="#" class="menu-btn" style="cursor: not-allowed;"
-               onclick="alert('Selesaikan Kuis Merge Sort terlebih dahulu!'); return false;">
-                <i class="fa-solid fa-lock me-2"></i> Evaluasi Akhir
+            <a href="#" class="menu-btn text-muted" style="cursor: not-allowed; opacity: 0.6;" 
+            onclick="alert('Selesaikan Kuis Merge Sort terlebih dahulu!'); return false;">
+                <i class="fa-solid fa-lock text-danger me-2"></i> Evaluasi Akhir
             </a>
         @endif
     </div>

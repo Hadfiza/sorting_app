@@ -17,7 +17,7 @@ class AktivitasController extends Controller
         $mahasiswa = Auth::user()->mahasiswa;
 
         $aktivitas = Aktivitas::orderByRaw("
-            FIELD(folder,'pendahuluan','bubble','selection','insertion','merge')
+            FIELD(folder,'pendahuluan','bubble','selection','insertion','merge', 'evaluasi')
         ")
         ->orderBy('urutan')
         ->get()
@@ -86,13 +86,18 @@ class AktivitasController extends Controller
                         ->orderBy('nomor')
                         ->get();
 
-            return view("mahasiswa.$aktivitas->folder.$aktivitas->slug",
-                compact('aktivitas','soal')
-            );
+        } elseif ($aktivitas->tipe == 'evaluasi') {
+
+            $soal = ButirSoal::where('id_aktivitas', $id)
+                        ->inRandomOrder()
+                        ->get();
+
+        } else {
+            $soal = collect(); // kosong kalau bukan soal
         }
 
         return view("mahasiswa.$aktivitas->folder.$aktivitas->slug",
-            compact('aktivitas')
+            compact('aktivitas','soal')
         );
     }
 
