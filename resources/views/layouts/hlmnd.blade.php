@@ -108,7 +108,7 @@
     <div class="menu-item {{ request()->routeIs('dosen.praktikum.*') ? 'active' : '' }}">
         <a href="{{ route('dosen.praktikum.index') }}" class="menu-btn">
             <i class="fa-solid fa-flask me-2"></i>
-            Hasil Praktikum
+            Manajemen Praktikum
         </a>
     </div>
 

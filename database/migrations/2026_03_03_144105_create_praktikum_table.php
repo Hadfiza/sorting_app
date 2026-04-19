@@ -20,6 +20,7 @@ return new class extends Migration
 
             $table->string('judul');
             $table->text('deskripsi');
+            $table->string('file_soal')->nullable();
             $table->dateTime('batas_waktu')->nullable();
             $table->integer('bobot')->default(100);
 

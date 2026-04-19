@@ -49,8 +49,12 @@
 
     <div class="card title-card mb-4">
         <div class="card-body">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center justify-content-between">
                 <h3 class="mb-0">Hasil Praktikum</h3>
+                
+                <a href="{{ route('dosen.praktikum.soal') }}" class="btn btn-light text-primary fw-bold rounded-pill px-4 shadow-sm">
+                    <i class="bi bi-file-earmark-pdf-fill me-2 text-danger"></i> Kelola Soal PDF
+                </a>
             </div>
         </div>
     </div>

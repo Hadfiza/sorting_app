@@ -25,5 +25,10 @@ class Aktivitas extends Model
     {
         return $this->hasMany(JawabanMahasiswa::class,'id_aktivitas');
     }
+
+    public function praktikum()
+    {
+        return $this->hasOne(Praktikum::class, 'id_aktivitas');
+    }
 }
 

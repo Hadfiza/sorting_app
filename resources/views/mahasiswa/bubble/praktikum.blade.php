@@ -2,28 +2,6 @@
 
 @section('title','BubbleSort')
 
-@section('content')
-<meta name="csrf-token" content="{{ csrf_token() }}">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
-
-@php
-    // 1. Cek apakah aktivitas ini sudah masuk tabel progres_mahasiswa
-    $isSelesai = in_array($item->id, $progresSelesai);
-
-    // 2. Ambil relasi mahasiswa dari user yang sedang login
-    $mahasiswa = auth()->user()->mahasiswa;
-    
-    // 3. Cari data pengumpulan praktikum mahasiswa ini
-    $submission = null;
-    if ($mahasiswa) {
-        $submission = \App\Models\PengumpulanPraktikum::where('id_mahasiswa', $mahasiswa->id)
-                        ->where('id_praktikum', 3) // Sesuaikan ID praktikumnya
-                        ->first();
-    }
-@endphp
-
 <style>
 /* =========================
    CODEMIRROR
@@ -158,6 +136,34 @@
 }
 </style>
 
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+
+
+@section('content')
+
+@php
+    // 1. Cek apakah aktivitas ini sudah masuk tabel progres_mahasiswa
+    $isSelesai = in_array($item->id, $progresSelesai);
+
+    // 2. Ambil relasi mahasiswa dari user yang sedang login
+    $mahasiswa = auth()->user()->mahasiswa;
+
+    // 3. AMBIL DATA SOAL PRAKTIKUM (JUDUL, DESKRIPSI, PDF)
+    $praktikumData = \App\Models\Praktikum::where('id_aktivitas', $item->id)->first();
+    
+    // 4. Cari data pengumpulan praktikum mahasiswa ini
+    $submission = null;
+    if ($mahasiswa) {
+        $submission = \App\Models\PengumpulanPraktikum::where('id_mahasiswa', $mahasiswa->id)
+                        ->where('id_praktikum', $praktikumData ? $praktikumData->id : 0) 
+                        ->first();
+    }
+@endphp
+
+
 <div class="card title-card mb-4">
     <div class="card-body">
         <div class="d-flex align-items-center">
@@ -171,7 +177,7 @@
     </div>
 </div>
 
-<div class="materi-page">
+{{-- <div class="materi-page">
     <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
             <div class="materi-header">
@@ -195,7 +201,7 @@
                 >
             </div>
 
-            {{-- <div class="table-responsive">
+            <div class="table-responsive">
                 <table class="praktikum-table">
                     <thead>
                         <tr>
@@ -237,7 +243,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>   --}}
+            </div>  
 
             <p class="card-text text-justify">
                 Data mahasiswa yang tersedia seperti gambar diatas.<br>
@@ -249,6 +255,48 @@
                 <li>Setelah pengurutan selesai, tampilkan daftar mahasiswa sesuai urutan nilai UAS tersebut.</li>
             </ol>
             </p>
+        </div>
+    </div> --}}
+
+<div class="materi-page">
+    <div class="card mb-4 materi-box">
+        <div class="card-body materi-text">
+            <div class="materi-header mb-3">
+                <i class="fa-sharp-duotone fa-solid fa-shuffle"></i>
+                <span class="materi-badge">Soal Praktikum</span>
+            </div>
+
+            @if($praktikumData)
+                {{-- <div class="mb-4">
+                    <h4 class="fw-bold text-dark">{{ $praktikumData->judul }}</h4>
+                    <p class="text-muted text-justify" style="font-size: 15px;">{{ $praktikumData->deskripsi }}</p>
+                </div> --}}
+
+                @if($praktikumData->file_soal)
+                    <div class="p-2 rounded shadow-sm border" style="background-color: #f8fafc; border-color: #cbd5e1 !important;">
+                        <div class="d-flex align-items-center gap-2 px-3 py-2 border-bottom bg-light rounded-top mb-2">
+                            <i class="fa-solid fa-file-pdf text-danger fs-5"></i>
+                            <h5 class="fw-bold mb-0 text-dark" style="font-size: 1rem;">File Soal Praktikum</h5>
+                            <a href="{{ asset('storage/soal_praktikum/' . $praktikumData->file_soal) }}" target="_blank" class="btn btn-sm btn-outline-primary ms-auto fw-bold">
+                                <i class="fa-solid fa-expand"></i> Layar Penuh
+                            </a>
+                        </div>
+                        
+                        <iframe src="{{ asset('storage/soal_praktikum/' . $praktikumData->file_soal) }}"
+                                width="100%" height="600px"
+                                style="border: none; border-radius: 8px;">
+                        </iframe>
+                    </div>
+                @else
+                    <div class="alert alert-warning mb-0 border-0 shadow-sm">
+                        <i class="fa-solid fa-triangle-exclamation me-2"></i> Dosen belum mengunggah file PDF untuk praktikum ini.
+                    </div>
+                @endif
+            @else
+                <div class="alert alert-warning mb-0 border-0 shadow-sm">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i> Data soal praktikum belum diatur oleh dosen di sistem.
+                </div>
+            @endif
         </div>
     </div>
 

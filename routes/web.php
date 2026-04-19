@@ -106,6 +106,10 @@ Route::prefix('mahasiswa')
     // ---------------------------------------------------------
     // ROUTE MANAJEMEN PRAKTIKUM
     // ---------------------------------------------------------
+
+    Route::get('/praktikum/kelola-soal', [PraktikumController::class, 'kelolasoal'])->name('praktikum.soal');
+    Route::post('/praktikum/simpan-soal/{id}', [PraktikumController::class, 'simpanSoal'])->name('praktikum.simpanSoal');
+
     Route::get('/praktikum', [PraktikumController::class, 'index'])
     ->name('praktikum.index');
     Route::get('/praktikum/{id}', [PraktikumController::class, 'dosenShow'])
