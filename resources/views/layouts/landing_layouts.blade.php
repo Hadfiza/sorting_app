@@ -41,7 +41,7 @@
                         <a class="nav-link {{ request()->routeIs('kodeku') ? 'active fw-bold text-primary' : '' }}" href="{{ route('kodeku') }}">Kodeku</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('petunjuk') ? 'active fw-bold text-primary' : '' }}" href="/">Petunjuk Penggunaan</a>
+                        <a class="nav-link {{ request()->routeIs('petunjuk') ? 'active fw-bold text-primary' : '' }}" href="{{route('petunjuk')}}">Petunjuk Penggunaan</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('tentang') ? 'active fw-bold text-primary' : '' }}" href="{{ route('tentang') }}">Tentang</a>

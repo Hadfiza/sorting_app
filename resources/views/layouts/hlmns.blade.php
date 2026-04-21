@@ -32,7 +32,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="{{route("mahasiswa.profil")}}">
                         <i class="fa-solid fa-user me-2"></i> Profil
                     </a>
                 </li>
@@ -100,6 +100,7 @@
     <div class="sidebar-divider"></div>
 
     @foreach($aktivitasSorted as $folder => $items)
+        @if($folder == 'evaluasi') @continue @endif
         @php
             $isLocked = false;
             
@@ -196,9 +197,9 @@
                 <i class="fa-solid fa-file-pen me-2"></i> Evaluasi Akhir
             </a>
         @else
-            <a href="#" class="menu-btn text-muted" style="cursor: not-allowed; opacity: 0.6;" 
+            <a href="#" class="menu-btn" style="cursor: not-allowed;" 
             onclick="alert('Selesaikan Kuis Merge Sort terlebih dahulu!'); return false;">
-                <i class="fa-solid fa-lock text-danger me-2"></i> Evaluasi Akhir
+                <i class="fa-solid fa-lock me-2"></i> Evaluasi Akhir
             </a>
         @endif
     </div>

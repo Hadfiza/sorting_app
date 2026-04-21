@@ -10,6 +10,7 @@ use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MahasiswaDashboardController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\PraktikumController;
+use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,10 @@ Route::middleware('guest')->group(function () {
     Route::get('/tentang', function () {
         return view('tentang');
     })->name('tentang');
+
+    Route::get('/petunjuk', function () {
+        return view('petunjuk');
+    })->name('petunjuk');
 
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.process');
@@ -88,6 +93,10 @@ Route::prefix('mahasiswa')
     Route::post('/aktivitas/tandai-selesai', 
         [AktivitasController::class, 'tandaiSelesai'])
     ->name('aktivitas.tandai_selesai');
+
+    // Rute profil mahasiswa
+    Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
+    Route::post('/profil/update', [ProfilController::class, 'update'])->name('profil.update');
 
 });
 
@@ -156,6 +165,10 @@ Route::prefix('mahasiswa')
 
     Route::get('/setting', [SettingController::class,'index'])
         ->name('setting');
+
+    // Rute profil dosen
+    Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
+    Route::post('/profil/update', [ProfilController::class, 'update'])->name('profil.update');
 
 
 

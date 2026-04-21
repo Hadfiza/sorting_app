@@ -36,7 +36,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="{{route("dosen.profil")}}">
                         <i class="fa-solid fa-user me-2"></i> Profil
                     </a>
                 </li>
