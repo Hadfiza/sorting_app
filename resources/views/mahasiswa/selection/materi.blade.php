@@ -237,7 +237,7 @@
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="sq1" id="sq1b" value="B">
-                        <label class="form-check-label" for="sq1b">B. Memilih elemen terkecil dari data yang belum terurut dan menempatkannya di posisi awal.</label>
+                        <label class="form-check-label" for="sq1b">B. Menyisipkan elemen ke posisi yang tepat pada bagian yang sudah terurut.</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="sq1" id="sq1c" value="C">
@@ -245,7 +245,7 @@
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="sq1" id="sq1d" value="D">
-                        <label class="form-check-label" for="sq1d">D. Menyisipkan elemen ke posisi yang tepat pada bagian yang sudah terurut.</label>
+                        <label class="form-check-label" for="sq1d">D. Memilih elemen terkecil dari data yang belum terurut dan menempatkannya di posisi awal.</label>
                     </div>
                 </div>
 
@@ -277,7 +277,7 @@
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="sq3" id="sq3b" value="B">
-                        <label class="form-check-label" for="sq3b">B. Karena algoritma ini tetap melakukan proses pencarian minimum pada setiap iterasi yang membandingkan semua sisa elemen.</label>
+                        <label class="form-check-label" for="sq3b">B. Karena pertukaran selalu dilakukan dengan elemen yang berada di posisi paling akhir. </label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="sq3" id="sq3c" value="C">
@@ -285,9 +285,73 @@
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="sq3" id="sq3d" value="D">
-                        <label class="form-check-label" for="sq3d">D. Karena pertukaran selalu dilakukan dengan elemen yang berada di posisi paling akhir.</label>
+                        <label class="form-check-label" for="sq3d">D. Karena algoritma ini tetap melakukan proses pencarian minimum pada setiap iterasi yang membandingkan semua sisa elemen.</label>
                     </div>
                 </div>
+
+                <!-- SOAL 4 -->
+                <div class="mb-4 fade-in d-none" id="q4-container">
+                    <p class="fw-semibold mb-2">
+                        4. Jika kita mengurutkan array [64, 25, 12, 22, 11] secara ascending menggunakan Selection Sort, nilai manakah yang akan menempati posisi pertama setelah iterasi pertama selesai?
+                    </p>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq4" id="sq4a" value="A">
+                        <label class="form-check-label" for="sq4a">A. 64</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq4" id="sq4b" value="B">
+                        <label class="form-check-label" for="sq4b">B. 25</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq4" id="sq4c" value="C">
+                        <label class="form-check-label" for="sq4c">C. 11</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq4" id="sq4d" value="D">
+                        <label class="form-check-label" for="sq4d">D. 12</label>
+                    </div>
+                </div>
+
+
+                <!-- SOAL 5 -->
+                <div class="mb-4 fade-in d-none" id="q5-container">
+                    <p class="fw-semibold mb-2">
+                        5. Keunggulan utama Selection Sort dibandingkan Bubble Sort dalam hal penggunaan sumber daya adalah:
+                    </p>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq5" id="sq5a" value="A">
+                        <label class="form-check-label" for="sq5a">
+                            A. Jumlah operasi penulisan ke memori (write/swap) lebih sedikit dan terukur.
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq5" id="sq5b" value="B">
+                        <label class="form-check-label" for="sq5b">
+                            B. Memiliki kompleksitas waktu yang lebih kecil, yaitu O(n).
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq5" id="sq5c" value="C">
+                        <label class="form-check-label" for="sq5c">
+                            C. Lebih cepat dalam mengurutkan data yang sudah hampir terurut.
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sq5" id="sq5d" value="D">
+                        <label class="form-check-label" for="sq5d">
+                            D. Tidak memerlukan perbandingan elemen sama sekali.
+                        </label>
+                    </div>
+                </div>
+
             </div>
 
             <div id="selectionQuizFeedback" class="alert d-none mt-3"></div>
@@ -397,9 +461,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const q1Inputs = document.querySelectorAll('input[name="sq1"]');
     const q2Inputs = document.querySelectorAll('input[name="sq2"]');
     const q3Inputs = document.querySelectorAll('input[name="sq3"]');
-    
+    const q4Inputs = document.querySelectorAll('input[name="sq4"]');
+
     const q2Container = document.getElementById('q2-container');
     const q3Container = document.getElementById('q3-container');
+    const q4Container = document.getElementById('q4-container');
+    const q5Container = document.getElementById('q5-container');
     const btnCheck = document.getElementById('btnCheckSelectionQuiz');
     
     const feedback = document.getElementById('selectionQuizFeedback');
@@ -419,8 +486,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Memunculkan tombol periksa saat soal 3 dipilih
+    // muncul soal 4
     q3Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q4Container.classList.remove('d-none');
+        });
+    });
+
+    // muncul soal 5
+    q4Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q5Container.classList.remove('d-none');
+        });
+    });
+
+    // tombol check muncul di soal terakhir
+    q5Inputs.forEach(input => {
         input.addEventListener('change', () => {
             btnCheck.classList.remove('d-none');
         });
@@ -431,8 +512,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const q1 = document.querySelector('input[name="sq1"]:checked');
         const q2 = document.querySelector('input[name="sq2"]:checked');
         const q3 = document.querySelector('input[name="sq3"]:checked');
+        const q4 = document.querySelector('input[name="sq4"]:checked');
+        const q5 = document.querySelector('input[name="sq5"]:checked');
 
-        if (!q1 || !q2 || !q3) {
+        if (!q1 || !q2 || !q3 || !q4 || !q5) {
             feedback.className = 'alert alert-warning mt-3';
             feedback.innerHTML = 'Harap pilih jawaban untuk semua soal terlebih dahulu!';
             feedback.classList.remove('d-none');
@@ -440,11 +523,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         let correctCount = 0;
-        if (q1.value === 'B') correctCount++; 
+        if (q1.value === 'D') correctCount++; 
         if (q2.value === 'B') correctCount++; 
-        if (q3.value === 'B') correctCount++; 
+        if (q3.value === 'D') correctCount++; 
+        if (q4.value === 'C') correctCount++; 
+        if (q5.value === 'A') correctCount++; 
 
-        if (correctCount === 3) {
+        if (correctCount === 5) {
             feedback.className = 'alert alert-success mt-3';
             feedback.innerHTML = '<strong>Luar Biasa!</strong> Pemahaman Anda tentang Selection Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
             feedback.classList.remove('d-none');

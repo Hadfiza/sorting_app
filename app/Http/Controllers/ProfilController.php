@@ -5,15 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Aktivitas; 
 
 class ProfilController extends Controller
 {
     public function index()
     {
         $user = Auth::user();
+        
+        // Mengambil data aktivitas untuk sidebar (dikelompokkan berdasarkan folder)
+        $aktivitas = Aktivitas::all()->groupBy('folder');
+
         // Menggunakan layout yang sesuai dengan role
         $view = ($user->role == 'mahasiswa') ? 'mahasiswa.profil' : 'dosen.profil';
-        return view($view, compact('user'));
+        
+        // Kirimkan variabel aktivitas dan materi bersamaan dengan user
+        return view($view, compact('user', 'aktivitas'));
     }
 
     public function update(Request $request)

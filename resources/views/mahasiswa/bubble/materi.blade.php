@@ -284,6 +284,70 @@
                         <label class="form-check-label" for="bq3d">D. n/2 kali</label>
                     </div>
                 </div>
+
+                <!-- SOAL 4 -->
+                <div class="mb-4 fade-in d-none" id="q4-container">
+                    <p class="fw-semibold mb-2">
+                        4. Dalam algoritma Bubble Sort, kapan proses pertukaran (swap) data berhenti dilakukan dalam satu iterasi?
+                    </p>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq4" id="bq4a" value="A">
+                        <label class="form-check-label" for="bq4a">
+                            A. Ketika elemen pertama sudah lebih kecil dari elemen kedua.
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq4" id="bq4b" value="B">
+                        <label class="form-check-label" for="bq4b">
+                            B. Ketika elemen terkecil sudah berada di posisi paling akhir daftar.
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq4" id="bq4c" value="C">
+                        <label class="form-check-label" for="bq4c">
+                            C. Ketika indeks array sudah mencapai jumlah data.
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq4" id="bq4d" value="D">
+                        <label class="form-check-label" for="bq4d">
+                            D. Ketika sudah tidak ada lagi elemen yang lebih besar di kiri dibandingkan kanan.
+                        </label>
+                    </div>
+                </div>
+
+
+                <!-- SOAL 5 -->
+                <div class="mb-4 fade-in d-none" id="q5-container">
+                    <p class="fw-semibold mb-2">
+                        5. Jika array [1, 2, 3, 5, 4] diurutkan menggunakan Bubble Sort, berapa iterasi minimal hingga data pasti terurut?
+                    </p>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq5" id="bq5a" value="A">
+                        <label class="form-check-label" for="bq5a">A. 1 iterasi</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq5" id="bq5b" value="B">
+                        <label class="form-check-label" for="bq5b">B. 5 iterasi</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq5" id="bq5c" value="C">
+                        <label class="form-check-label" for="bq5c">C. 2 iterasi</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bq5" id="bq5d" value="D">
+                        <label class="form-check-label" for="bq5d">D. 4 iterasi</label>
+                    </div>
+                </div>
+
             </div>
 
             <div id="bubbleQuizFeedback" class="alert d-none mt-3"></div>
@@ -376,9 +440,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const q1Inputs = document.querySelectorAll('input[name="bq1"]');
     const q2Inputs = document.querySelectorAll('input[name="bq2"]');
     const q3Inputs = document.querySelectorAll('input[name="bq3"]');
+    const q4Inputs = document.querySelectorAll('input[name="bq4"]');
+    const q5Inputs = document.querySelectorAll('input[name="bq5"]');
     
     const q2Container = document.getElementById('q2-container');
     const q3Container = document.getElementById('q3-container');
+    const q4Container = document.getElementById('q4-container');
+    const q5Container = document.getElementById('q5-container');
     const btnCheck = document.getElementById('btnCheckBubbleQuiz');
     
     const feedback = document.getElementById('bubbleQuizFeedback');
@@ -398,8 +466,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Memunculkan tombol periksa saat soal 3 dipilih
+    // tampil soal 4
     q3Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q4Container.classList.remove('d-none');
+        });
+    });
+
+    // tampil soal 5
+    q4Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q5Container.classList.remove('d-none');
+        });
+    });
+
+    // tombol check muncul di akhir
+    q5Inputs.forEach(input => {
         input.addEventListener('change', () => {
             btnCheck.classList.remove('d-none');
         });
@@ -410,8 +492,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const q1 = document.querySelector('input[name="bq1"]:checked');
         const q2 = document.querySelector('input[name="bq2"]:checked');
         const q3 = document.querySelector('input[name="bq3"]:checked');
+        const q4 = document.querySelector('input[name="bq4"]:checked');
+        const q5 = document.querySelector('input[name="bq5"]:checked');
 
-        if (!q1 || !q2 || !q3) {
+        if (!q1 || !q2 || !q3 || !q4 || !q5) {
             feedback.className = 'alert alert-warning mt-3';
             feedback.innerHTML = 'Harap pilih jawaban untuk semua soal terlebih dahulu!';
             feedback.classList.remove('d-none');
@@ -422,8 +506,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (q1.value === 'B') correctCount++; 
         if (q2.value === 'A') correctCount++; 
         if (q3.value === 'B') correctCount++; 
+        if (q4.value === 'D') correctCount++; 
+        if (q5.value === 'C') correctCount++; 
 
-        if (correctCount === 3) {
+        if (correctCount === 5) {
             feedback.className = 'alert alert-success mt-3';
             feedback.innerHTML = '<strong>Luar Biasa!</strong> Pemahaman Anda tentang Bubble Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
             feedback.classList.remove('d-none');

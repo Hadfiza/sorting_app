@@ -296,6 +296,70 @@
                         <label class="form-check-label" for="iq3d">D. Menggeser elemen yang lebih besar ke kanan untuk memberi ruang bagi elemen key.</label>
                     </div>
                 </div>
+
+                <!-- SOAL 4 -->
+                <div class="mb-4 fade-in d-none" id="q4-container">
+                    <p class="fw-semibold mb-2">
+                        4. Pada algoritma Insertion Sort, elemen pertama dari kumpulan data dianggap sebagai ...
+                    </p>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq4" id="iq4a" value="A">
+                        <label class="form-check-label" for="iq4a">
+                            A. Elemen yang harus dipindahkan ke posisi paling akhir.
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq4" id="iq4b" value="B">
+                        <label class="form-check-label" for="iq4b">
+                            B. Bagian dari daftar yang sudah terurut (sorted sub-list).
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq4" id="iq4c" value="C">
+                        <label class="form-check-label" for="iq4c">
+                            C. Elemen yang memiliki nilai paling besar secara otomatis.
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq4" id="iq4d" value="D">
+                        <label class="form-check-label" for="iq4d">
+                            D. Data sementara yang harus dihapus untuk memberi ruang bagi key.
+                        </label>
+                    </div>
+                </div>
+
+
+                <!-- SOAL 5 -->
+                <div class="mb-4 fade-in d-none" id="q5-container">
+                    <p class="fw-semibold mb-2">
+                        5. Perhatikan array berikut: [3, 10, 4, 1, 5]. Jika angka "4" dipilih sebagai key, urutan data yang benar setelah disisipkan adalah ...
+                    </p>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq5" id="iq5a" value="A">
+                        <label class="form-check-label" for="iq5a">A. [3, 1, 4, 5, 10]</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq5" id="iq5b" value="B">
+                        <label class="form-check-label" for="iq5b">B. [1, 3, 4, 10, 5]</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq5" id="iq5c" value="C">
+                        <label class="form-check-label" for="iq5c">C. [3, 4, 10, 1, 5]</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq5" id="iq5d" value="D">
+                        <label class="form-check-label" for="iq5d">D. [4, 3, 10, 1, 5]</label>
+                    </div>
+                </div>
+
             </div>
 
             <div id="insertionQuizFeedback" class="alert d-none mt-3"></div>
@@ -407,9 +471,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const q1Inputs = document.querySelectorAll('input[name="iq1"]');
     const q2Inputs = document.querySelectorAll('input[name="iq2"]');
     const q3Inputs = document.querySelectorAll('input[name="iq3"]');
+    const q4Inputs = document.querySelectorAll('input[name="iq4"]');
+    const q5Inputs = document.querySelectorAll('input[name="iq5"]');
+
     
     const q2Container = document.getElementById('q2-container');
     const q3Container = document.getElementById('q3-container');
+    const q4Container = document.getElementById('q4-container');
+    const q5Container = document.getElementById('q5-container');
     const btnCheck = document.getElementById('btnCheckInsertionQuiz');
     
     const feedback = document.getElementById('insertionQuizFeedback');
@@ -429,8 +498,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Memunculkan tombol periksa saat soal 3 dipilih
+    // muncul soal 4
     q3Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q4Container.classList.remove('d-none');
+        });
+    });
+
+    // muncul soal 5
+    q4Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q5Container.classList.remove('d-none');
+        });
+    });
+
+    // tombol check muncul setelah soal 5
+    q5Inputs.forEach(input => {
         input.addEventListener('change', () => {
             btnCheck.classList.remove('d-none');
         });
@@ -441,8 +524,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const q1 = document.querySelector('input[name="iq1"]:checked');
         const q2 = document.querySelector('input[name="iq2"]:checked');
         const q3 = document.querySelector('input[name="iq3"]:checked');
+        const q4 = document.querySelector('input[name="iq4"]:checked');
+        const q5 = document.querySelector('input[name="iq5"]:checked');
 
-        if (!q1 || !q2 || !q3) {
+        if (!q1 || !q2 || !q3 || !q4 || !q5) {
             feedback.className = 'alert alert-warning mt-3';
             feedback.innerHTML = 'Harap pilih jawaban untuk semua soal terlebih dahulu!';
             feedback.classList.remove('d-none');
@@ -453,8 +538,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (q1.value === 'C') correctCount++; // Jawaban: Menyusun kartu di tangan...
         if (q2.value === 'A') correctCount++; // Jawaban: Jumlah pertukaran dan pergeseran sedikit...
         if (q3.value === 'D') correctCount++; // Jawaban: Menggeser elemen yang lebih besar ke kanan...
+        if (q4.value === 'B') correctCount++; // 
+        if (q5.value === 'C') correctCount++;
 
-        if (correctCount === 3) {
+        if (correctCount === 5) {
             feedback.className = 'alert alert-success mt-3';
             feedback.innerHTML = 'Luar Biasa! Pemahaman Anda tentang Insertion Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
             feedback.classList.remove('d-none');

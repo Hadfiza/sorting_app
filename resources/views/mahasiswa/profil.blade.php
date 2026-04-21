@@ -50,7 +50,7 @@
                     <h2 class="fw-bold mb-1">{{ auth()->user()->nama }}</h2>
                     <p class="mb-2 text-light"><i class="fa-solid fa-envelope me-2"></i>{{ auth()->user()->email }}</p>
                     <span class="badge bg-white text-primary px-3 py-2 rounded-pill shadow-sm border">
-                        <i class="fa-solid fa-user-graduate me-1"></i> Mahasiswa Skripsi
+                        <i class="fa-solid fa-user-graduate me-1"></i> Mahasiswa
                     </span>
                 </div>
 
@@ -143,5 +143,5 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
 @endsection

@@ -328,6 +328,61 @@
                         <label class="form-check-label" for="mq3d">D. Karena menggunakan proses perulangan bersarang</label>
                     </div>
                 </div>
+                <!-- SOAL 4 -->
+                <div class="mb-4 fade-in d-none" id="q4-container">
+                    <p class="fw-semibold mb-2">
+                        4. Apa yang dilakukan algoritma pada tahap "Combine/Merge" dalam proses Merge Sort?
+                    </p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="mq4" id="mq4a" value="A">
+                        <label class="form-check-label" for="mq4a">
+                            A. Dua sublist yang sudah terurut dan menyatukannya kembali menjadi satu daftar terurut dengan membandingkan elemen terkecil dari masing-masing sublist
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="mq4" id="mq4b" value="B">
+                        <label class="form-check-label" for="mq4b">
+                            B. Membagi array menjadi dua bagian yang terus mengecil secara acak
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="mq4" id="mq4c" value="C">
+                        <label class="form-check-label" for="mq4c">
+                            C. Menghapus elemen-elemen yang memiliki nilai ganda (duplikat) dalam daftar
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="mq4" id="mq4d" value="D">
+                        <label class="form-check-label" for="mq4d">
+                            D. Mencari nilai pivot untuk menentukan pembagian data selanjutnya
+                        </label>
+                    </div>
+                </div>
+
+
+                <!-- SOAL 5 -->
+                <div class="mb-4 fade-in d-none" id="q5-container">
+                    <p class="fw-semibold mb-2">
+                        5. Jika sebuah array memiliki 8 elemen, berapa kali proses pembagian (Divide) akan dilakukan hingga setiap elemen berdiri sendiri sebagai satu sublist?
+                    </p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="mq5" id="mq5a" value="A">
+                        <label class="form-check-label" for="mq5a">A. 3 kali</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="mq5" id="mq5b" value="B">
+                        <label class="form-check-label" for="mq5b">B. 1 kali</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="mq5" id="mq5c" value="C">
+                        <label class="form-check-label" for="mq5c">C. 8 kali</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="mq5" id="mq5d" value="D">
+                        <label class="form-check-label" for="mq5d">D. 7 kali</label>
+                    </div>
+                </div>
+
             </div>
 
             <div id="mergeQuizFeedback" class="alert d-none mt-3"></div>
@@ -493,9 +548,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const q1Inputs = document.querySelectorAll('input[name="mq1"]');
     const q2Inputs = document.querySelectorAll('input[name="mq2"]');
     const q3Inputs = document.querySelectorAll('input[name="mq3"]');
-    
+    const q4Inputs = document.querySelectorAll('input[name="mq4"]');
+    const q5Inputs = document.querySelectorAll('input[name="mq5"]');
+
+
     const q2Container = document.getElementById('q2-container');
     const q3Container = document.getElementById('q3-container');
+    const q4Container = document.getElementById('q4-container');
+    const q5Container = document.getElementById('q5-container');
     const btnCheck = document.getElementById('btnCheckMergeQuiz');
     
     const feedback = document.getElementById('mergeQuizFeedback');
@@ -515,20 +575,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Memunculkan tombol periksa saat soal 3 dipilih
     q3Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q4Container.classList.remove('d-none');
+        });
+    });
+
+    q4Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q5Container.classList.remove('d-none');
+        });
+    });
+
+    // Memunculkan tombol periksa saat soal 3 dipilih
+    q5Inputs.forEach(input => {
         input.addEventListener('change', () => {
             btnCheck.classList.remove('d-none');
         });
     });
+
 
     // Pengecekan Jawaban Akhir
     btnCheck.addEventListener('click', function() {
         const q1 = document.querySelector('input[name="mq1"]:checked');
         const q2 = document.querySelector('input[name="mq2"]:checked');
         const q3 = document.querySelector('input[name="mq3"]:checked');
+        const q4 = document.querySelector('input[name="mq4"]:checked');
+        const q5 = document.querySelector('input[name="mq5"]:checked');
 
-        if (!q1 || !q2 || !q3) {
+        if (!q1 || !q2 || !q3 || !q4 || !q5) {
             feedback.className = 'alert alert-warning mt-3';
             feedback.innerHTML = 'Harap pilih jawaban untuk semua soal terlebih dahulu!';
             feedback.classList.remove('d-none');
@@ -539,8 +614,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (q1.value === 'A') correctCount++; // Jawaban: Divide and Conquer
         if (q2.value === 'B') correctCount++; // Jawaban: Saat daftar kosong atau hanya memiliki satu elemen
         if (q3.value === 'C') correctCount++; // Jawaban: Karena memerlukan memori tambahan
+        if (q4.value === 'A') correctCount++;
+        if (q5.value === 'D') correctCount++;
 
-        if (correctCount === 3) {
+        if (correctCount === 5) {
             feedback.className = 'alert alert-success mt-3';
             feedback.innerHTML = 'Luar Biasa! Pemahaman Anda tentang Merge Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
             feedback.classList.remove('d-none');
