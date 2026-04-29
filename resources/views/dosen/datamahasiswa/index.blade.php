@@ -1,5 +1,8 @@
 @extends('layouts.hlmnd')
 
+@section('title','Data Mahasiswa')
+
+
 @section('content')
 <style>
     .card-panel {

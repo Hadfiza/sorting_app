@@ -1,5 +1,8 @@
 @extends('layouts.hlmnd')
 
+@section('title', 'Show-Praktikum')
+
+
 <style>
 /* Header Styling */
 .title-card {

@@ -38,7 +38,7 @@ class KategoriSoalController extends Controller
         return response()->json(['status' => 'started']);
     }
 
-public function submit(Request $request, $id_aktivitas)
+    public function submit(Request $request, $id_aktivitas)
     {
         $aktivitas = Aktivitas::with('butirSoal')->findOrFail($id_aktivitas);
         $jawabanUser = $request->json('jawaban') ?? [];
@@ -59,34 +59,44 @@ public function submit(Request $request, $id_aktivitas)
 
         $skor = 0;
 
+        // ARRAY: Untuk menyimpan jawaban user sekaligus status benar/salahnya
+        $detailJawabanLengkap = [];
+
         foreach ($aktivitas->butirSoal as $soal) {
             $key = 'q'.$soal->nomor;
 
-            $user = strtolower(trim($jawabanUser[$key] ?? ''));
+            $jawabanMhs = $jawabanUser[$key] ?? '';
             $correctRaw = $soal->jawaban_benar;
+            
+            $isCorrect = false; // Asumsi awal salah
 
-            // cek apakah JSON (dragdrop)
+            // Cek apakah jawaban merupakan JSON (dragdrop/array)
             $decoded = json_decode($correctRaw, true);
 
             if (is_array($decoded) && isset($decoded['correct'])) {
+                $correctArr = $decoded['correct']; // array kunci jawaban
+                $userArr = json_decode($jawabanMhs, true);
 
-                $correct = $decoded['correct']; // array
-
-                $userArr = json_decode($jawabanUser[$key] ?? '[]', true);
-
-                if ($userArr === $correct) {
+                if ($userArr === $correctArr) {
                     $skor += $bobotPerSoal;
+                    $isCorrect = true;
                 }
-
             } else {
+                // Evaluasi pilihan ganda biasa
+                $userStr = strtolower(trim($jawabanMhs));
+                $correctStr = strtolower(trim($correctRaw));
 
-                $user = strtolower(trim($jawabanUser[$key] ?? ''));
-                $correct = strtolower(trim($correctRaw));
-
-                if ($user === $correct) {
+                if ($userStr === $correctStr) {
                     $skor += $bobotPerSoal;
+                    $isCorrect = true;
                 }
             }
+
+            // SIMPAN DATA LENGKAP KE ARRAY BARU
+            $detailJawabanLengkap[$key] = [
+                'jawaban'    => $jawabanMhs,
+                'is_correct' => $isCorrect
+            ];
         }
 
         $skor = round($skor);
@@ -118,7 +128,7 @@ public function submit(Request $request, $id_aktivitas)
             'attempt' => $attemptBaru,
             'skor' => $skor,
             'status_lulus' => $statusLulus,
-            'detail_jawaban' => json_encode($jawabanUser),
+            'detail_jawaban' => json_encode($detailJawabanLengkap),
             'waktu_mulai' => $start,
             'waktu_selesai' => now()
         ]);

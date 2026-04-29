@@ -13,7 +13,7 @@
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm fixed-top">
         <div class="container">
             
             <a class="navbar-brand fw-bold d-flex align-items-center fs-3" href="/">
@@ -34,12 +34,12 @@
                         Beranda
                         </a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link" href="{{ route('login') }}">Materi</a>
-                    </li>
-                    <li class="nav-item">
+                    </li> --}}
+                    {{-- <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('kodeku') ? 'active fw-bold text-primary' : '' }}" href="{{ route('kodeku') }}">Kodeku</a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('petunjuk') ? 'active fw-bold text-primary' : '' }}" href="{{route('petunjuk')}}">Petunjuk Penggunaan</a>
                     </li>
@@ -59,6 +59,13 @@
     </main>
 
     @yield('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+
+<footer class="footer">
+    <div class="text-center">
+        <small>© 2026 SortLearn.</small>
+    </div>
+</footer>
 </body>
 </html>

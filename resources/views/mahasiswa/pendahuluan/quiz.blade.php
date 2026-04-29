@@ -60,6 +60,34 @@
     /* State Terkunci */
     .quiz-locked { opacity: 0.7; pointer-events: none; filter: grayscale(20%); 
     }
+
+    @media (max-width: 768px) {
+        #nav-bottom-container {
+            gap: 6px;
+        }
+
+        #nav-bottom-container button {
+            padding: 6px 10px;   /* lebih kecil */
+            font-size: 12px;     /* kecil tapi masih kebaca */
+            border-radius: 8px;
+        }
+
+        /* tombol lanjut sedikit lebih dominan */
+        #btn-next {
+            padding: 6px 12px;
+        }
+
+        #navigation-numbers {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* jadi 5 kolom */
+            gap: 8px;
+        }
+
+        #navigation-numbers button {
+            font-size: 12px;
+            padding: 6px;
+        }
+    }
     </style>
 </head>
 <body class="p-4 md:p-10 font-sans text-slate-800" style="background-color: #f0f7ff;">
@@ -195,6 +223,7 @@ class="inline-block w-24 mx-1 bg-slate-800 text-white border-b border-white outl
                     @foreach($items as $item)
                         <div draggable="true"
                             ondragstart="drag(event)"
+                            onclick="selectItem(this)" {{--TAP--}}
                             id="drag{{ $item }}-{{ $s->nomor }}"
                             class="w-16 h-16 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-2xl cursor-move shadow-md">
                             {{ $item }}
@@ -207,6 +236,7 @@ class="inline-block w-24 mx-1 bg-slate-800 text-white border-b border-white outl
                         <div id="drop{{ $i }}-{{ $s->nomor }}"
                             ondrop="drop(event, {{ $s->nomor }})"
                             ondragover="allowDrop(event)"
+                            onclick="tapDrop(this, {{ $s->nomor }})" {{--TAP--}}
                             class="w-20 h-20 border-2 border-dashed border-blue-200 rounded-2xl flex items-center justify-center bg-slate-50 transition-all">
                         </div>
                     @endfor
@@ -283,43 +313,43 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id) }}";
     let indexSoal = 0;
     const daftarSoal = document.querySelectorAll('.soal');
     const totalSoal = daftarSoal.length;
+    let selectedItem = null; //TAP
     let isLocked = false;
 
+    const kunciJawaban = {
 
-const kunciJawaban = {
+    @foreach($soal as $s)
 
-@foreach($soal as $s)
+    @if($s->tipe == 'dragdrop')
+        @php
+            $data = json_decode($s->jawaban_benar, true);
+            $correct = json_encode($data['correct']);
+        @endphp
+        q{{ $s->nomor }}: {!! $correct !!},
 
-@if($s->tipe == 'dragdrop')
-    @php
-        $data = json_decode($s->jawaban_benar, true);
-        $correct = json_encode($data['correct']);
-    @endphp
-    q{{ $s->nomor }}: {!! $correct !!},
+    @else
+        q{{ $s->nomor }}: "{{ strtolower($s->jawaban_benar) }}",
+    @endif
 
-@else
-    q{{ $s->nomor }}: "{{ strtolower($s->jawaban_benar) }}",
-@endif
+    @endforeach
 
-@endforeach
+    };
 
-};
+    function mulaiLatihan() {
+        totalWaktu = {{ $quiz->durasi }} * 60;
 
-function mulaiLatihan() {
-    totalWaktu = {{ $quiz->durasi }} * 60;
+        fetch("{{ route('mahasiswa.quiz.start', $quiz->id) }}", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        });
 
-    fetch("{{ route('mahasiswa.quiz.start', $quiz->id) }}", {
-        method: "POST",
-        headers: {
-            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        }
-    });
+        document.getElementById('intro-area').classList.add('d-none');
+        document.getElementById('quiz-area').classList.remove('d-none');
 
-    document.getElementById('intro-area').classList.add('d-none');
-    document.getElementById('quiz-area').classList.remove('d-none');
-
-    startTimer();
-}
+        startTimer();
+    }
 
     function tampilkanSoal(i) {
         daftarSoal.forEach((soal, idx) => {
@@ -331,35 +361,35 @@ function mulaiLatihan() {
         if(!isLocked) btnNext.innerText = (indexSoal === totalSoal - 1) ? 'Finish' : 'Lanjut';
     }
 
-function markAnswered(nomor) {
+    function markAnswered(nomor) {
 
-    if(isLocked) return;
+        if(isLocked) return;
 
-    const navBtn = document.getElementById(`nav-${nomor-1}`);
+        const navBtn = document.getElementById(`nav-${nomor-1}`);
 
-    if (navBtn.classList.contains('ragu')) return;
+        if (navBtn.classList.contains('ragu')) return;
 
-    let filled = false;
+        let filled = false;
 
-    // CEK RADIO
-    const radios = document.querySelectorAll(`input[name="q${nomor}"][type="radio"]`);
-    if (radios.length > 0) {
-        filled = document.querySelector(`input[name="q${nomor}"]:checked`);
-    } 
-    // CEK INPUT TEXT / HIDDEN (DRAGDROP)
-    else {
-        const input = document.querySelector(`input[name="q${nomor}"]`);
-        filled = input && input.value.trim().length > 0;
+        // CEK RADIO
+        const radios = document.querySelectorAll(`input[name="q${nomor}"][type="radio"]`);
+        if (radios.length > 0) {
+            filled = document.querySelector(`input[name="q${nomor}"]:checked`);
+        } 
+        // CEK INPUT TEXT / HIDDEN (DRAGDROP)
+        else {
+            const input = document.querySelector(`input[name="q${nomor}"]`);
+            filled = input && input.value.trim().length > 0;
+        }
+
+        if(filled) {
+            navBtn.classList.remove('unanswered');
+            navBtn.classList.add('answered');
+        } else {
+            navBtn.classList.add('unanswered');
+            navBtn.classList.remove('answered');
+        }
     }
-
-    if(filled) {
-        navBtn.classList.remove('unanswered');
-        navBtn.classList.add('answered');
-    } else {
-        navBtn.classList.add('unanswered');
-        navBtn.classList.remove('answered');
-    }
-}
 
     function toggleRaguCurrent() {
         if (isLocked) return;
@@ -421,37 +451,52 @@ function markAnswered(nomor) {
         ev.preventDefault();
         if(isLocked) return;
 
-        var data = ev.dataTransfer.getData("text");
-        var draggedElement = document.getElementById(data);
+        let target = ev.target;
 
-        if (ev.target.classList.contains('border-dashed') && ev.target.children.length === 0) {
+        // ==== MODE DESKTOP (drag) ====
+        if (ev.dataTransfer) {
+            var data = ev.dataTransfer.getData("text");
+            var draggedElement = document.getElementById(data);
 
-            ev.target.appendChild(draggedElement);
-
-            ev.target.classList.remove('bg-slate-50');
-            ev.target.classList.add('bg-blue-50');
-
-            updateDragAnswer(nomorSoal);
+            if (target.classList.contains('border-dashed') && target.children.length === 0) {
+                target.appendChild(draggedElement);
+            }
         }
+
+        updateAfterDrop(target, nomorSoal);
     }
 
-function updateDragAnswer(nomor) {
+    //     var data = ev.dataTransfer.getData("text");
+    //     var draggedElement = document.getElementById(data);
 
-    let arr = [];
+    //     if (ev.target.classList.contains('border-dashed') && ev.target.children.length === 0) {
 
-    const drops = document.querySelectorAll(`[id^="drop"][id$="-${nomor}"]`);
+    //         ev.target.appendChild(draggedElement);
 
-    drops.forEach(d => {
-        if (d.innerText.trim() !== "") {
-            arr.push(parseInt(d.innerText.trim()));
-        }
-    });
+    //         ev.target.classList.remove('bg-slate-50');
+    //         ev.target.classList.add('bg-blue-50');
 
-    document.getElementById(`ans-q${nomor}`).value = JSON.stringify(arr);
+    //         updateDragAnswer(nomorSoal);
+    //     }
+    // }
 
-    // 🔥 INI WAJIB
-    markAnswered(nomor);
-}
+    function updateDragAnswer(nomor) {
+
+        let arr = [];
+
+        const drops = document.querySelectorAll(`[id^="drop"][id$="-${nomor}"]`);
+
+        drops.forEach(d => {
+            if (d.innerText.trim() !== "") {
+                arr.push(parseInt(d.innerText.trim()));
+            }
+        });
+
+        document.getElementById(`ans-q${nomor}`).value = JSON.stringify(arr);
+
+        // INI WAJIB
+        markAnswered(nomor);
+    }
 
     function resetDrag(nomor) {
 
@@ -523,26 +568,26 @@ function updateDragAnswer(nomor) {
 
         semuaJawaban[key] = jawabanUser;
 
-if (Array.isArray(kunciJawaban[key])) {
+        if (Array.isArray(kunciJawaban[key])) {
 
-    let userArr = [];
+            let userArr = [];
 
-    try {
-        userArr = JSON.parse(jawabanUser);
-        } catch(e) {}
+            try {
+                userArr = JSON.parse(jawabanUser);
+                } catch(e) {}
 
-        if (JSON.stringify(userArr) === JSON.stringify(kunciJawaban[key])) {
-            benar++;
-        }
+                if (JSON.stringify(userArr) === JSON.stringify(kunciJawaban[key])) {
+                    benar++;
+                }
 
-        } else {
+                } else {
 
-            if (jawabanUser.toLowerCase() === kunciJawaban[key].toLowerCase()) {
-                benar++;
-        }
+                    if (jawabanUser.toLowerCase() === kunciJawaban[key].toLowerCase()) {
+                        benar++;
+                }
 
-    }
-    }
+            }
+        }          
 
     const skor = Math.round((benar / totalSoal) * 100);
 
@@ -696,6 +741,41 @@ if (Array.isArray(kunciJawaban[key])) {
                 hitungNilai();
             });
         }
+
+function selectItem(el) {
+    if (isLocked) return;
+
+    // reset semua
+    document.querySelectorAll('[draggable="true"]').forEach(i => {
+        i.classList.remove('ring-4','ring-yellow-400');
+    });
+
+    selectedItem = el;
+
+    // kasih highlight
+    el.classList.add('ring-4','ring-yellow-400');
+}
+
+function tapDrop(target, nomorSoal) {
+    if (isLocked) return;
+    if (!selectedItem) return;
+
+    if (target.children.length === 0) {
+        target.appendChild(selectedItem);
+
+        selectedItem.classList.remove('ring-4','ring-yellow-400');
+        selectedItem = null;
+
+        updateAfterDrop(target, nomorSoal);
+    }
+}
+
+function updateAfterDrop(target, nomorSoal) {
+    target.classList.remove('bg-slate-50');
+    target.classList.add('bg-blue-50');
+
+    updateDragAnswer(nomorSoal);
+}
 </script>
 </body>
 </html>

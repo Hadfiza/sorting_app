@@ -1,10 +1,10 @@
 @extends('layouts.landing_layouts')
 
-@section('title', 'Petunjuk Penggunaan - Sorting App')
+@section('title', 'Petunjuk Penggunaan - SortLearn')
 
 @section('content')
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+{{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
@@ -57,6 +57,28 @@
         padding-left: 1.2rem;
         margin-bottom: 0;
     }
+
+    @media (max-width: 768px){
+
+        .content-wrapper{
+            padding-top: 30px;   /* dari 110 → 80 */
+            padding-bottom: 20px;
+        }
+
+        /* HEADER BIRU */
+        .content-wrapper > .p-4{
+            padding: 16px !important; /* dari p-4 (24px) jadi lebih kecil */
+        }
+
+        /* TITLE */
+        .content-wrapper h1{
+            font-size: 20px;
+        }
+
+        .content-wrapper p{
+            font-size: 13px;
+        }
+    }
 </style>
 
 <div class="container content-wrapper">
@@ -76,12 +98,12 @@
     <div class="accordion" id="accordionPetunjuk">
 
         <div class="accordion-item">
-            <h2 class="accordion-header" id="headingTwo">
-                <button class="accordion-button collapsed fs-5 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed fs-5 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                     <div class="step-number me-3">1</div> Akses Beranda
                 </button>
             </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionPetunjuk">
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionPetunjuk">
                 <div class="accordion-body p-3">
                     <div class="row align-items-center g-3">
                         <div class="col-lg-4 col-xl-3">
@@ -102,12 +124,12 @@
         </div>
 
         <div class="accordion-item">
-            <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button fs-5 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed fs-5 fw-bold" type="button" data-bs-toggle="collapse"data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                     <div class="step-number me-3">2</div> Cara Masuk / Login
                 </button>
             </h2>
-            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionPetunjuk">
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionPetunjuk" >
                 <div class="accordion-body p-3">
                     <div class="row align-items-center g-4">{{-- <div class="row align-items-start g-4"> --}}
                         <div class="col-lg-4 col-xl-3 order-1 order-lg-2">
@@ -227,6 +249,6 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
 
 @endsection

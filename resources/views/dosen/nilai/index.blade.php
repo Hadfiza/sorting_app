@@ -1,5 +1,7 @@
 @extends('layouts.hlmnd')
 
+@section('title', 'Nilai')
+
 @section('content')
 <style>
     .card-panel { border-radius: 16px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
@@ -124,7 +126,7 @@
                                 ['id' => $id_k_bubble, 'nama' => 'Q2 (Bubble Sort)', 'kkm' => $kkmKuis2],
                                 ['id' => $id_k_selection, 'nama' => 'Q3 (Selection Sort)', 'kkm' => $kkmKuis3],
                                 ['id' => $id_k_insertion, 'nama' => 'Q4 (Insertion Sort)', 'kkm' => $kkmKuis4],
-                                ['id' => $id_k_merge, 'nama' => 'Q5 (Merge Sort)', 'kkm' => $kkmKuis5],
+                                ['id' => $id_k_merge, 'nama' => 'Q5  (Merge Sort)', 'kkm' => $kkmKuis5],
                             ];
 
                             $detail_kuis_array = [];
@@ -148,31 +150,22 @@
                                             $durasi = $m > 0 ? "{$m}m {$s}s" : "{$s}s";
                                         }
 
-                                        // --- PARSING JSON DETAIL JAWABAN (1-10) ---
+                                        // --- PARSING JSON DETAIL JAWABAN (Dinamis) ---
                                         $raw_detail = json_decode($attempt->detail_jawaban, true) ?? [];
-                                        $jawaban_status = array_fill(0, 10, null);
+                                        $jawaban_status = []; // Gunakan array kosong
 
-                                        foreach ($raw_detail as $key => $jawabanUser) {
+                                        foreach ($raw_detail as $key => $data) {
                                             $nomor = (int) str_replace('q', '', $key);
-                                            $soal = \App\Models\ButirSoal::where('id_aktivitas', $modul['id'])
-                                                        ->where('nomor', $nomor)
-                                                        ->first();
-
-                                            if($soal){
-                                                $raw = $soal->jawaban_benar;
-                                                $decoded = json_decode($raw, true);
-
-                                                if (is_array($decoded) && isset($decoded['correct'])) {
-                                                    $kunciArr = $decoded['correct'];
-                                                    $userArr  = json_decode($jawabanUser, true);
-                                                    $jawaban_status[$nomor-1] = ($userArr === $kunciArr);
-                                                } else {
-                                                    $kunci = strtolower(trim($raw));
-                                                    $user  = strtolower(trim($jawabanUser));
-                                                    $jawaban_status[$nomor-1] = ($user === $kunci);
-                                                }
+                                            
+                                            // Ambil status is_correct dari struktur JSON baru yang kita buat di Controller
+                                            if (is_array($data) && isset($data['is_correct'])) {
+                                                $jawaban_status[$nomor] = $data['is_correct'];
+                                            } else {
+                                                $jawaban_status[$nomor] = null;
                                             }
                                         }
+                                        // Sortir agar urutan nomor soal benar (1, 2, 3...)
+                                        ksort($jawaban_status);
 
                                         $attempts_data[] = [
                                             'attempt' => $idx + 1,
@@ -353,13 +346,34 @@
             let headingId = `headingKuis${index}`;
 
             let tableRows = '';
+            let tableHeaderCols = '';
+            let maxQuestions = 0;
+
+            // Cari jumlah soal terbanyak dari attempt untuk membuat header kolom
+            modul.attempts.forEach(att => {
+                if (att.detail_soal.length > maxQuestions) maxQuestions = att.detail_soal.length;
+            });
+
+            // Jika data berbentuk objek (karena ksort di PHP), kita sesuaikan cara hitungnya
+            // Atau lebih amannya, biarkan Javascript membuat kolom berdasarkan data yang ada
             if (modul.total_attempt > 0) {
+                // Buat Header Angka (1, 2, 3, dst) secara dinamis
+                // Kita asumsikan jumlah soal konsisten, ambil dari attempt pertama
+                let sampleAttempt = modul.attempts[0].detail_soal;
+                // Jika detail_soal adalah objek, kita hitung keys-nya
+                let questionKeys = Object.keys(sampleAttempt); 
+                
+                questionKeys.forEach(num => {
+                    tableHeaderCols += `<th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">${num}</th>`;
+                });
+
                 modul.attempts.forEach(att => {
-                    // PERBAIKAN: Menggunakan modul.kkm
                     let attBadge = att.skor >= modul.kkm ? 'success' : 'danger';
-                    
                     let detailHtml = '';
-                    att.detail_soal.forEach(status => {
+
+                    // Tampilkan centang/silang secara dinamis
+                    Object.keys(att.detail_soal).forEach(num => {
+                        let status = att.detail_soal[num];
                         if (status === true) {
                             detailHtml += `<td class="text-center align-middle"><i class="fa-solid fa-check text-success fs-6"></i></td>`;
                         } else if (status === false) {
@@ -380,6 +394,7 @@
                         </tr>
                     `;
                 });
+
             } else {
                 tableRows = `<tr><td colspan="15" class="text-center text-muted py-3">Siswa belum mengerjakan kuis ini.</td></tr>`;
             }
@@ -411,16 +426,7 @@
                                             <th class="text-center py-2 text-secondary" style="font-size: 0.75rem; text-transform: uppercase;">Selesai</th>
                                             <th class="text-center py-2 text-secondary" style="font-size: 0.75rem; text-transform: uppercase;">Waktu</th>
                                             <th class="text-center py-2 text-secondary border-end" style="font-size: 0.75rem; text-transform: uppercase;">Skor</th>
-                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">1</th>
-                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">2</th>
-                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">3</th>
-                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">4</th>
-                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">5</th>
-                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">6</th>
-                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">7</th>
-                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">8</th>
-                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">9</th>
-                                            <th class="text-center py-2 text-secondary" style="font-size: 0.75rem;">10</th>
+                                            ${tableHeaderCols}
                                         </tr>
                                     </thead>
                                     <tbody>

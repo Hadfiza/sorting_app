@@ -1,6 +1,6 @@
 @extends('layouts.hlmns')
 
-@section('title','BubbleSort')
+@section('title','Simulasi Selection Sort')
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/selection.css') }}">

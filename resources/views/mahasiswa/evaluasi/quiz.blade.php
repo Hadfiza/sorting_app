@@ -21,6 +21,35 @@
     .answered { background-color: #22c55e; border-color: #16a34a; color: white; }
     .active-soal { transform: scale(1.07); z-index: 10; }
     .quiz-locked { opacity: 0.7; pointer-events: none; filter: grayscale(20%); }
+
+    @media (max-width: 768px) {
+        #nav-bottom-container {
+            gap: 6px;
+        }
+
+        #nav-bottom-container button {
+            padding: 6px 10px;   /* lebih kecil */
+            font-size: 12px;     /* kecil tapi masih kebaca */
+            border-radius: 8px;
+        }
+
+        /* tombol lanjut sedikit lebih dominan */
+        #btn-next {
+            padding: 6px 12px;
+        }
+
+        #navigation-numbers {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* jadi 5 kolom */
+            gap: 8px;
+        }
+
+        #navigation-numbers button {
+            font-size: 12px;
+            padding: 6px;
+        }
+    }
+
     </style>
 </head>
 
@@ -120,12 +149,12 @@
                 @endphp
                 <div class="flex gap-4 mb-10 justify-center" id="source-{{ $s->nomor }}">
                     @foreach($items as $item)
-                        <div draggable="true" ondragstart="drag(event)" id="drag{{ $item }}-{{ $s->nomor }}" class="w-16 h-16 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-2xl cursor-move shadow-md">{{ $item }}</div>
+                        <div draggable="true" ondragstart="drag(event)" onclick="selectItem(this)" {{--TAP--}} id="drag{{ $item }}-{{ $s->nomor }}" class="w-16 h-16 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-2xl cursor-move shadow-md">{{ $item }}</div>
                     @endforeach
                 </div>
                 <div class="flex gap-4 justify-center">
                     @for($i=1;$i<=count($items);$i++)
-                        <div id="drop{{ $i }}-{{ $s->nomor }}" ondrop="drop(event, {{ $s->nomor }})" ondragover="allowDrop(event)" class="w-20 h-20 border-2 border-dashed border-blue-200 rounded-2xl flex items-center justify-center bg-slate-50 transition-all"></div>
+                        <div id="drop{{ $i }}-{{ $s->nomor }}" ondrop="drop(event, {{ $s->nomor }})" ondragover="allowDrop(event)" onclick="tapDrop(this, {{ $s->nomor }})" {{--TAP--}} class="w-20 h-20 border-2 border-dashed border-blue-200 rounded-2xl flex items-center justify-center bg-slate-50 transition-all"></div>
                     @endfor
                 </div>
                 <input type="hidden" name="q{{ $s->nomor }}" id="ans-q{{ $s->nomor }}">
@@ -173,6 +202,7 @@
     let indexSoal = 0;
     const daftarSoal = document.querySelectorAll('.soal');
     const totalSoal = daftarSoal.length;
+    let selectedItem = null; //TAP
     let isLocked = false;
 
     const kunciJawaban = {
@@ -394,6 +424,41 @@
             customClass: { confirmButton: 'bg-blue-600 text-white px-8 py-2.5 rounded-lg font-bold' }
         }).then(() => { hitungNilai(); });
     }
+
+function selectItem(el) {
+    if (isLocked) return;
+
+    // reset semua
+    document.querySelectorAll('[draggable="true"]').forEach(i => {
+        i.classList.remove('ring-4','ring-yellow-400');
+    });
+
+    selectedItem = el;
+
+    // kasih highlight
+    el.classList.add('ring-4','ring-yellow-400');
+}
+
+function tapDrop(target, nomorSoal) {
+    if (isLocked) return;
+    if (!selectedItem) return;
+
+    if (target.children.length === 0) {
+        target.appendChild(selectedItem);
+
+        selectedItem.classList.remove('ring-4','ring-yellow-400');
+        selectedItem = null;
+
+        updateAfterDrop(target, nomorSoal);
+    }
+}
+
+function updateAfterDrop(target, nomorSoal) {
+    target.classList.remove('bg-slate-50');
+    target.classList.add('bg-blue-50');
+
+    updateDragAnswer(nomorSoal);
+}
 </script>
 </body>
 </html>

@@ -156,5 +156,11 @@ function toggleMenu(btn){
 }
 </script>
 
+<footer class="footer">
+    <div class="text-center">
+        <small>© 2026 SortLearn.</small>
+    </div>
+</footer>
+
 </body>
 </html>

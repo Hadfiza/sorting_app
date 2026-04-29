@@ -1,6 +1,6 @@
 @extends('layouts.landing_layouts')
 
-@section('title', 'SortLearn - Kodeku')
+@section('title', 'Kodeku - SortLearn')
 
 @section('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
@@ -10,7 +10,7 @@
         /* Penyesuaian agar konten tidak tertutup Navbar Fixed */
         body {
             background-color: #f8f9fa; /* Abu-abu terang agar kontras dengan editor */
-            padding-top: 80px; /* Jarak untuk navbar fixed-top */
+            padding-top: 80px;
         }
 
         /* --- STYLING EDITOR PYTHON --- */
@@ -127,6 +127,61 @@
             display: flex;
             align-items: center; /* Menjaga logo dan teks sejajar vertikal */
         }
+
+        @media (max-width: 768px){
+            body{
+                padding-top: 0px;
+            }
+            
+            .app-wrapper{
+                height: auto;        /* 🔥 hilangkan fixed height */
+            }
+
+            .split-container{
+                flex-direction: column; /* 🔥 jadi atas-bawah */
+            }
+
+            .panel-left,
+            .panel-right{
+                flex: none;
+                width: 100%;
+            }
+
+            .panel-left{
+                height: 250px; /* editor */
+            }
+
+            .panel-right{
+                height: 200px; /* output */
+            }
+
+            .editor-header{
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                height: auto;
+            }
+
+            .btn-run{
+                width: 100%;
+            }
+
+            #output{
+                font-size: 12px;
+                padding: 10px;
+            }
+
+            .CodeMirror{
+                font-size: 12px;
+            }
+
+            .btn-run{
+                width: auto;               /* 🔥 jangan full */
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+    
+}
     </style>
 @endsection
 
@@ -143,7 +198,7 @@
         <div class="app-wrapper">
             
             <header class="editor-header">
-                <div class="flex items-center">
+                <div class="d-flex align-items-center">
                     <img src="{{ asset('images/LOGO.png') }}" alt="Logo"  class="editor-logo">
                     <h2 class="text-white font-bold ml-2">Python Editor</h2>
                 </div>

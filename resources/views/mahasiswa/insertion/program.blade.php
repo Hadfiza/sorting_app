@@ -1,6 +1,6 @@
 @extends('layouts.hlmns')
 
-@section('title','BubbleSort')
+@section('title','Kode Program Imsertion Sort')
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/insertion.css') }}">
@@ -316,7 +316,7 @@ print("Setelah sorting:", angka)
     </div>
     <div class="card mb-4">
         <div class="card-body materi-text">
-            <p>Cobalah jalankan kode Insertion Sort di bawah ini untuk melihat bagaimana Python memproses datanya.</p>
+            <p>Jalankan kode program Insertion Sort di bawah ini untuk mengamati bagaimana Python memproses data.</p>
           
             <div class="live-editor">
                 <header class="editor-header">

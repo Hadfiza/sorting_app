@@ -1,6 +1,6 @@
 @extends('layouts.hlmns')
 
-@section('title','Praktikum Bubble Sort')
+@section('title','BubbleSort')
 
 <style>
 /* =========================
@@ -134,62 +134,6 @@
     color: #2563eb;
     font-weight: 700;
 }
-
-@media (max-width: 768px) {
-
-    .pdf-container iframe {
-        width: 100%;
-        height: 60vh;
-        border-radius: 8px;
-    }
-
-    .live-editor {
-        height: auto;
-    }
-
-    .live-editor .split-container {
-        flex-direction: column;
-        gap: 10px; /* biar ada jarak */
-    }
-
-    .live-editor .panel-left,
-    .live-editor .panel-right {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    /* ===== SAMAKAN AREA ISI ===== */
-    .live-editor .panel-left textarea,
-    .live-editor .CodeMirror,
-    .live-editor #output {
-        height: 200px !important;
-    }
-
-    .live-editor .CodeMirror {
-        flex: none !important;
-        height: 200px !important;
-    }
-
-    .CodeMirror {
-        height: 200px !important;
-        overflow: hidden !important;
-    }
-
-    /* CodeMirror scroll */
-    .CodeMirror-scroll {
-        height: 200px !important;
-        overflow-y: auto !important;   /* scroll vertikal */
-        overflow-x: auto !important;
-    }
-    /* OUTPUT */
-    .live-editor #output {
-        flex: none !important;
-        overflow-y: auto;
-        overflow-x: auto;
-    }
-
-}
 </style>
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -233,6 +177,87 @@
     </div>
 </div>
 
+{{-- <div class="materi-page">
+    <div class="card mb-4 materi-box">
+        <div class="card-body materi-text">
+            <div class="materi-header">
+                <i class="fa-sharp-duotone fa-solid fa-shuffle"></i>
+                <span class="materi-badge">Soal Praktikum</span>
+            </div>
+            <p class="card-text text-justify">
+                Sebuah program akademik ingin menampilkan urutan nilai UAS mahasiswa dari nilai yang paling rendah hingga yang paling tinggi. Data mahasiswa disimpan menggunakan struktur list of dictionary, dengan setiap dictionary berisi informasi:
+            </p>
+            <ul class="card-text">
+                <li>Nama mahasiswa</li>
+                <li>Nilai mahasiswa</li>
+                <li>Nomor induk mahasiswa</li>
+            </ul>
+            <div class="my-4">
+                <img 
+                    src="{{ asset('images/bubble/praktikumbubble.png') }}" 
+                    alt="praktikum bubbleSort"
+                    class="img-fluid"
+                    style="max-width: 300px;"
+                >
+            </div>
+
+            <div class="table-responsive">
+                <table class="praktikum-table">
+                    <thead>
+                        <tr>
+                            <th>Algoritma</th>
+                            <th>Best Case</th>
+                            <th>Average Case</th>
+                            <th>Worst Case</th>
+                            <th>Space Complexity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Bubble Sort</td>
+                            <td>O(n)</td>
+                            <td>O(n²)</td>
+                            <td>O(n²)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Selection Sort</td>
+                            <td>O(n²)</td>
+                            <td>O(n²)</td>
+                            <td>O(n²)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Insertion Sort</td>
+                            <td>O(n)</td>
+                            <td>O(n²)</td>
+                            <td>O(n²)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Merge Sort</td>
+                            <td>O(n log n)</td>
+                            <td>O(n log n)</td>
+                            <td>O(n log n)</td>
+                            <td>O(n)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>  
+
+            <p class="card-text text-justify">
+                Data mahasiswa yang tersedia seperti gambar diatas.<br>
+                Bagian akademik meminta Anda membuat program Python untuk:<br>
+            <ol class="card-text">
+                <li>Mengurutkan data mahasiswa berdasarkan nilai UAS dari yang paling rendah ke tertinggi</li>
+                <li>Sorting dilakukan menggunakan algoritma Bubble Sort manual, bukan fungsi sort() atau sorted().</li>
+                <li>Fungsi Bubble Sort harus dapat menerima index key (misalnya 'uas') sebagai dasar pengurutan.</li>
+                <li>Setelah pengurutan selesai, tampilkan daftar mahasiswa sesuai urutan nilai UAS tersebut.</li>
+            </ol>
+            </p>
+        </div>
+    </div> --}}
+
 <div class="materi-page">
     <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
@@ -275,19 +300,9 @@
         </div>
     </div>
 
-    <div class="alert alert-info">
-        <b>Instruksi:</b>
-        <ol class="mb-0 mt-2">
-            <li>Ketikkan atau modifikasi kode program pada editor di bawah.</li>
-            <li>Klik tombol <b>Run Code</b> untuk menjalankan program.</li>
-            <li>Pastikan <b>output berhasil muncul</b> pada bagian Console Output.</li>
-            <li>Jika sudah sesuai, klik tombol <b>Submit Praktikum</b> dinawah untuk mengumpulkan jawaban.</li>
-        </ol>
-    </div>
-
     <div class="card mb-4">
         <div class="card-body materi-text">
-            {{-- <p>Cobalah jalankan kode Bubble Sort di bawah ini untuk melihat bagaimana Python memproses datanya.</p> --}}
+            <p>Cobalah jalankan kode Bubble Sort di bawah ini untuk melihat bagaimana Python memproses datanya.</p>
           
             <div class="live-editor">
                 <header class="editor-header">

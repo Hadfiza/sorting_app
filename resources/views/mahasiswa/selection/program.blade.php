@@ -1,6 +1,6 @@
 @extends('layouts.hlmns')
 
-@section('title','SelectionSort')
+@section('title','Kode Program Selection Sort')
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/selection.css') }}">
@@ -479,7 +479,7 @@ for m in data_produk:
 
     <div class="card mb-4">
         <div class="card-body materi-text">
-            <p>Cobalah jalankan kode Selection Sort di bawah ini untuk melihat bagaimana Python memproses datanya.</p>
+            <p>Jalankan kode program Selection Sort di bawah ini untuk mengamati bagaimana Python memproses data.</p>
           
             <div class="live-editor">
                 <header class="editor-header">

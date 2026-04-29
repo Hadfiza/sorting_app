@@ -60,6 +60,35 @@
     /* State Terkunci */
     .quiz-locked { opacity: 0.7; pointer-events: none; filter: grayscale(20%); 
     }
+
+    @media (max-width: 768px) {
+        #nav-bottom-container {
+            gap: 6px;
+        }
+
+        #nav-bottom-container button {
+            padding: 6px 10px;   /* lebih kecil */
+            font-size: 12px;     /* kecil tapi masih kebaca */
+            border-radius: 8px;
+        }
+
+        /* tombol lanjut sedikit lebih dominan */
+        #btn-next {
+            padding: 6px 12px;
+        }
+
+        #navigation-numbers {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* jadi 5 kolom */
+            gap: 8px;
+        }
+
+        #navigation-numbers button {
+            font-size: 12px;
+            padding: 6px;
+        }
+    }
+
     </style>
 </head>
 <body class="p-4 md:p-10 font-sans text-slate-800" style="background-color: #f0f7ff;">
@@ -195,6 +224,7 @@ class="inline-block w-24 mx-1 bg-slate-800 text-white border-b border-white outl
                     @foreach($items as $item)
                         <div draggable="true"
                             ondragstart="drag(event)"
+                            onclick="selectItem(this)" {{--TAP--}}
                             id="drag{{ $item }}-{{ $s->nomor }}"
                             class="w-16 h-16 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-2xl cursor-move shadow-md">
                             {{ $item }}
@@ -207,6 +237,7 @@ class="inline-block w-24 mx-1 bg-slate-800 text-white border-b border-white outl
                         <div id="drop{{ $i }}-{{ $s->nomor }}"
                             ondrop="drop(event, {{ $s->nomor }})"
                             ondragover="allowDrop(event)"
+                            onclick="tapDrop(this, {{ $s->nomor }})" {{--TAP--}}
                             class="w-20 h-20 border-2 border-dashed border-blue-200 rounded-2xl flex items-center justify-center bg-slate-50 transition-all">
                         </div>
                     @endfor
@@ -283,6 +314,7 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id) }}";
     let indexSoal = 0;
     const daftarSoal = document.querySelectorAll('.soal');
     const totalSoal = daftarSoal.length;
+    let selectedItem = null; //TAP
     let isLocked = false;
 
 
@@ -421,18 +453,19 @@ function markAnswered(nomor) {
         ev.preventDefault();
         if(isLocked) return;
 
-        var data = ev.dataTransfer.getData("text");
-        var draggedElement = document.getElementById(data);
+        let target = ev.target;
 
-        if (ev.target.classList.contains('border-dashed') && ev.target.children.length === 0) {
+        // ==== MODE DESKTOP (drag) ====
+        if (ev.dataTransfer) {
+            var data = ev.dataTransfer.getData("text");
+            var draggedElement = document.getElementById(data);
 
-            ev.target.appendChild(draggedElement);
-
-            ev.target.classList.remove('bg-slate-50');
-            ev.target.classList.add('bg-blue-50');
-
-            updateDragAnswer(nomorSoal);
+            if (target.classList.contains('border-dashed') && target.children.length === 0) {
+                target.appendChild(draggedElement);
+            }
         }
+
+        updateAfterDrop(target, nomorSoal);
     }
 
 function updateDragAnswer(nomor) {
@@ -696,6 +729,41 @@ if (Array.isArray(kunciJawaban[key])) {
                 hitungNilai();
             });
         }
+
+function selectItem(el) {
+    if (isLocked) return;
+
+    // reset semua
+    document.querySelectorAll('[draggable="true"]').forEach(i => {
+        i.classList.remove('ring-4','ring-yellow-400');
+    });
+
+    selectedItem = el;
+
+    // kasih highlight
+    el.classList.add('ring-4','ring-yellow-400');
+}
+
+function tapDrop(target, nomorSoal) {
+    if (isLocked) return;
+    if (!selectedItem) return;
+
+    if (target.children.length === 0) {
+        target.appendChild(selectedItem);
+
+        selectedItem.classList.remove('ring-4','ring-yellow-400');
+        selectedItem = null;
+
+        updateAfterDrop(target, nomorSoal);
+    }
+}
+
+function updateAfterDrop(target, nomorSoal) {
+    target.classList.remove('bg-slate-50');
+    target.classList.add('bg-blue-50');
+
+    updateDragAnswer(nomorSoal);
+}
 </script>
 </body>
 </html>

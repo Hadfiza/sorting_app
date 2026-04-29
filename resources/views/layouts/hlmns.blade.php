@@ -16,6 +16,15 @@
 
 <nav class="navbar navbar-expand-lg fixed-top navbar-siswa">
     <div class="container-fluid px-4">
+        <!-- MOBILE -->
+        <button class="btn text-white d-lg-none me-2" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        {{-- <!-- DESKTOP COLLAPSE -->
+        <button class="btn text-white d-none d-lg-inline me-2" onclick="toggleCollapse()">
+            <i class="fa-solid fa-bars"></i>
+        </button> --}}
         <a class="navbar-brand fw-bold text-white d-flex align-items-center" href="/">
             <img src="{{ asset('images/LOGO.png') }}" 
                 alt="Logo" 
@@ -89,7 +98,7 @@
     });
 @endphp
 
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
 
     <div class="menu-item {{ request()->routeIs('mahasiswa.dashboard') ? 'active' : '' }}">
         <a href="{{ route('mahasiswa.dashboard') }}" class="menu-btn">
@@ -205,6 +214,7 @@
     </div>
 
 </div>
+<div id="overlay" onclick="toggleSidebar()"></div>
 
 <div class="content">
     @yield('content')
@@ -219,7 +229,40 @@ function toggleMenu(btn){
     const item = btn.closest('.menu-item');
     item.classList.toggle('open');
 }
+
+function toggleSidebar() {
+    if (window.innerWidth > 768) return; // 🔥 hanya HP
+
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+}
+
+/* auto close saat klik menu */
+document.querySelectorAll('.sidebar a').forEach(link => {
+    link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+    });
+});
+
+/* reset saat resize */
+window.addEventListener('resize', function () {
+    if (window.innerWidth > 768) {
+        document.getElementById('sidebar').classList.remove('active');
+        document.getElementById('overlay').classList.remove('active');
+    }
+});
 </script>
 
+<footer class="footer">
+    <div class="text-center">
+        <small>© 2026 SortLearn.</small>
+    </div>
+</footer>
 </body>
 </html>

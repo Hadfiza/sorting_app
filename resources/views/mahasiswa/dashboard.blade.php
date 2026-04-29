@@ -10,13 +10,19 @@
         border-right: 1px solid #e9ecef;
     }
 
-    @media (max-width: 991px) {
-        .panel-divider {
-            border-right: none;
-            border-bottom: 1px solid #e9ecef;
-            padding-bottom: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
+    .welcome-box {
+        padding: 20px 24px; /* 🔥 sebelumnya pasti besar */
+        border-radius: 16px;
+    }
+
+    .welcome-box h2 {
+        font-size: 1.5rem; /* 🔥 kecilkan dari default */
+        margin-bottom: 4px;
+    }
+
+    .welcome-box p {
+        font-size: 0.9rem;
+        margin-bottom: 0;
     }
 
     /* Hover card */
@@ -64,14 +70,23 @@
         color:#1e293b;
     }
 
+    @media (max-width: 991px) {
+        .panel-divider {
+            border-right: none;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+    }
+
 </style>
 @endsection
 
 
 @section('content')
 
-<div class="container-fluid py-4">
-
+<div class="container-fluid pt-2 ">
+    
     {{-- WELCOME --}}
     <div class="welcome-box mb-4">
         <div>
@@ -81,7 +96,7 @@
     </div>
 
 
-    <div class="bg-white p-4 p-md-5 rounded-4 shadow-sm border">
+    <div class="bg-white p-3 p-md-5 rounded-4 shadow-sm border">
 
         <div class="row d-flex align-items-stretch g-4">
 

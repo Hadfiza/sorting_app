@@ -1,6 +1,6 @@
 @extends('layouts.hlmns')
 
-@section('title','BubbleSort')
+@section('title','Materi Bubble Sort')
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/bubble.css') }}">

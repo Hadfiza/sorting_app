@@ -1,6 +1,6 @@
 @extends('layouts.hlmns')
 
-@section('title','Insertion Sort')
+@section('title','Materi Insertion Sort')
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/insertion.css') }}">

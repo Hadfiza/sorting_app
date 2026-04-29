@@ -1,5 +1,7 @@
 @extends('layouts.hlmnd')
 
+@section('title', 'Manajemen Soal' )
+
 @section('content')
 <style>
     .card-panel { border-radius: 16px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }

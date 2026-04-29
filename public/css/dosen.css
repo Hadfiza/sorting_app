@@ -177,6 +177,14 @@ body {
     font-weight: bold;
 }
 
+.footer{
+    margin-top: 30px;              /* kasih jarak dari konten */
+    padding: 15px 0;
+    text-align: center;
+    color: #6b7280;
+    font-size: 13px;
+    border-top: 1px solid #e5e7eb; /* garis pemisah */
+}
 
 
 /* ===== RESPONSIVE ===== */

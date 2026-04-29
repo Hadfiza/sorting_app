@@ -156,3 +156,141 @@
     line-height: 1.6;
 }
 
+@media (max-width: 768px) {
+    /* Judul */
+    /* ===== HEADER AKTIVITAS ===== */
+    .materi-header {
+        display: flex;
+        align-items: flex-start;   /* penting */
+        gap: 8px;
+    }
+
+    /* ICON */
+    .materi-header i {
+        margin-top: 3px; /* biar sejajar visual */
+    }
+
+    /* WRAP TEXT (badge + judul) */
+    .materi-header span {
+        display: inline-block;
+        font-size: 16px;
+        line-height: 1.4;
+    }
+
+    /* BADGE */
+    .materi-badge {
+        font-size: 12px;
+        padding: 4px 10px;
+    }
+
+    /* ===== TEXT MERAH ===== */
+    .card-text {
+        font-size: 12px;     /* ini justru dikecilin */
+        line-height: 1.5;
+    }
+
+    /* ===== CONTAINER BIAR PADAT ===== */
+    .materi-box {
+        padding: 14px;
+    }
+    /* ===== TEXT MERAH ===== */
+    .card-text {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    /* PILLS */
+    .nav-pills .nav-link {
+        font-size: 13px;          /* naik dari kecil */
+        padding: 8px 12px;        /* biar lebih “klikable” */
+        border-radius: 20px;
+    }
+
+    .nav-pills {
+        gap: 6px;
+    }
+
+    /* simulasi */
+    /* ===== GAMBAR (dibesarin dikit, tetap muat 5) ===== */
+    .book-container {
+        gap: 10px;
+    }
+
+    .book-img-wrap {
+        width: 21%;        /* dari 19% → jadi lebih besar */
+        max-width: 80px;   /* biar gak kekecilan */
+    }
+
+    .book-img-wrap img {
+        width: 100%;
+        height: auto;
+    }
+
+    /* ===== BUTTON DIPERKECIL ===== */
+    .btn-sim {
+        padding: 8px 14px;   /* sebelumnya 10px 25px */
+        font-size: 13px;
+        border-radius: 6px;
+    }
+
+    .action-buttons {
+        gap: 8px;
+    }
+
+    /* Aktivitas */
+    /* container code */
+    .code-container {
+        overflow-x: auto;
+        white-space: nowrap;     /* 🔥 jangan wrap */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* isi kode */
+    .code-container {
+        font-family: 'Courier New', monospace;
+    }
+
+    /* biar scroll keliatan smooth */
+    .code-container::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .code-container::-webkit-scrollbar-thumb {
+        background: #555;
+        border-radius: 10px;
+    }
+
+    .code-input {
+        display: inline-block;
+        vertical-align: middle;
+        width: auto !important;
+        min-width: 40px;
+        max-width: 100px;
+        font-size: 13px;
+        padding: 2px 6px;
+    }
+
+    /* editor */
+    .live-editor {
+        height: auto;              /* jangan fix 500px */
+    }
+
+    .live-editor .split-container {
+        flex-direction: column;    /* 🔥 ini kunci utama */
+    }
+
+    .live-editor .panel-left,
+    .live-editor .panel-right {
+        flex: none;
+        width: 100%;
+    }
+
+    .live-editor .CodeMirror {
+        height: 250px !important;  /* editor tidak kependekan */
+    }
+
+    .live-editor #output {
+        height: 150px;
+        font-size: 12px;
+    }
+}

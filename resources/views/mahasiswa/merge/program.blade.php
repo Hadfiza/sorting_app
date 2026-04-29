@@ -1,6 +1,6 @@
 @extends('layouts.hlmns')
 
-@section('title','BubbleSort')
+@section('title','Kode Program Merge Sort')
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/merge.css') }}">
@@ -482,7 +482,7 @@ print("Setelah diurutkan:", data)
     </div>
     <div class="card mb-4">
         <div class="card-body materi-text">
-            <p>Cobalah jalankan kode Bubble Sort di bawah ini untuk melihat bagaimana Python memproses datanya.</p>
+            <p>Jalankan kode program Merge Sort di bawah ini untuk mengamati bagaimana Python memproses data.</p>
           
             <div class="live-editor">
                 <header class="editor-header">

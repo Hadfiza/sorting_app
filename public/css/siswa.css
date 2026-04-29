@@ -38,36 +38,84 @@ body {
     transition: margin-left .3s ease;
 }
 
-
-
-/* ===== TEKS RATA KIRI KANAN ===== */
-.card-text {
-    text-align: justify;
-    text-justify: inter-word;
-    line-height: 1.7;
+.sidebar.collapsed ~ .content {
+    margin-left: 80px;
 }
 
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 767.98px) {
-    .sidebar { transform: translateX(-100%); }
-    .sidebar.show { transform: translateX(0); }
-    .content { margin-left: 0; }
-}
+/* =====================================
+   SIDEBAR FINAL SYSTEM
+===================================== */
 
-/* ===== SIDEBAR ===== */
 .sidebar{
     position:fixed;
-    top:60px;
+    top:var(--navbar-h);
     left:0;
     width:var(--sidebar-w);
     height:calc(100vh - var(--navbar-h));
-    background: #ffffff;
-    box-shadow: 2px 0 12px rgba(0,0,0,0.08);
+    background:#ffffff;
+    box-shadow:2px 0 12px rgba(0,0,0,0.08);
     padding:16px;
-    z-index:1020;
-    margin-top: -1px;
+    z-index:1050;
     overflow-y:auto;
+    transition: all 0.3s ease;
+}
+
+/* CONTENT DESKTOP
+.content {
+    margin-left: var(--sidebar-w);
+    padding: 24px;
+    padding-top: calc(56px + 24px);
+} */
+
+/* =====================================
+   MOBILE ONLY
+===================================== */
+@media (max-width: 768px) {
+
+    .sidebar {
+        left: -260px; /* sembunyi */
+        width: 260px;
+    }
+
+    .sidebar.active {
+        left: 0; /* muncul */
+    }
+
+    .content {
+        margin-left: 0 !important;
+    }
+}
+
+/* =====================================
+   OVERLAY
+===================================== */
+#overlay {
+    position: fixed;
+    top: var(--navbar-h);
+    left: 0;
+    width: 100%;
+    height: calc(100vh - var(--navbar-h));
+    background: rgba(0,0,0,0.4);
+    z-index: 1040;
+    display: none;
+}
+
+#overlay.active {
+    display: block;
+}
+
+/* =====================================
+   SAFETY DESKTOP (ANTI BUG)
+===================================== */
+@media (min-width: 769px) {
+    .sidebar {
+        left: 0 !important;
+    }
+
+    #overlay {
+        display: none !important;
+    }
 }
 
 
@@ -172,6 +220,12 @@ body {
     font-size:18px;
 }
 
+/* ===== TEKS RATA KIRI KANAN ===== */
+.card-text {
+    text-align: justify;
+    text-justify: inter-word;
+    line-height: 1.7;
+}
 
 /* ===== STYLING UNTUK JUDUL DENGAN BOX ===== */
 .title-card {
@@ -389,21 +443,17 @@ body {
     color: #2a5298;
 }
 
+.footer{
+    margin-top: 30px;              /* kasih jarak dari konten */
+    padding: 15px 0;
+    text-align: center;
+    color: #6b7280;
+    font-size: 13px;
+    border-top: 1px solid #e5e7eb; /*garis pemisah */
+}
 
 
 
 
-/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> */
 
-/* Atau gunakan SVG jika tidak ingin Font Awesome */
-/* .title-icon svg { */
-
-/* ===============================
-   BUBBLE SORT ILLUSTRATION
-   =============================== */
-
-/* =========================================================
-   BUBBLE SORT SIMULATION (SAFE SCOPE)
-   Prefix: .bubble-sort-sim
-   ========================================================= */
 

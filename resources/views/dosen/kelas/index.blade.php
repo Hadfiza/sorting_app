@@ -1,5 +1,7 @@
 @extends('layouts.hlmnd')
 
+@section('title','Kelas')
+
 @section('content')
 <style>
     .kelas-card {

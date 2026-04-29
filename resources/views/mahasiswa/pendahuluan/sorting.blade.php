@@ -72,7 +72,7 @@
                 >
             </div>
 
-            <div class="d-flex justify-content-center gap-3 mb-3" id="unsorted-books">
+            <div class="d-flex flex-wrap justify-content-center gap-2 mb-3" id="unsorted-books">
                 <img src="{{ asset('images/buku/edisi1.png') }}" class="book" data-edisi="1">
                 <img src="{{ asset('images/buku/edisi2.png') }}" class="book" data-edisi="2">
 

@@ -1,146 +1,13 @@
 @extends('layouts.hlmns')
 
-@section('title','Kode Program BubbleSort')
+@section('title','Kode Program Bubble Sort')
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/bubble.css') }}">
 @endsection
 
 <style>
-/* =========================
-   CODEMIRROR
-========================= */
 
-.live-editor {
-    width: 100%;
-    height: 500px;
-    background: #1e1e1e;
-    border-radius: 12px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-}
-
-/* Header */
-.live-editor .editor-header {
-    padding: 10px 20px;
-    background: #2d2d2d;
-    border-bottom: 1px solid #444;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-}
-
-.live-editor .editor-header h1 {
-    margin: 0;
-    font-size: 1rem;
-}
-
-/* Split layout */
-.live-editor .split-container {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-}
-
-/* Panel kiri */
-.live-editor .panel-left {
-    flex: 6;
-    display: flex;
-    flex-direction: column;
-    border-right: 1px solid #444;
-}
-
-/* Panel kanan */
-.live-editor .panel-right {
-    flex: 4;
-    display: flex;
-    flex-direction: column;
-    background: #101010;
-}
-
-/* Label */
-.live-editor .panel-label {
-    background: #333;
-    color: #ccc;
-    padding: 5px 15px;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-}
-
-/* CodeMirror */
-.live-editor .CodeMirror {
-    flex: 1;
-    font-size: 14px;
-}
-
-/* Output */
-.live-editor #output {
-    flex: 1;
-    padding: 15px;
-    color: #00ff00;
-    font-family: 'Courier New', monospace;
-    white-space: pre-wrap;
-    overflow-y: auto;
-    font-size: 13px;
-}
-
-/* Run button */
-.live-editor .btn-run {
-    padding: 5px 15px;
-    background: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-/* ===  CSS INPUT KODE === */
-.code-input {
-    background: #2d2d2d;
-    border: 1px solid #555;
-    color: #569cd6; /* Warna font biru ala VSCode */
-    font-family: 'Courier New', monospace;
-    padding: 2px 6px;
-    border-radius: 4px;
-    outline: none;
-    font-size: 14px;
-    transition: 0.3s ease;
-}
-
-.code-input:focus {
-    border-color: #007acc;
-    background: #1e1e1e;
-}
-
-.code-input.correct {
-    border-color: #28a745 !important;
-    background: rgba(40, 167, 69, 0.2) !important;
-    color: #28a745;
-}
-
-.code-input.wrong {
-    border-color: #dc3545 !important;
-    background: rgba(220, 53, 69, 0.2) !important;
-    color: #dc3545;
-}
-
-/* Tambahan CSS Khusus untuk Tab Pills agar lebih estetik */
-.nav-pills .nav-link {
-    color: #495057;
-    background-color: transparent;
-    transition: all 0.3s ease;
-}
-.nav-pills .nav-link:hover {
-    background-color: #e9ecef;
-}
-.nav-pills .nav-link.active {
-    background-color: #0d6efd;
-    color: white;
-    box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2);
-}
 
 </style>
 
@@ -504,7 +371,7 @@ print("Setelah di sortir:", data)
     </div>
     <div class="card mb-4">
         <div class="card-body materi-text">
-            <p>Cobalah jalankan kode Bubble Sort di bawah ini untuk melihat bagaimana Python memproses datanya.</p>
+            <p>Jalankan kode program Merge Sort di bawah ini untuk mengamati bagaimana Python memproses data.</p>
           
             <div class="live-editor">
                 <header class="editor-header">

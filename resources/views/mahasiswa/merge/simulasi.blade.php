@@ -1,6 +1,6 @@
 @extends('layouts.hlmns')
 
-@section('title','BubbleSort')
+@section('title','Simulasi Merge Sort')
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/merge.css') }}">

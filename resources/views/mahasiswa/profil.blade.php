@@ -5,7 +5,7 @@
 @section('content')
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<div class="container py-5 mt-5">
+<div class="container py-1">
     
     @if(session('success'))
         <div class="alert alert-success border-0 shadow-sm rounded-4 mb-4 d-flex align-items-center">
@@ -31,7 +31,7 @@
 
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         
-        <div class="card-header border-0 text-white p-4 p-md-5 position-relative" style="background: linear-gradient(135deg, #2563eb, #3b82f6);">
+        <div class="card-header border-0 text-white p-4 p-md-3 position-relative" style="background: linear-gradient(135deg, #2563eb, #3b82f6);">
             <div class="position-absolute rounded-circle bg-white opacity-25" style="width: 150px; height: 150px; top: -50px; right: -20px; filter: blur(20px);"></div>
             <div class="position-absolute rounded-circle bg-info opacity-25" style="width: 100px; height: 100px; bottom: -30px; left: 20%; filter: blur(15px);"></div>
             
@@ -62,7 +62,7 @@
             </div>
         </div>
 
-        <div class="card-body p-4 p-md-5">
+        <div class="card-body p-4 p-md-3">
             <h5 class="fw-bold text-dark mb-4 border-bottom pb-3"><i class="fa-solid fa-id-card text-primary me-2"></i>Detail Informasi Mahasiswa</h5>
             
             <div class="row g-4">

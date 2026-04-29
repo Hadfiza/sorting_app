@@ -1,6 +1,6 @@
 @extends('layouts.hlmns')
 
-@section('title','Merge Sort')
+@section('title','Materi Merge Sort')
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/merge.css') }}">

@@ -1,6 +1,19 @@
 @extends('layouts.landing_layouts')
 
-@section('title', 'Informasi Aplikasi')
+@section('title', 'Tentang - SortLearn')
+
+<style>
+    .judul-halaman{
+        padding-top: 70px;
+    }
+
+    @media (max-width: 768px){
+        .judul-halaman{
+            padding-top: 0px;
+        }
+        
+    }
+</style>
 
 @section('content')
 <div class="container py-4">
@@ -63,6 +76,29 @@
                 <div class="col-md-3 label">Tahun</div>
                 <div class="col-md-9">2026</div>
             </div>
+
+        </div>
+    </div>
+
+    <!-- CARD -->
+    <div class="card card-custom border-0 shadow mt-4">
+
+        <div class="card-body p-4 p-md-5">
+            <div class="dapus">
+                <h3 class="mb-4 fw-semibold text-light">Daftar Pustaka</h3>
+                <ul>
+                    <li>yaaya</li>
+                </ul>
+            </div>
+
+            <div class="atribusi">
+                <h3 class="mb-4 fw-semibold text-light">Atribusi</h3>
+                <ul>
+                    <li>Canva</li>
+                </ul>
+            </div>
+
+
 
         </div>
     </div>

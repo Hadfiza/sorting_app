@@ -1,6 +1,6 @@
 @extends('layouts.hlmns')
 
-@section('title','BubbleSort')
+@section('title','Simulasi Insertion Sort')
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/insertion.css') }}">

@@ -1,6 +1,6 @@
 @extends('layouts.hlmns')
 
-@section('title','BubbleSort')
+@section('title','Praktikum Merge Sort')
 
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -159,6 +159,62 @@
     color: #2563eb;
     font-weight: 700;
 }
+
+@media (max-width: 768px) {
+
+    .pdf-container iframe {
+        width: 100%;
+        height: 60vh;
+        border-radius: 8px;
+    }
+
+    .live-editor {
+        height: auto;
+    }
+
+    .live-editor .split-container {
+        flex-direction: column;
+        gap: 10px; /* biar ada jarak */
+    }
+
+    .live-editor .panel-left,
+    .live-editor .panel-right {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* ===== SAMAKAN AREA ISI ===== */
+    .live-editor .panel-left textarea,
+    .live-editor .CodeMirror,
+    .live-editor #output {
+        height: 200px !important;
+    }
+
+    .live-editor .CodeMirror {
+        flex: none !important;
+        height: 200px !important;
+    }
+
+    .CodeMirror {
+        height: 200px !important;
+        overflow: hidden !important;
+    }
+
+    /* CodeMirror scroll */
+    .CodeMirror-scroll {
+        height: 200px !important;
+        overflow-y: auto !important;   /* scroll vertikal */
+        overflow-x: auto !important;
+    }
+    /* OUTPUT */
+    .live-editor #output {
+        flex: none !important;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+
+}
 </style>
 
 <div class="card title-card mb-4">
@@ -254,9 +310,19 @@
         </div>
     </div>
 
+    <div class="alert alert-info">
+        <b>Instruksi:</b>
+        <ol class="mb-0 mt-2">
+            <li>Ketikkan atau modifikasi kode program pada editor di bawah.</li>
+            <li>Klik tombol <b>Run Code</b> untuk menjalankan program.</li>
+            <li>Pastikan <b>output berhasil muncul</b> pada bagian Console Output.</li>
+            <li>Jika sudah sesuai, klik tombol <b>Submit Praktikum</b> dinawah untuk mengumpulkan jawaban.</li>
+        </ol>
+    </div>
+
     <div class="card mb-4">
         <div class="card-body materi-text">
-            <p>Cobalah jalankan kode Bubble Sort di bawah ini untuk melihat bagaimana Python memproses datanya.</p>
+            {{-- <p>Cobalah jalankan kode Bubble Sort di bawah ini untuk melihat bagaimana Python memproses datanya.</p> --}}
           
             <div class="live-editor">
                 <header class="editor-header">
