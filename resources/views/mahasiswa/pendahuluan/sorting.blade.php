@@ -8,7 +8,6 @@
 
 @section('content')
 
-<!-- ===== Judul Materi dengan Box ===== -->
 <div class="card title-card mb-4">
     <div class="card-body">
         <div class="d-flex align-items-center">
@@ -22,7 +21,6 @@
     </div>
 </div>
 
-<!-- ===== Tujuan Pembelajaran ===== -->
 <div class="materi-page">
     <div class="card mb-4">
         <div class="card-body">
@@ -36,8 +34,6 @@
         </div>
     </div>
 
-
-<!-- ===== SORTING ===== -->
     <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
 
@@ -54,11 +50,6 @@
             </p>
         </div>
     </div>
-
-
-
-
-    <!-- ===== CONTOH SEDERHANA ===== -->
 
     <div class="card mb-4 materi-box" >
         <div class="card-body materi-text">
@@ -81,7 +72,7 @@
                 >
             </div>
 
-            <div class="d-flex justify-content-center gap-3 mb-3" id="unsorted-books">
+            <div class="d-flex flex-wrap justify-content-center gap-2 mb-3" id="unsorted-books">
                 <img src="{{ asset('images/buku/edisi1.png') }}" class="book" data-edisi="1">
                 <img src="{{ asset('images/buku/edisi2.png') }}" class="book" data-edisi="2">
 
@@ -102,15 +93,12 @@
                 </button>
             </div>
 
-            {{-- <div class="d-flex justify-content-center gap-3 mb-3" id="sorted-books"></div> --}}
-
             <p class="card-text">
                 Berdasarkan ilustrasi sederhana di atas, dapat disimpulkan bahwa proses pengurutan data melibatkan tahapan perbandingan antar elemen serta pertukaran posisi apabila urutan elemen belum sesuai dengan kriteria yang ditentukan. Meskipun pada simulasi hanya ditunjukkan satu kali proses pertukaran, mekanisme tersebut merupakan prinsip dasar yang digunakan dalam berbagai algoritma sorting. Untuk menilai tingkat efisiensi suatu algoritma dalam melakukan proses pengurutan, diperlukan pemahaman lebih lanjut mengenai kompleksitas algoritma sorting, yang berkaitan dengan jumlah operasi yang dilakukan selama proses tersebut berlangsung.
             </p>
         </div>
     </div>
 
-    <!-- ================= AKTIVITAS 1.1 : DRAG & DROP ================= -->
     <div class="card mb-4 materi-box mt-5" id="dragActivity">
         <div class="card-body materi-text">
 
@@ -123,15 +111,16 @@
                 <strong>Instruksi:</strong> Tarik setiap skenario di bawah ini ke kotak kategori pengurutan yang tepat
                 (<em>Ascending</em> atau <em>Descending</em>).
             </p>
+            
+            <p class="card-text mb-4 text-danger fw-bold">
+                <i class="fa-solid fa-lock me-1"></i> Selesaikan aktivitas klasifikasi berikut dengan benar untuk membuka akses ke materi selanjutnya!
+            </p>
 
             <div class="row g-4">
-
-                <!-- ===== KOLOM ITEM ===== -->
-                <div class="col-md-5">
+                <div class="col-md-5" id="kolomSumber">
                     <h6 class="fw-semibold mb-3">Skenario</h6>
 
                     <div class="drag-list" id="dragSource">
-
                         <div class="drag-item image-only" draggable="true" data-answer="ascending">
                             <img src="/images/sort/1.png" alt="Skenario 1">
                         </div>
@@ -143,11 +132,10 @@
                         <div class="drag-item image-only" draggable="true" data-answer="descending">
                             <img src="/images/sort/3.png" alt="Skenario 3">
                         </div>
-
                     </div>
                 </div>
 
-                <div class="col-md-7 sorting-zones">
+                <div class="col-md-7 sorting-zones" id="kolomTarget">
                     <div class="drop-zone" data-zone="ascending">
                         <div class="zone-header">Ascending</div>
                         <div class="zone-content drop-target"></div>
@@ -158,49 +146,34 @@
                         <div class="zone-content drop-target"></div>
                     </div>
                 </div>
-
-
-
-
             </div>
 
-            <!-- FEEDBACK -->
             <div id="dragFeedback" class="mt-4 text-center d-none"></div>
             <div class="text-center mt-3">
                 <button id="checkAnswerBtn" class="btn btn-primary" disabled>
-                    Periksa Jawaban
+                    <i class="fa-solid fa-check-double me-1"></i> Periksa Jawaban
                 </button>
 
                 <button id="resetDragBtn" class="btn btn-outline-secondary">
-                    Reset
+                    <i class="fa-solid fa-rotate-right me-1"></i> Reset
                 </button>
             </div>
-
-
-
-
         </div>
     </div>
 </div>
 
-
 <div class="d-flex justify-content-center gap-3 mt-4 pt-3 border-top">
-
-    <a href="#" 
-       class="btn btn-outline-secondary">
+    <a href="#" class="btn btn-outline-secondary">
         Sebelumnya
     </a>
 
     <a href="{{ route('mahasiswa.aktivitas.show',['pendahuluan','kompleksitas']) }}" 
-       class="btn btn-primary">
-        Selanjutnya
+       class="btn btn-success disabled" id="btnNextMateri" tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;">
+        <i class="fa-solid fa-lock me-1" id="lockIcon"></i> Selanjutnya
     </a>
-
 </div>
 
-
 <script>
-
 document.addEventListener('DOMContentLoaded', () => {
 
     let draggedItem = null;
@@ -211,6 +184,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkBtn   = document.getElementById('checkAnswerBtn');
     const resetBtn   = document.getElementById('resetDragBtn');
     const activityBox = document.getElementById('dragActivity');
+    
+    // Element untuk tombol Kunci dan Kolom Grid Bootstrap
+    const btnNext = document.getElementById('btnNextMateri');
+    const lockIcon = document.getElementById('lockIcon');
+    const kolomSumber = document.getElementById('kolomSumber');
+    const kolomTarget = document.getElementById('kolomTarget');
+    const totalItems = dragItems.length; 
 
     /* ========== DRAG ========== */
     dragItems.forEach(item => {
@@ -224,45 +204,52 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
- 
     /* ========== DROP ========== */
-   const dropTargets = document.querySelectorAll('.drop-target');
+    const dropTargets = document.querySelectorAll('.drop-target');
 
-dropTargets.forEach(target => {
+    dropTargets.forEach(target => {
+        target.addEventListener('dragover', e => {
+            e.preventDefault(); 
+            target.parentElement.classList.add('active');
+        });
 
-    target.addEventListener('dragover', e => {
-        e.preventDefault(); // 🔑 KUNCI UTAMA
-        target.parentElement.classList.add('active');
+        target.addEventListener('dragleave', () => {
+            target.parentElement.classList.remove('active');
+        });
+
+        target.addEventListener('drop', e => {
+            e.preventDefault();
+            target.parentElement.classList.remove('active');
+
+            if (!draggedItem) return;
+            if (draggedItem.dataset.used === 'true') return;
+
+            const img = draggedItem.querySelector('img').cloneNode(true);
+            img.classList.add('dropped-image');
+            img.dataset.answer = draggedItem.dataset.answer;
+            img.style.pointerEvents = 'none'; 
+
+            target.appendChild(img);
+
+            draggedItem.dataset.used = 'true';
+            draggedItem.draggable = false;
+            draggedItem.classList.add('used');
+            draggedItem.style.display = 'none'; 
+
+            // Cek jumlah gambar yang sudah di-drop
+            const droppedCount = document.querySelectorAll('.dropped-image').length;
+            
+            // Nyalakan tombol cek jawaban hanya ketika minimal 1 item didrop
+            checkBtn.disabled = false;
+
+            // --- LOGIKA BARU: LEBARKAN SAAT SEMUA SUDAH DIDROP ---
+            if (droppedCount === totalItems) {
+                kolomSumber.classList.add('d-none'); // Sembunyikan sumber
+                kolomTarget.classList.remove('col-md-7'); 
+                kolomTarget.classList.add('col-md-12'); // Jadikan full 100%
+            }
+        });
     });
-
-    target.addEventListener('dragleave', () => {
-        target.parentElement.classList.remove('active');
-    });
-
-    target.addEventListener('drop', e => {
-        e.preventDefault();
-        target.parentElement.classList.remove('active');
-
-        if (!draggedItem) return;
-        if (draggedItem.dataset.used === 'true') return;
-
-        const img = draggedItem.querySelector('img').cloneNode(true);
-        img.classList.add('dropped-image');
-        img.dataset.answer = draggedItem.dataset.answer;
-
-        target.appendChild(img);
-
-        // 🔒 kunci item asal
-        draggedItem.dataset.used = 'true';
-        draggedItem.draggable = false;
-        draggedItem.style.opacity = '0.4';
-        draggedItem.style.cursor = 'not-allowed';
-
-        checkBtn.disabled = false;
-    });
-});
-
-
 
     /* ========== CEK JAWABAN ========== */
     checkBtn.addEventListener('click', () => {
@@ -284,44 +271,85 @@ dropTargets.forEach(target => {
             });
         });
 
-        feedbackEl.innerHTML =
-            `<div class="alert alert-success py-3 mb-0">
-                Hasil: benar <b>${correct}</b> dari <b>${total}</b> 
-             </div>`;
-        feedbackEl.classList.remove('d-none');
-
-                if (correct === totalItems) {
-            activityBox.classList.add('completed');
+        if (total < totalItems) {
+            feedbackEl.className = 'alert alert-warning py-3 mb-0 mt-3';
+            feedbackEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Harap masukkan semua skenario (${total}/${totalItems}) terlebih dahulu!`;
+            feedbackEl.classList.remove('d-none');
+            return;
         }
 
+        if (correct === totalItems) {
+            feedbackEl.className = 'alert alert-success py-3 mb-0 mt-3';
+            feedbackEl.innerHTML = `<i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Semua klasifikasi benar (${correct}/${totalItems}). Tombol Selanjutnya telah dibuka.`;
+            feedbackEl.classList.remove('d-none');
+            activityBox.classList.add('completed');
+
+            // Buka tombol next
+            btnNext.classList.remove('disabled');
+            btnNext.removeAttribute('tabindex');
+            btnNext.removeAttribute('aria-disabled');
+            btnNext.style.pointerEvents = 'auto';
+            btnNext.style.opacity = '1';
+            lockIcon.className = 'fa-solid fa-unlock me-1';
+
+            // SIMPAN PROGRESS
+            fetch("{{ route('mahasiswa.aktivitas.tandai_selesai') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    id_aktivitas: {{ $item->id }} // Mengirim ID aktivitas saat ini
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Progress tersimpan:", data);
+            })
+            .catch(error => console.error("Error:", error));
+        } else {
+            feedbackEl.className = 'alert alert-danger py-3 mb-0 mt-3';
+            feedbackEl.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <strong>Kurang Tepat!</strong> Ada klasifikasi yang salah (Benar: ${correct}/${totalItems}). Silakan klik Reset dan coba lagi.`;
+            feedbackEl.classList.remove('d-none');
+        }
     });
 
     /* ========== RESET ========== */
-resetBtn.addEventListener('click', () => {
+    resetBtn.addEventListener('click', () => {
+        document.querySelectorAll('.dropped-image').forEach(img => img.remove());
 
-    // hapus semua hasil drop
-    document.querySelectorAll('.dropped-image')
-        .forEach(img => img.remove());
+        document.querySelectorAll('.drag-item').forEach(item => {
+            item.dataset.used = 'false';
+            item.draggable = true;
+            item.classList.remove('used');
+            item.style.display = ''; 
+            item.style.opacity = '';
+            item.style.cursor = 'grab';
+        });
 
-    // buka kembali semua item drag
-    document.querySelectorAll('.drag-item').forEach(item => {
-        item.dataset.used = 'false';
-        item.draggable = true;
-        item.style.opacity = '';
-        item.style.cursor = 'grab';
+        activityBox.classList.remove('completed');
+        feedbackEl.innerHTML = '';
+        feedbackEl.classList.add('d-none');
+        checkBtn.disabled = true;
+
+        // --- KEMBALIKAN UKURAN KOLOM SEPERTI SEMULA ---
+        kolomSumber.classList.remove('d-none'); 
+        kolomTarget.classList.remove('col-md-12'); 
+        kolomTarget.classList.add('col-md-7'); 
+
+        // Kunci Kembali Tombol Lanjut
+        btnNext.classList.add('disabled');
+        btnNext.setAttribute('tabindex', '-1');
+        btnNext.setAttribute('aria-disabled', 'true');
+        btnNext.style.pointerEvents = 'none';
+        btnNext.style.opacity = '0.5';
+        lockIcon.className = 'fa-solid fa-lock me-1';
     });
-
-    // reset tampilan & state
-    activityBox.classList.remove('completed');
-    feedbackEl.innerHTML = '';
-    feedbackEl.classList.add('d-none');
-    checkBtn.disabled = true;
 });
 
-
-});
-
-
+/* ========== ANIMASI TUKAR BUKU ========== */
 let sedangTertukar = false;
 
 function swapAndShowSorted() {
@@ -331,29 +359,22 @@ function swapAndShowSorted() {
 
     if (!a || !b || btn.disabled) return;
 
-    // Kunci tombol agar tidak diklik selama animasi berjalan
     btn.disabled = true;
 
-    // 1. Hitung jarak antara buku A dan buku B
     const rectA = a.getBoundingClientRect();
     const rectB = b.getBoundingClientRect();
     const dx = rectB.left - rectA.left;
 
-    // 2. Tambahkan class untuk z-index agar buku di atas
     a.classList.add('swap-active');
     b.classList.add('swap-active');
 
-    // 3. Jalankan efek meluncur (Transform)
     a.style.transform = `translateX(${dx}px)`;
     b.style.transform = `translateX(${-dx}px)`;
 
-    // 4. Tunggu animasi selesai sebelum menukar konten
     setTimeout(() => {
-        // Matikan transisi agar saat reset transform tidak terlihat meluncur balik
         a.style.transition = 'none';
         b.style.transition = 'none';
 
-        // TUKAR ISI GAMBAR DAN DATA (Seperti cara awal Anda)
         const tempSrc = a.src;
         a.src = b.src;
         b.src = tempSrc;
@@ -362,21 +383,18 @@ function swapAndShowSorted() {
         a.dataset.edisi = b.dataset.edisi;
         b.dataset.edisi = tempEdisi;
 
-        // Reset posisi transform ke 0 secara instan (karena transition sudah none)
         a.style.transform = '';
         b.style.transform = '';
 
-        // Berikan jeda kecil sebelum mengaktifkan kembali transisi dan tombol
         setTimeout(() => {
-            a.style.transition = ''; // Kembalikan transisi untuk penggunaan berikutnya
+            a.style.transition = ''; 
             b.style.transition = '';
             a.classList.remove('swap-active');
             b.classList.remove('swap-active');
             btn.disabled = false;
         }, 50);
 
-    }, 600); // Harus sama dengan durasi transition di CSS (0.6s)
+    }, 600); 
 }
-
 </script>
 @endsection

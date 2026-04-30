@@ -1,5 +1,8 @@
 @extends('layouts.hlmnd')
 
+@section('title', 'Praktikum')
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 <style>
 .title-card {
     background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
@@ -49,32 +52,70 @@
 
     <div class="card title-card mb-4">
         <div class="card-body">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center justify-content-between">
                 <h3 class="mb-0">Hasil Praktikum</h3>
+                
+                <a href="{{ route('dosen.praktikum.soal') }}" class="btn btn-light text-primary fw-bold rounded-pill px-4 shadow-sm">
+                    <i class="bi bi-file-earmark-pdf-fill me-2 text-danger"></i> Kelola Soal PDF
+                </a>
             </div>
         </div>
     </div>
 
     <div class="card shadow-sm border-0">
         <div class="card-body">
-            <form action="" method="GET" class="row g-3 mb-4">
+            <form method="GET" class="row g-3 mb-4 align-items-center">
+
                 <div class="col-md-5">
                     <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
-                        <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Cari nama mahasiswa..." value="{{ request('search') }}">
+                        <span class="input-group-text bg-light border-end-0" style="height:45px;">
+                            <i class="bi bi-search"></i>
+                        </span>
+
+                        <input type="text"
+                            name="search"
+                            class="form-control border-start-0 ps-0"
+                            style="height:45px;"
+                            placeholder="Cari nama mahasiswa..."
+                            value="{{ request('search') }}">
                     </div>
                 </div>
+
                 <div class="col-md-4">
-                    <select name="kelas" class="form-select text-muted">
+                    <select name="kelas_id" class="form-select" style="height:45px;">
                         <option value="">Semua Kelas</option>
-                        <option value="A" {{ request('kelas') == 'A' ? 'selected' : '' }}>Kelas A</option>
-                        <option value="B" {{ request('kelas') == 'B' ? 'selected' : '' }}>Kelas B</option>
+
+                        @foreach($kelases as $kelas)
+                        <option value="{{ $kelas->id }}"
+                            {{ request('kelas_id') == $kelas->id ? 'selected' : '' }}>
+                            {{ $kelas->nama_kelas }}
+                        </option>
+                        @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary w-100 fw-bold">Filter</button>
+
+                <div class="col-md-3 d-flex gap-2">
+
+                    <button type="submit" 
+                        class="btn btn-primary fw-bold flex-grow-1"
+                        style="height:45px;">
+                        <i class="bi bi-funnel"></i> Filter
+                    </button>
+
+                    @if(request()->has('search') || request()->has('kelas_id'))
+                    <a href="{{ url()->current() }}" 
+                    class="btn btn-primary d-flex align-items-center justify-content-center"
+                    style="height:45px; width:45px;"
+                    title="Reset Filter">
+
+                    <i class="bi bi-arrow-repeat"></i>
+
+                    </a>
+                    @endif
+
                 </div>
-            </form>
+
+                </form>
 
             <div class="table-responsive">
                 <table class="table table-hover align-middle">

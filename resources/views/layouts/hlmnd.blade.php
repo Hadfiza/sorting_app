@@ -36,7 +36,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="{{route("dosen.profil")}}">
                         <i class="fa-solid fa-user me-2"></i> Profil
                     </a>
                 </li>
@@ -60,9 +60,11 @@
 @php
     $dashboard = request()->routeIs('dosen.dashboard');
     $nilai     = request()->routeIs('dosen.nilai.*');
-    $mahasiswa = request()->routeIs('dosen.mahasiswa.*');
+    $mahasiswa = request()->routeIs('dosen.datamahasiswa.*');
+    $praktikum = request()->routeIs('dosen.praktikum.*');
     $kelas     = request()->routeIs('dosen.kelas.*');
-    $setting   = request()->routeIs('dosen.setting');
+    $setting   = request()->routeIs('dosen.kkm');
+    $soal = request()->routeIs('dosen.soal.*');
 @endphp
 
 <!-- ===== SIDEBAR ===== -->
@@ -87,36 +89,53 @@
     </div>
 
     <!-- Data Nilai -->
-    <div class="menu-item {{ $nilai ? 'active' : '' }}">
-        <a href="#" class="menu-btn">
-            <i class="fa-solid fa-chart-column me-2"></i>
+    <div class="menu-item {{ request()->routeIs('dosen.nilai.*') ? 'active' : '' }}">
+        <a href="{{ route('dosen.nilai.index') }}" class="menu-btn">
+            <i class="fa-solid fa-chart-simple me-2"></i>
             Data Nilai
         </a>
     </div>
 
     <!-- Data Mahasiswa -->
-    <div class="menu-item {{ $mahasiswa ? 'active' : '' }}">
-        <a href="#" class="menu-btn">
+    <div class="menu-item {{ request()->routeIs('dosen.datamahasiswa.*') ? 'active' : '' }}">
+        <a href="{{ route('dosen.datamahasiswa.index') }}" class="menu-btn">
             <i class="fa-solid fa-users me-2"></i>
             Data Mahasiswa
         </a>
     </div>
 
-    <!-- Data Mahasiswa -->
-    <div class="menu-item {{ $mahasiswa ? 'active' : '' }}">
+    <!-- Data Praktikum -->
+    <div class="menu-item {{ request()->routeIs('dosen.praktikum.*') ? 'active' : '' }}">
         <a href="{{ route('dosen.praktikum.index') }}" class="menu-btn">
-            <i class="fa-solid fa-users me-2"></i>
-            Hasil Praktikum
+            <i class="fa-solid fa-flask me-2"></i>
+            Manajemen Praktikum
         </a>
     </div>
 
+    <!-- Data Soal -->
+    <div class="menu-item {{ request()->routeIs('dosen.soal.*') ? 'active' : '' }}">
+        <a href="{{ route('dosen.soal.index') }}" class="menu-btn">
+            <i class="fa-solid fa-file-pen"></i>
+            Manajemen Soal
+        </a>
+    </div>
+
+
+
     <!-- Setting -->
-    <div class="menu-item {{ $setting ? 'active' : '' }}">
+    <div class="menu-item {{ request()->routeIs('dosen.kkm.*') ? 'active' : '' }}">
+        <a href="{{ route('dosen.kkm.index') }}" class="menu-btn">
+            <i class="fa-solid fa-gear me-2"></i>
+            Pengaturan KKM
+        </a>
+    </div>
+
+    {{-- <div class="menu-item {{ $setting ? 'active' : '' }}">
         <a href="{{ route('dosen.setting') }}" class="menu-btn">
             <i class="fa-solid fa-gear me-2"></i>
             Setting
         </a>
-    </div>
+    </div> --}}
 
 </div>
 
@@ -136,6 +155,12 @@ function toggleMenu(btn){
     item.classList.toggle('open');
 }
 </script>
+
+<footer class="footer">
+    <div class="text-center">
+        <small>© 2026 SortLearn.</small>
+    </div>
+</footer>
 
 </body>
 </html>

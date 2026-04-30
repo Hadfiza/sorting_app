@@ -1,167 +1,153 @@
 @extends('layouts.hlmns')
 
-@section('title','BubbleSort')
+@section('title','Materi Insertion Sort')
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/insertion.css') }}">
+<style>
+    /* Style Tambahan untuk Ilustrasi Visualisasi Insertion Sort */
+    .sim-visual-container {
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 12px;
+        /* padding: 25px; */
+        margin: 20px 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        overflow-x: auto; /* Memungkinkan scroll horizontal jika tree terlalu lebar */
+        -webkit-overflow-scrolling: touch;
+        padding: 15px !important;
+    }
+
+    .stats-row {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85rem;
+        color: #58a6ff;
+        margin-bottom: 20px;
+    }
+
+    .visualizer-area {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        height: 180px;
+        gap: 8px;
+        border-bottom: 2px solid #30363d;
+        padding-bottom: 10px;
+    }
+
+    .bar-item {
+        background: #8b949e; 
+        width: 35px;
+        border-radius: 4px 4px 0 0;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .bar-item span {
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.75rem;
+        color: #8b949e;
+    }
+
+    /* Insertion Sort States */
+    .bar-item.active-key {
+        background: #f1c40f !important; /* Elemen yang sedang disisipkan (Key) */
+        transform: translateY(-10px);
+        box-shadow: 0 0 15px rgba(241, 196, 15, 0.5);
+    }
+
+    .bar-item.comparing {
+        background: #ffffff !important; /* Sedang dibandingkan dengan key */
+    }
+
+    .bar-item.is-sorted {
+        background: #3fb950 !important; /* Bagian kiri yang sudah terurut relatif */
+    }
+
+    .legend-row {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+        font-size: 0.8rem;
+        color: #8b949e;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .color-box {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+    }
+
+    .controls-row {
+        margin-top: 25px;
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .btn-visual {
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        border: 1px solid #30363d;
+    }
+
+    .btn-start-v { background: #238636; color: white; border: none; }
+    .btn-reset-v { background: #21262d; color: white; }
+    
+    .btn-visual:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .tree-level {
+        display: flex;
+        justify-content: center;
+        gap: 10px !important; /* Perkecil jarak antar node di HP */
+        width: max-content; /* Pastikan container mengikuti lebar isi agar bisa di-scroll */
+        min-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    #insertion-visualizer {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center; /* Center di desktop */
+        gap: 5px;
+        height: 200px;
+        padding: 10px;
+        overflow-x: auto; /* Wajib untuk responsif HP */
+        -webkit-overflow-scrolling: touch;
+        background: #161b22;
+        border-radius: 8px;
+    }
+</style>
 @endsection
 
 @section('content')
 
+@php
+    // Mengecek apakah materi ini sudah pernah diselesaikan
+    $isSelesai = isset($progresSelesai) && in_array($item->id, $progresSelesai);
+@endphp
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<style>
-/* CSS EDITOR PYTHON (Disesuaikan agar muat di dalam Card) */
-    .app-wrapper {
-        width: 100%;
-        height: 500px;
-        background: #1e1e1e;
-        border-radius: 12px;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        margin-top: 20px;
-    }
-    .editor-header { padding: 10px 20px; background: #2d2d2d; border-bottom: 1px solid #444; display: flex; justify-content: space-between; align-items: center; color: white; }
-    .editor-header h1 { margin: 0; font-size: 1rem; }
-    .split-container { display: flex; flex: 1; overflow: hidden; border-top: 1px solid #444; }
 
-    .panel-right { flex: 4; display: flex; flex-direction: column; background: #101010; }
-    .panel-label { background: #333; color: #ccc; padding: 5px 15px; font-size: 0.75rem; text-transform: uppercase; }
-    .CodeMirror { flex-grow: 1; height: 100%; font-size: 14px; text-align: left; }
-    #output { padding: 15px; color: #00ff00; font-family: 'Courier New', monospace; white-space: pre-wrap; overflow-y: auto; flex-grow: 1; font-size: 13px; text-align: left; }
-    .btn-run { padding: 5px 15px; background: #28a745; color: white; border: none; border-radius: 4px; font-weight: bold; }
-
-    .panel-left { 
-    flex: 6; 
-    border-right: 1px solid #444; 
-    display: flex; 
-    flex-direction: column; 
-    height: 100%; /* Pastikan tingginya penuh */
-}
-
-
-
-/* ===============================
-   FILE CONTAINER
-   =============================== */
-
-.file-container {
-    position: relative;
-    height: 180px;
-    margin-bottom: 25px;
-}
-
-
-/* ===============================
-   FILE WRAP
-   =============================== */
-
-.file-wrap {
-    position: absolute;
-    width: 100px;
-    transition: all 0.4s ease;
-    text-align: center;
-    z-index: 1; /* 🔥 jangan besar */
-}
-
-.file-wrap img {
-    width: 100px;
-    pointer-events: none; /* supaya gambar tidak menghalangi klik */
-}
-
-.file-label {
-    display: block;
-    margin-top: 8px;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-
-/* ===============================
-   STATE VISUAL
-   =============================== */
-
-.file-wrap.is-sorted img {
-    filter: drop-shadow(0 0 8px #2ecc71);
-}
-
-.file-wrap.comparing img {
-    filter: drop-shadow(0 0 8px #f39c12);
-}
-
-.file-wrap.is-key img {
-    filter: drop-shadow(0 0 10px #3498db);
-}
-
-
-/* ===============================
-   BUTTON AREA
-   =============================== */
-
-.action-buttons {
-    position: relative;
-    z-index: 20; /* 🔥 lebih tinggi dari file-wrap */
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 15px;
-}
-
-
-/* ===============================
-   BUTTON STYLE
-   =============================== */
-
-.btn-sim {
-    padding: 10px 22px;
-    border-radius: 6px;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-    background: #3498db;
-    color: #fff;
-}
-
-.btn-sim:hover {
-    transform: translateY(-2px);
-}
-
-.btn-yes {
-    background: #27ae60;
-}
-
-.btn-no {
-    background: #e74c3c;
-}
-
-.btn-swap {
-    background: #f39c12;
-}
-
-.btn-disabled {
-    opacity: 0.6;
-    cursor: default;
-}
-
-
-/* ===============================
-   FINISH MESSAGE
-   =============================== */
-
-#finish-message {
-    margin-top: 20px;
-    font-weight: bold;
-    text-align: center;
-} */
-
-
-
-</style>
-
-<!-- ===== Judul Materi dengan Box ===== -->
 <div class="card title-card mb-4">
     <div class="card-body">
         <div class="d-flex align-items-center">
@@ -169,16 +155,16 @@
                 <i class="fas fa-sort-amount-down"></i>
             </div>
             <div>
-                <h3 class="mb-0">Algoritma InsertionSort</h3>
+                <h3 class="mb-0">Algoritma Insertion Sort</h3>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ===== Tujuan Pembelajaran ===== -->
 <div class="materi-page">
-    <div class="card mb-4">
-        <div class="card-body">
+    {{-- MATERI ASLI 1: TUJUAN PEMBELAJARAN --}}
+    <div class="card mb-4 materi-box">
+        <div class="card-body materi-text">
             <h5 class="card-title">Tujuan Pembelajaran</h5> 
             <p>Setelah menyelesaikan materi pada bab ini, mahasiswa diharapkan mampu:</p>
             <ul>
@@ -189,14 +175,12 @@
         </div>
     </div>
 
-
-<!-- ===== SORTING ===== -->
+    {{-- MATERI ASLI 2: PENGERTIAN --}}
     <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
-
             <div class="materi-header">
                 <i class="fa-sharp-duotone fa-solid fa-book-open"></i>
-                <span class="materi-badge">InsertionSort</span>
+                <span class="materi-badge">Pengertian Insertion Sort</span>
             </div>
             <p class="card-text text-justify">
                 Insertion Sort adalah algoritma pengurutan sederhana yang bekerja dengan cara menyisipkan elemen ke posisi yang tepat dalam kumpulan data yang sebagian telah terurut. Cara kerjanya mirip seperti seseorang menyusun kartu di tangan: setiap kartu baru dibandingkan dengan kartu-kartu sebelumnya, lalu ditempatkan pada posisi yang sesuai agar urutan tetap benar. Dalam prosesnya, Insertion Sort selalu menjaga agar bagian awal list berada dalam keadaan terurut, kemudian setiap item berikutnya disisipkan satu per satu ke posisi yang tepat di antara elemen-elemen yang sudah terurut tersebut.</br></br>
@@ -205,11 +189,9 @@
             </p>
         </div>
     </div>
-</div>
 
-<!-- ===== Prinsip Kerja ===== -->
-<div class="materi-page d-none">
-    <div class="card mb-4 materi-box" >
+    {{-- MATERI ASLI 3: CARA KERJA --}}
+    <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
             <div class="materi-header">
                 <i class="fa-sharp-duotone fa-solid fa-shuffle"></i>
@@ -230,196 +212,426 @@
             </p>
         </div>
     </div>
-</div>
 
-
-<!-- ===== Ilustrasi ===== -->
-<div class="materi-page d-none">
-    <div class="card mb-4">
+    {{-- ILUSTRASI VISUALISASI INTERAKTIF --}}
+    <div class="card mb-4 materi-box">
         <div class="card-body materi-text">
             <div class="materi-header">
-                <i class="fa-solid fa-play"></i>
-                <span class="materi-badge">Simulasi Insertion Sort</span>
+                <i class="fa-solid fa-play-circle"></i>
+                <span class="materi-badge">Ilustrasi Visualisasi</span>
             </div>
             
-            <div class="simulation-wrapper">
-                <div class="sub-title"><strong>Studi kasus : </strong>Dalam sebuah sistem pengelolaan arsip digital, terdapat beberapa data yang diberi label nama bulan, yaitu April, Juni, September, Mei, dan Oktober. Data tersebut belum tersusun secara alfabet, sehingga menyulitkan proses pencarian. Untuk mengatasi masalah ini, digunakan algoritma Insertion Sort, yang mengurutkan data dengan cara mengambil satu elemen sebagai key lalu menyisipkannya ke posisi yang tepat di bagian data yang sudah terurut.</div>
-                
-                <div id="simulation-container"></div>
-                
-                <div id="finish-message" style="display:none; margin-top:30px;" class="text-center">
-                    <div class="alert alert-success">
-                        <h4><i class="fa fa-check-circle"></i> Pengurutan Selesai!</h4>
-                        <button class="btn btn-outline-success" onclick="resetSimulation()">Ulangi Simulasi</button>
+            <p>Berikut adalah simulasi interaktif untuk membantu Anda memahami cara kerja algoritma secara langsung. Klik tombol <strong> Mulai Visualisasi </strong> untuk mengamati proses pengurutan langkah demi langkah, atau tekan tombol <strong> Acak Data </strong> untuk mencoba simulasi dengan susunan angka yang baru. Pastikan Anda memperhatikan perubahan warna pada balok sesuai dengan keterangan status di bagian bawah.</p>
+
+            <div class="sim-visual-container">
+                <div class="stats-row">
+                    <span>Complexity: O(n²)</span>
+                    <span>Space: O(1)</span>
+                </div>
+
+                <div id="insertion-visualizer" class="visualizer-area">
                     </div>
+
+                <div class="legend-row">
+                    <div class="legend-item"><div class="color-box" style="background: #8b949e;"></div> Belum Dicek</div>
+                    <div class="legend-item"><div class="color-box" style="background: #f1c40f;"></div> Elemen Sisip (Key)</div>
+                    <div class="legend-item"><div class="color-box" style="background: #ffffff; border: 1px solid #8b949e;"></div> Membandingkan</div>
+                    <div class="legend-item"><div class="color-box" style="background: #3fb950;"></div> Bagian Terurut</div>
+                </div>
+
+                <div class="controls-row">
+                    <button id="iResetBtn" class="btn-visual btn-reset-v" onclick="initI()">Acak Data</button>
+                    <button id="iStartBtn" class="btn-visual btn-start-v" onclick="startI()">Mulai Visualisasi</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- ===== Program ===== -->
-<div class="materi-page d-none">
-        <div class="card mb-4 materi-box">
+
+
+    <div class="card mb-4 materi-box mt-4" id="quizActivity">
         <div class="card-body materi-text">
-            <div class="materi-header">
-                <i class="fa-solid fa-code"></i>
-                <span class="materi-badge">Program InsertionSort</span>
+
+            <div class="materi-header mb-3">
+                <span class="materi-badge">Aktivitas 2.1: Uji Pemahaman Insertion Sort</span>
             </div>
 
-            <div class="text-center my-4">
-                <img 
-                    src="{{ asset('images/insertion/insertion.png') }}" 
-                    alt="Code BubbleSort"
-                    class="img-fluid"
-                    style="max-width: 700px;"
-                >
-            </div>
-            <p>Penjelasan:</p>
-            <ul>
-                <li>
-                    Baris <code>def insertion_sort(data)</code> : Menyatakan bahwa program mendefinisikan sebuah fungsi bernama <code>insertion_sort</code> yang menerima satu parameter berupa list angka yang akan diurutkan.
-                </li>
-                <li>
-                    Baris <code>n = len(data)</code> : Digunakan untuk menghitung panjang data dan menyimpan jumlah elemen pada list ke dalam variabel <code>n</code>, sehingga dapat digunakan dalam proses perulangan.
-                </li>
-                <li>
-                    Baris <code>for i in range(1, n)</code> : Merupakan perulangan utama yang mengatur proses pengurutan dimulai dari elemen kedua. Pada setiap iterasi, elemen ke-<code>i</code> akan disisipkan ke posisi yang benar pada bagian list sebelah kiri yang sudah terurut.
-                </li>
-                <li>
-                    Baris <code>key = data[i]</code> : Digunakan untuk menyimpan elemen yang sedang diproses dan akan dibandingkan serta disisipkan ke posisi yang sesuai. Elemen ini disebut sebagai <em>key</em>.
-                </li>
-                <li>
-                    Baris <code>j = i - 1</code> : Menyimpan indeks elemen sebelumnya (sebelah kiri <code>key</code>) yang akan digunakan untuk membandingkan dan menentukan posisi penyisipan.
-                </li>
-                <li>
-                    Baris <code>while j &gt;= 0 and data[j] &gt; key</code>, <code>data[j + 1] = data[j]</code>, dan <code>j -= 1</code> : Merupakan proses pergeseran elemen. Selama elemen di sebelah kiri lebih besar dari <code>key</code>, elemen tersebut akan digeser satu posisi ke kanan hingga ditemukan posisi yang tepat.
-                </li>
-                <li>
-                    Baris <code>data[j + 1] = key</code> : Digunakan untuk menyisipkan <code>key</code> ke posisi yang benar setelah semua elemen yang lebih besar digeser. Pada tahap ini, bagian kiri list kembali dalam keadaan terurut.
-                </li>
-                <li>
-                    Baris <code>print(f"Hasil setelah langkah ke-{i}: {data}")</code> : Menampilkan kondisi list setelah setiap langkah penyisipan selesai, sehingga mahasiswa dapat mengamati proses pengurutan secara bertahap.
-                </li>
-                <li>
-                    Pemanggilan fungsi & keluaran : Pada bagian akhir program, list awal didefinisikan (<code>angka = [4, 2, 5, 1, 3]</code>), kemudian fungsi <code>insertion_sort(angka)</code> dipanggil untuk menampilkan kondisi data sebelum dan sesudah proses pengurutan.
-                </li>
-            </ul>
+            @if(!$isSelesai)
+            <p class="card-text mb-4 text-danger fw-bold">
+                Jawablah pertanyaan berikut secara berurutan dengan benar untuk membuka akses ke materi selanjutnya!
+            </p>
 
-        </div>
-    </div>
-
-
-
-    <div class="card mb-4">
-        <div class="card-body materi-text">
-            <p>Cobalah jalankan kode Bubble Sort di bawah ini untuk melihat bagaimana Python memproses datanya.</p>
-          
-            <div class="app-wrapper">
-                <header class="editor-header">
-                    <h1>Python Editor</h1>
-                    <div>
-                        {{-- <span id="status" style="font-size: 0.8rem; color: #aaa;">⏳ Loading Pyodide...</span> --}}
-                        <button id="runBtn" class="btn-run" disabled>Run Code</button>
+            <div class="quiz-container">
+                <div class="mb-4 fade-in" id="q1-container">
+                    <p class="fw-semibold mb-2">1. Bagaimana analogi yang paling tepat untuk menggambarkan cara kerja Insertion Sort?</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq1" id="iq1a" value="A">
+                        <label class="form-check-label" for="iq1a">A. Memilih nilai terkecil dari sisa data dan menaruhnya di awal.</label>
                     </div>
-                </header>
-                <div class="split-container">
-                    <div class="panel-left">
-                        <div class="panel-label">Input Kode</div>
-                        <textarea id="code"></textarea>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq1" id="iq1b" value="B">
+                        <label class="form-check-label" for="iq1b">B. Menggelembungkan nilai terbesar ke posisi paling akhir secara bertahap.</label>
                     </div>
-
-                    <div class="panel-right">
-                        <div class="panel-label">Console Output</div>
-                        <div id="output"></div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq1" id="iq1c" value="C">
+                        <label class="form-check-label" for="iq1c">C. Menyusun kartu di tangan dengan menyisipkan kartu baru ke posisi yang tepat.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq1" id="iq1d" value="D">
+                        <label class="form-check-label" for="iq1d">D. Memecah barisan data menjadi dua bagian yang lebih kecil terus menerus.</label>
                     </div>
                 </div>
+
+                <div class="mb-4 fade-in d-none" id="q2-container">
+                    <p class="fw-semibold mb-2">2. Mengapa Insertion Sort dianggap lebih efisien untuk data yang hampir terurut (nearly sorted)?</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq2" id="iq2a" value="A">
+                        <label class="form-check-label" for="iq2a">A. Karena jumlah pertukaran dan pergeseran elemen yang dibutuhkan menjadi sangat sedikit.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq2" id="iq2b" value="B">
+                        <label class="form-check-label" for="iq2b">B. Karena algoritma ini secara otomatis mengubah kompleksitas waktunya menjadi O(1).</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq2" id="iq2c" value="C">
+                        <label class="form-check-label" for="iq2c">C. Karena membagi data menjadi kelompok-kelompok kecil mempercepat proses komputasi.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq2" id="iq2d" value="D">
+                        <label class="form-check-label" for="iq2d">D. Karena algoritma ini tidak menggunakan proses perulangan bersarang (nested loop).</label>
+                    </div>
+                </div>
+
+                <div class="mb-4 fade-in d-none" id="q3-container">
+                    <p class="fw-semibold mb-2">3. Apa yang dilakukan algoritma Insertion Sort (Ascending) jika menemukan elemen di sebelah kiri yang lebih besar dari elemen yang disisipkan (key)?</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq3" id="iq3a" value="A">
+                        <label class="form-check-label" for="iq3a">A. Menghapus elemen yang lebih besar tersebut dari daftar.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq3" id="iq3b" value="B">
+                        <label class="form-check-label" for="iq3b">B. Menukar posisinya secara langsung dengan elemen yang paling akhir.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq3" id="iq3c" value="C">
+                        <label class="form-check-label" for="iq3c">C. Membatalkan proses pengurutan karena urutan dianggap salah dari awal.</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq3" id="iq3d" value="D">
+                        <label class="form-check-label" for="iq3d">D. Menggeser elemen yang lebih besar ke kanan untuk memberi ruang bagi elemen key.</label>
+                    </div>
+                </div>
+
+                <!-- SOAL 4 -->
+                <div class="mb-4 fade-in d-none" id="q4-container">
+                    <p class="fw-semibold mb-2">
+                        4. Pada algoritma Insertion Sort, elemen pertama dari kumpulan data dianggap sebagai ...
+                    </p>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq4" id="iq4a" value="A">
+                        <label class="form-check-label" for="iq4a">
+                            A. Elemen yang harus dipindahkan ke posisi paling akhir.
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq4" id="iq4b" value="B">
+                        <label class="form-check-label" for="iq4b">
+                            B. Bagian dari daftar yang sudah terurut (sorted sub-list).
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq4" id="iq4c" value="C">
+                        <label class="form-check-label" for="iq4c">
+                            C. Elemen yang memiliki nilai paling besar secara otomatis.
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq4" id="iq4d" value="D">
+                        <label class="form-check-label" for="iq4d">
+                            D. Data sementara yang harus dihapus untuk memberi ruang bagi key.
+                        </label>
+                    </div>
+                </div>
+
+
+                <!-- SOAL 5 -->
+                <div class="mb-4 fade-in d-none" id="q5-container">
+                    <p class="fw-semibold mb-2">
+                        5. Perhatikan array berikut: [3, 10, 4, 1, 5]. Jika angka "4" dipilih sebagai key, urutan data yang benar setelah disisipkan adalah ...
+                    </p>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq5" id="iq5a" value="A">
+                        <label class="form-check-label" for="iq5a">A. [3, 1, 4, 5, 10]</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq5" id="iq5b" value="B">
+                        <label class="form-check-label" for="iq5b">B. [1, 3, 4, 10, 5]</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq5" id="iq5c" value="C">
+                        <label class="form-check-label" for="iq5c">C. [3, 4, 10, 1, 5]</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="iq5" id="iq5d" value="D">
+                        <label class="form-check-label" for="iq5d">D. [4, 3, 10, 1, 5]</label>
+                    </div>
+                </div>
+
             </div>
+
+            <div id="insertionQuizFeedback" class="alert d-none mt-3"></div>
+            <div class="text-start mt-3">
+                <button id="btnCheckInsertionQuiz" class="btn btn-primary d-none">
+                    Periksa Jawaban
+                </button>
+            </div>
+            @else
+                <div class="alert alert-success mt-2 mb-0">
+                    <i class="bi bi-check-circle-fill me-2"></i> 
+                    <strong>Selesai!</strong> Anda sudah menyelesaikan uji pemahaman ini. Tombol navigasi di bawah telah terbuka.
+                </div>
+            @endif
+
         </div>
     </div>
-</div>
+    </div>
 
 <div class="d-flex justify-content-center gap-3 mt-4 pt-3 border-top">
-
-    <a href="#" 
-       class="btn btn-outline-secondary">
-        Sebelumnya
-    </a>
-
+    <a href="#" class="btn btn-outline-secondary">Sebelumnya</a>
+    
     <a href="{{ route('mahasiswa.aktivitas.show',['insertion','simulasi']) }}" 
-       class="btn btn-primary">
+       id="btnNextInsertion" 
+       class="btn btn-success {{ $isSelesai ? '' : 'disabled' }}" 
+       {!! $isSelesai ? '' : 'tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;"' !!}>
         Selanjutnya
     </a>
+    </div>
 
-</div>
-
+{{-- SCRIPT VISUALISASI INSERTION SORT --}}
 <script>
+    let iData = [];
+    const iCont = document.getElementById("insertion-visualizer");
+    const iStartBtn = document.getElementById("iStartBtn");
+    const iResetBtn = document.getElementById("iResetBtn");
 
-document.addEventListener('DOMContentLoaded', function () {
-
-    const materiPages = document.querySelectorAll('.materi-page');
-    if (materiPages.length === 0) return; // ⛔ hanya jalan di halaman materi
-
-    const submenuPages = document.querySelectorAll('.submenu-page');
-
-    let materiIndex = 0;
-
-    const btnPrev = document.getElementById('btnPrev');
-    const btnNext = document.getElementById('btnNext');
-
-    function updateSidebarActive(index) {
-        submenuPages.forEach(link => {
-            link.classList.toggle(
-                'active-sub',
-                Number(link.dataset.index) === index
-            );
-        });
+    function initI() {
+        // Menyesuaikan jumlah data untuk layar kecil agar tidak terlalu panjang
+        const dataCount = window.innerWidth < 768 ? 6 : 10;
+        iData = Array.from({ length: dataCount }, () => Math.floor(Math.random() * 70) + 15);
+        renderI();
+        iStartBtn.disabled = false;
+        iResetBtn.disabled = false;
     }
 
-    function tampilMateri(i) {
-        materiPages.forEach((page, idx) => {
-            page.classList.toggle('d-none', idx !== i);
-        });
-
-        materiIndex = i;
-        updateSidebarActive(i);   // 🔥 INI KUNCINYA
-        updateButtonState();
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function updateButtonState() {
-        if (btnPrev) btnPrev.disabled = materiIndex === 0;
-        if (btnNext) btnNext.disabled = materiIndex === materiPages.length - 1;
-    }
-
-    window.goMateri = function(i){
-        tampilMateri(i);
-    }
-
-    window.nextMateri = function(){
-        if (materiIndex < materiPages.length - 1) {
-            tampilMateri(materiIndex + 1);
+    // Fungsi pembantu untuk scroll otomatis di HP
+    function scrollToActiveBar(idx) {
+        const bars = iCont.getElementsByClassName("bar-item");
+        if (bars[idx]) {
+            bars[idx].scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
         }
     }
 
-    window.prevMateri = function(){
-        if (materiIndex > 0) {
-            tampilMateri(materiIndex - 1);
-        }
+    function renderI(activeKey = -1, compareIdx = -1, sortedLimit = -1) {
+        iCont.innerHTML = "";
+        iData.forEach((val, idx) => {
+            const bar = document.createElement("div");
+            bar.className = "bar-item";
+            
+            // Menggunakan transform atau variabel CSS agar lebih fleksibel di HP
+            bar.style.height = `${val * 2}px`;
+            
+            if (idx <= sortedLimit) bar.classList.add("is-sorted");
+            if (idx === activeKey) {
+                bar.classList.add("active-key");
+                // Scroll otomatis ke elemen yang sedang aktif
+                setTimeout(() => scrollToActiveBar(idx), 50);
+            }
+            if (idx === compareIdx) bar.classList.add("comparing");
+            
+            const txt = document.createElement("span");
+            txt.innerText = val;
+            bar.appendChild(txt);
+            iCont.appendChild(bar);
+        });
     }
 
-    // init
-    tampilMateri(0);
-});
+    const sleepI = (ms) => new Promise(res => setTimeout(res, ms));
+
+    async function startI() {
+        iStartBtn.disabled = true;
+        iResetBtn.disabled = true;
+        let n = iData.length;
+
+        for (let i = 1; i < n; i++) {
+            let key = iData[i];
+            let j = i - 1;
+
+            renderI(i, -1, i - 1);
+            await sleepI(700);
+
+            while (j >= 0 && iData[j] > key) {
+                renderI(j + 1, j, i - 1);
+                await sleepI(500);
+
+                iData[j + 1] = iData[j];
+                j = j - 1;
+                
+                renderI(j + 1, -1, i - 1);
+                await sleepI(300);
+            }
+            iData[j + 1] = key;
+            
+            renderI(-1, -1, i);
+            await sleepI(600);
+        }
+
+        iResetBtn.disabled = false;
+        
+        // Tetap memberikan feedback visual tanpa SweetAlert
+        iCont.style.border = "2px solid #3fb950";
+        setTimeout(() => { iCont.style.border = "1px solid #30363d"; }, 2000);
+    }
+
+    document.addEventListener('DOMContentLoaded', initI);
+    // Re-init saat layar diputar/diubah ukurannya
+    window.addEventListener('resize', () => {
+        if (!iStartBtn.disabled) initI();
+    });
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const q1Inputs = document.querySelectorAll('input[name="iq1"]');
+    const q2Inputs = document.querySelectorAll('input[name="iq2"]');
+    const q3Inputs = document.querySelectorAll('input[name="iq3"]');
+    const q4Inputs = document.querySelectorAll('input[name="iq4"]');
+    const q5Inputs = document.querySelectorAll('input[name="iq5"]');
+
+    
+    const q2Container = document.getElementById('q2-container');
+    const q3Container = document.getElementById('q3-container');
+    const q4Container = document.getElementById('q4-container');
+    const q5Container = document.getElementById('q5-container');
+    const btnCheck = document.getElementById('btnCheckInsertionQuiz');
+    
+    const feedback = document.getElementById('insertionQuizFeedback');
+    const btnNext = document.getElementById('btnNextInsertion');
+
+    // Memunculkan soal 2 saat soal 1 dipilih
+    q1Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q2Container.classList.remove('d-none');
+        });
+    });
+
+    // Memunculkan soal 3 saat soal 2 dipilih
+    q2Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q3Container.classList.remove('d-none');
+        });
+    });
+
+    // muncul soal 4
+    q3Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q4Container.classList.remove('d-none');
+        });
+    });
+
+    // muncul soal 5
+    q4Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            q5Container.classList.remove('d-none');
+        });
+    });
+
+    // tombol check muncul setelah soal 5
+    q5Inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            btnCheck.classList.remove('d-none');
+        });
+    });
+
+    // Pengecekan Jawaban Akhir
+    btnCheck.addEventListener('click', function() {
+        const q1 = document.querySelector('input[name="iq1"]:checked');
+        const q2 = document.querySelector('input[name="iq2"]:checked');
+        const q3 = document.querySelector('input[name="iq3"]:checked');
+        const q4 = document.querySelector('input[name="iq4"]:checked');
+        const q5 = document.querySelector('input[name="iq5"]:checked');
+
+        if (!q1 || !q2 || !q3 || !q4 || !q5) {
+            feedback.className = 'alert alert-warning mt-3';
+            feedback.innerHTML = 'Harap pilih jawaban untuk semua soal terlebih dahulu!';
+            feedback.classList.remove('d-none');
+            return;
+        }
+
+        let correctCount = 0;
+        if (q1.value === 'C') correctCount++; // Jawaban: Menyusun kartu di tangan...
+        if (q2.value === 'A') correctCount++; // Jawaban: Jumlah pertukaran dan pergeseran sedikit...
+        if (q3.value === 'D') correctCount++; // Jawaban: Menggeser elemen yang lebih besar ke kanan...
+        if (q4.value === 'B') correctCount++; // 
+        if (q5.value === 'C') correctCount++;
+
+        if (correctCount === 5) {
+            feedback.className = 'alert alert-success mt-3';
+            feedback.innerHTML = 'Luar Biasa! Pemahaman Anda tentang Insertion Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
+            feedback.classList.remove('d-none');
+            
+            // Tembak data ke database tanpa reload halaman (AJAX)
+            fetch("{{ route('mahasiswa.aktivitas.tandai_selesai') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    id_aktivitas: {{ $item->id }} // Mengirim ID aktivitas saat ini
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    feedback.innerHTML = '<strong>Luar Biasa!</strong> Pemahaman Anda tentang Bubble Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
+                    
+                    // Buka kunci tombol Selanjutnya
+                    btnNext.classList.remove('disabled');
+                    btnNext.removeAttribute('tabindex');
+                    btnNext.removeAttribute('aria-disabled');
+                    btnNext.style.pointerEvents = 'auto'; 
+                    btnNext.style.opacity = '1';          
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                feedback.innerHTML = 'Gagal menyimpan progres, silakan periksa koneksi Anda.';
+            });
+
+        } else {
+            feedback.className = 'alert alert-danger mt-3';
+            feedback.innerHTML = 'Kurang Tepat! Ada jawaban yang masih salah. Coba baca kembali materi di atas.';
+            feedback.classList.remove('d-none');
+        }
+    });
+});
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
-<script>
-window.IMG_PATH = "{{ asset('images/aset/nama') }}/";
-</script>
 <script src="{{ asset('js/insertionsort.js') }}"></script>
 
 @endsection

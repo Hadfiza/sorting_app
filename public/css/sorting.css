@@ -1,26 +1,25 @@
-/* ===== DRAG LIST ===== */
+/* ========================================= */
+/* ===== DRAG LIST & ITEM (SUMBER) =====     */
+/* ========================================= */
 .drag-list {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
 }
 
-/* ===== DRAG ITEM ===== */
 .drag-item {
     width: 100%;
-    max-width: 420px;   /* opsional */
+    max-width: 420px;
     height: 240px;
-
     border: 2px dashed #cbd5e1;
     border-radius: 14px;
     background: #fff;
-
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: grab;
+    transition: opacity 0.2s;
 }
-
 
 .drag-item img {
     width: 100%;
@@ -29,7 +28,14 @@
     pointer-events: none;
 }
 
-/* ===== DROP ZONE ===== */
+/* Menyembunyikan item yang sudah didrop ke kotak */
+.drag-item.used {
+    display: none !important; 
+}
+
+/* ========================================= */
+/* ===== DROP ZONE (KOTAK KATEGORI) =====    */
+/* ========================================= */
 .sorting-zones {
     display: flex;
     flex-direction: column;
@@ -37,14 +43,17 @@
 }
 
 .drop-zone {
-    min-height: 260px;
     border: 2px dashed #94a3b8;
     border-radius: 18px;
     background: #f8fafc;
     padding: 16px;
-
     display: flex;
     flex-direction: column;
+    text-align: center;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+    height: auto !important; /* Biarkan memanjang ke bawah otomatis */
+    min-height: 200px;
 }
 
 .zone-header {
@@ -53,42 +62,68 @@
     margin-bottom: 12px;
 }
 
+/* Wadah di dalam drop zone tempat gambar bertumpuk */
 .zone-content {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-    min-height: 140px;
-}
-
-
-/* ===== IMAGE HASIL DROP ===== */
-.dropped-image {
-    width: 300px;
-    height: 200px;
-    object-fit: contain;
-}
-
-/* ===== MODE SELESAI ===== */
-#dragActivity.completed .col-md-4 {
-    display: none;
-}
-
-#dragActivity.completed .col-md-8 {
     width: 100%;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column; /* Gambar akan antre ke bawah secara berurutan */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 5px;
+}
+
+/* ========================================= */
+/* ===== IMAGE HASIL DROP =====              */
+/* ========================================= */
+.dropped-image {
+    width: 100%;
+    max-width: 260px; /* Ukuran maksimal agar tidak raksasa */
+    height: auto;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    object-fit: contain;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.dropped-image.correct {
+    border-color: #2ecc71 !important;
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
+}
+
+.dropped-image.wrong {
+    border-color: #e74c3c !important;
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.4);
+}
+
+/* ========================================= */
+/* ===== MODE SELESAI (KUIS BENAR) =====     */
+/* ========================================= */
+#dragActivity.completed .col-md-5 {
+    display: none !important; /* Hilangkan kolom sumber paksa */
+}
+
+#dragActivity.completed .col-md-7 {
+    /* Paksa Bootstrap untuk melebar 100% */
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    width: 100% !important; 
 }
 
 #dragActivity.completed .drop-zone {
-    min-height: 420px;
-    background: #ecfdf5;
-    border-color: #22c55e;
+    background: #ecfdf5 !important;
+    border-color: #22c55e !important;
 }
 
 
-
-/* ===== ILUSTRASI BUKU SORTING ===== */
+/* ========================================= */
+/* ===== ILUSTRASI BUKU SORTING =====        */
+/* ========================================= */
 .book {
     width: 120px;
+    max-width: 100%;
     height: 110px;
     transition: transform 0.6s ease-in-out; /* Memberikan efek meluncur */
     display: inline-block;
@@ -117,7 +152,9 @@
 }
 
 
-/* ===== TABEL SORTING MODERN ===== */
+/* ========================================= */
+/* ===== TABEL SORTING MODERN =====          */
+/* ========================================= */
 .sorting-table {
     width: 100%;
     border-collapse: separate;
@@ -158,3 +195,20 @@
     font-weight: 700;
 }
 
+/* =====================================
+   RESPONSIVE BOOK (MOBILE FIX)
+===================================== */
+
+@media (max-width: 768px) {
+
+    #unsorted-books {
+        flex-wrap: wrap !important; /* 🔥 biar turun ke bawah */
+        justify-content: center;
+    }
+
+    .book {
+        width: 70px;  /* 🔥 kecilkan */
+        height: auto;
+    }
+
+}

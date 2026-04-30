@@ -22,7 +22,7 @@ return new class extends Migration
          
             $table->string('nim')->unique();
             $table->string('angkatan');
-            $table->string('photo')->nullable();
+            $table->string('foto')->nullable();
 
             $table->timestamps();
         });

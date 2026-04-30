@@ -87,6 +87,21 @@ document.addEventListener("DOMContentLoaded", async function () {
                 return;
             }
 
+            if (!output || !output.trim() || output.trim() === "") {
+                alert("Output tidak boleh kosong! Klik RUN dulu sebelum submit.");
+                return;
+            }
+
+            if (output.toLowerCase().includes("error")) {
+                alert("Masih ada error pada program! Perbaiki dulu sebelum submit.");
+                return;
+            }
+
+            if (!output.trim()) {
+                alert("Output tidak boleh kosong! Jalankan kode dulu.");
+                return;
+            }
+
             if (typeof PRAKTIKUM_ID === "undefined") {
                 alert("Praktikum ID tidak ditemukan!");
                 return;
@@ -109,12 +124,35 @@ document.addEventListener("DOMContentLoaded", async function () {
                         penjelasan: penjelasan,
                         praktikum_id: PRAKTIKUM_ID
                     })
-                });
+                }); 
 
                 const result = await response.json();
 
                 if (result.success) {
                     alert("Berhasil disubmit!");
+                    if (typeof AKTIVITAS_ID !== "undefined" && typeof TANDAI_SELESAI_URL !== "undefined") {
+                        try {
+                            const resProgres = await fetch(TANDAI_SELESAI_URL, {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                    "Accept": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    id_aktivitas: AKTIVITAS_ID
+                                })
+                            });
+                            
+                            const dataProgres = await resProgres.json();
+                            if (dataProgres.success) {
+                                // Refresh halaman otomatis agar UI "Lanjut" langsung terbuka
+                                window.location.reload(); 
+                            }
+                        } catch (errProgres) {
+                            console.error("Gagal mengupdate progres:", errProgres);
+                        }
+                    }
                 } else {
                     alert("Gagal submit.");
                 }

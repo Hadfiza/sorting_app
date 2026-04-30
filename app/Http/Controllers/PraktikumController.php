@@ -3,63 +3,119 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Kelas;
 use App\Models\PengumpulanPraktikum;
 use App\Models\Praktikum;
+use App\Models\Aktivitas;
 use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\Storage;
 
 class PraktikumController extends Controller
 {
 
-    public function index()
+
+    public function index(Request $request)
     {
-        $praktikum = \App\Models\PengumpulanPraktikum::with([
+        $query = PengumpulanPraktikum::with([
             'praktikum',
             'mahasiswa.user',
             'mahasiswa.kelas'
-        ])->get();
+        ]);
 
-        return view('dosen.praktikum.index', compact('praktikum'));
+        // Filter pencarian nama mahasiswa
+        if ($request->filled('search')) {
+            $query->whereHas('mahasiswa.user', function ($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // Filter berdasarkan kelas
+        if ($request->filled('kelas_id')) {
+            $query->whereHas('mahasiswa', function ($q) use ($request) {
+                $q->where('id_kelas', $request->kelas_id);
+            });
+        }
+
+        $praktikum = $query->get();
+
+        // Ambil daftar kelas untuk dropdown
+        $kelases = Kelas::all();
+
+        return view('dosen.praktikum.index', compact('praktikum','kelases'));
     }
 
     public function show($id)
     {
-        $praktikum = Praktikum::findOrFail($id);
-        return view('mahasiswa.praktikum', compact('praktikum'));
-    }
+        // 1. Asumsi pertama: ID yang dikirim dari URL adalah ID Aktivitas
+        $item = \App\Models\Aktivitas::find($id);
+        
+        if ($item) {
+            // Arahkan otomatis ke foldernya (Contoh: mahasiswa.bubble.praktikum)
+            return view('mahasiswa.' . $item->folder . '.praktikum', compact('item'));
+        }
 
-    public function submit(Request $request)
+        // 2. Fallback: Jika ID yang dikirim ternyata ID Praktikum (Logika lama)
+        $praktikum = \App\Models\Praktikum::findOrFail($id);
+        $item = $praktikum->aktivitas; // Ambil relasi aktivitasnya
+        
+        return view('mahasiswa.' . $item->folder . '.praktikum', compact('item', 'praktikum'));
+    }
+public function submit(Request $request)
     {
         $request->validate([
             'kode_program' => 'required',
-            'penjelasan' => 'required',
+            'penjelasan'   => 'required',
+            'output' => 'required',
             'praktikum_id' => 'required'
         ]);
 
-        $idMahasiswa = auth()->user()->mahasiswa->id;
+        try {
+            $mahasiswa = auth()->user()->mahasiswa;
+            
+            if (!$mahasiswa) {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Profil mahasiswa tidak ditemukan di database!'
+                ], 404);
+            }
 
-        PengumpulanPraktikum::updateOrCreate(
-        [
-            'id_praktikum' => $request->praktikum_id,
-            'id_mahasiswa' => $idMahasiswa
-        ],
-        [
-            'kode_program' => $request->kode_program,
-            'output' => $request->output,
-            'penjelasan' => $request->penjelasan,
-            'status' => 'submitted'
-        ]);
+            PengumpulanPraktikum::updateOrCreate(
+            [
+                'id_praktikum' => $request->praktikum_id,
+                'id_mahasiswa' => $mahasiswa->id // <-- Menggunakan ID tabel mahasiswa
+            ],
+            [
+                'kode_program'   => $request->kode_program,
+                'output'         => $request->output,
+                'penjelasan'     => $request->penjelasan,
+                'status'         => 'submitted',
+                'nilai'          => null, 
+                'feedback_dosen' => null  
+            ]);
 
-        return response()->json(['success' => true]);
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sistem Error: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     //Halaman Dosen
     public function dosenShow($id)
     {
-        $praktikum = \App\Models\Praktikum::findOrFail($id);
+        // 1. Cari data pengumpulan yang SPESIFIK berdasarkan ID Pengumpulan yang diklik
+        $item = PengumpulanPraktikum::with(['praktikum', 'mahasiswa.user', 'mahasiswa.kelas'])
+                ->findOrFail($id);
 
-        $pengumpulan = \App\Models\PengumpulanPraktikum::where('id_praktikum', $id)
-            ->with('mahasiswa')
-            ->get();
+        // 2. Ambil informasi praktikum (judul, dll) dari relasi data tersebut
+        $praktikum = $item->praktikum;
+
+        // 3. Bungkus $item ke dalam array agar file view show.blade.php 
+        //    (yang menggunakan perulangan @foreach) tetap bisa berjalan normal tanpa error.
+        $pengumpulan = [$item];
 
         return view('dosen.praktikum.show', compact('praktikum', 'pengumpulan'));
     }
@@ -78,30 +134,128 @@ class PraktikumController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    // 1. Validasi input
-    $request->validate([
-        'nilai' => 'required|numeric|min:0|max:100',
-        'feedback' => 'nullable|string'
-    ]);
-
-    try {
-        // 2. Cari data praktikum mahasiswa berdasarkan ID
-        $data = PengumpulanPraktikum::findOrFail($id);
-
-        // 3. Update data
-        $data->update([
-            'nilai' => $request->nilai,
-            'feedback_dosen' => $request->feedback,
-            'status' => 'dinilai' // Opsional: jika Anda punya kolom status
+    {
+        // 1. Validasi input
+        $request->validate([
+            'nilai' => 'required|numeric|min:0|max:100',
+            'feedback' => 'nullable|string'
         ]);
 
-        // 4. Kembali dengan pesan sukses
-        return redirect()->back()->with('success', 'Nilai dan feedback untuk ' . $data->mahasiswa->user->nama . ' berhasil disimpan.');
-        
-    } catch (\Exception $e) {
-        return redirect()->back()->withErrors(['msg' => 'Gagal menyimpan data.']);
+        try {
+            // 2. Cari data praktikum mahasiswa berdasarkan ID
+            $data = PengumpulanPraktikum::findOrFail($id);
+
+            // 3. Update data
+            $data->update([
+                'nilai' => $request->nilai,
+                'feedback_dosen' => $request->feedback,
+                'status' => 'dinilai' // Opsional: jika Anda punya kolom status
+            ]);
+
+            // 4. Kembali dengan pesan sukses
+            return redirect()->back()->with('success', 'Nilai dan feedback untuk ' . $data->mahasiswa->user->nama . ' berhasil disimpan.');
+            
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['msg' => 'Gagal menyimpan data.']);
+        }
     }
-}
+
+    // =====================================================================
+    // FITUR DOSEN MENG-UPLOAD SOAL (PDF) & DESKRIPSI PRAKTIKUM
+    // =====================================================================
+    
+    // public function simpanSoal(Request $request, $id_aktivitas)
+    // {
+    //     $request->validate([
+    //         'judul'     => 'required|string|max:255',
+    //         'deskripsi' => 'required|string',
+    //         'file_soal' => 'nullable|mimes:pdf|max:5120', // Wajib PDF, Max 5MB
+    //     ]);
+
+    //     $praktikum = Praktikum::firstOrNew(['id_aktivitas' => $id_aktivitas]);
+        
+    //     $praktikum->judul = $request->judul;
+    //     $praktikum->deskripsi = $request->deskripsi;
+
+    //     // Logika Upload File PDF (Menggunakan Disk Public Eksplisit)
+    //     if ($request->hasFile('file_soal')) {
+    //         // Hapus file lama jika ada
+    //         if ($praktikum->file_soal && Storage::disk('public')->exists('soal_praktikum/' . $praktikum->file_soal)) {
+    //             Storage::disk('public')->delete('soal_praktikum/' . $praktikum->file_soal);
+    //         }
+
+    //         // Simpan file baru dengan paksaan ke Disk Public
+    //         $file = $request->file('file_soal');
+    //         $filename = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
+            
+    //         // Parameter ke-3 ('public') akan memaksa Laravel menaruhnya di storage/app/public
+    //         $file->storeAs('soal_praktikum', $filename, 'public');
+
+    //         $praktikum->file_soal = $filename;
+    //     }
+
+    //     $praktikum->save();
+
+    //     return back()->with('success', 'Tugas Praktikum & File Soal berhasil disimpan.');
+    // }
+
+    //dihosting
+    public function simpanSoal(Request $request, $id_aktivitas)
+    {
+        $request->validate([
+            'judul'     => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'file_soal' => 'nullable|mimes:pdf|max:5120', // max 5MB
+        ]);
+
+        $praktikum = Praktikum::firstOrNew(['id_aktivitas' => $id_aktivitas]);
+
+        $praktikum->judul = $request->judul;
+        $praktikum->deskripsi = $request->deskripsi;
+
+    //     // =========================
+    //     // UPLOAD FILE KE PUBLIC
+    //     // =========================
+        if ($request->hasFile('file_soal')) {
+
+            $folderPath = public_path('file/soal_praktikum');
+
+    //         // Pastikan folder ada
+    //         if (!file_exists($folderPath)) {
+    //             mkdir($folderPath, 0775, true);
+    //         }
+
+            // Hapus file lama jika ada
+            if ($praktikum->file_soal) {
+                $oldPath = public_path('file/soal_praktikum/' . $praktikum->file_soal);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+
+            // Upload file baru
+            $file = $request->file('file_soal');
+            $filename = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
+
+            $file->move($folderPath, $filename);
+
+            // Simpan nama file saja (biar fleksibel)
+            $praktikum->file_soal = $filename;
+        }
+
+        $praktikum->save();
+
+        return back()->with('success', 'Tugas Praktikum & File Soal berhasil disimpan.');
+    }
+
+    public function kelolaSoal()
+    {
+        // Mengambil semua aktivitas yang bertipe praktikum beserta data Praktikum-nya
+        $aktivitas = Aktivitas::with('praktikum')
+                        ->where('tipe', 'praktikum')
+                        ->get();
+
+        return view('dosen.praktikum.soal', compact('aktivitas'));
+    }
 
 }

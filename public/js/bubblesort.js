@@ -2,87 +2,8 @@
                         GLOBAL VARIABLE
 ========================================================= */
 
-
 // =========================================================
-// BAGIAN 1: NAVIGASI MATERI
-// =========================================================
-document.addEventListener('DOMContentLoaded', function () {
-    const materiPages = document.querySelectorAll('.materi-page');
-    if (materiPages.length === 0) return; 
-
-    const submenuPages = document.querySelectorAll('.submenu-page');
-    let materiIndex = 0;
-    const btnPrev = document.getElementById('btnPrev');
-    const btnNext = document.getElementById('btnNext');
-
-    function updateSidebarActive(index) {
-        submenuPages.forEach(link => {
-            link.classList.toggle(
-                'active-sub',
-                Number(link.dataset.index) === index
-            );
-        });
-    }
-
-    function tampilMateri(i) {
-        materiPages.forEach((page, idx) => {
-            page.classList.toggle('d-none', idx !== i);
-        });
-
-        materiIndex = i;
-        // updateSidebarActive(i); // Aktifkan jika sidebar logic ada
-        updateButtonState();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-
-        const page = materiPages[i];
-        if (page.querySelector('#code')) {
-            setTimeout(() => {
-                initPythonEditor();
-                if (editor) editor.refresh();
-            }, 50);
-        }
-    }
-
-    function updateButtonState() {
-        if (btnPrev) {
-            const isFirst = materiIndex === 0;
-            btnPrev.disabled = isFirst;
-            btnPrev.classList.toggle('btn-disabled', isFirst);
-            btnPrev.classList.toggle('btn-active', !isFirst);
-        }
-
-        if (btnNext) {
-            const isLast = materiIndex === materiPages.length - 1;
-            btnNext.disabled = isLast;
-            btnNext.classList.toggle('btn-disabled', isLast);
-            btnNext.classList.toggle('btn-active', !isLast);
-        }
-    }
-
-
-    window.goMateri = function(i){ tampilMateri(i); }
-    window.nextMateri = function(){
-        if (materiIndex < materiPages.length - 1) {
-            tampilMateri(materiIndex + 1);
-        }
-    }
-    window.prevMateri = function(){
-        if (materiIndex > 0) {
-            tampilMateri(materiIndex - 1);
-        }
-    }
-
-    // Init halaman pertama
-    tampilMateri(0);
-    
-    // Init Simulasi (Render awal buku)
-    renderBooks();
-    addHistoryRow('Data Awal', [...arr]);
-
-});
-
-// =========================================================
-// BAGIAN 2: LOGIKA SIMULASI BUBBLE SORT
+// BAGIAN 2: LOGIKA SIMULASI BUBBLE SORT Revisi (DENGAN ANIMASI)
 // =========================================================
 
 const IMG_PATH = window.IMG_PATH || ''; 
@@ -93,29 +14,24 @@ let i = 0;
 let j = 0; 
 let isProcessing = false;
 
-
 let container = document.getElementById('simulation-container');
 
-// --- FUNGSI RESET (Dimodifikasi agar langsung mulai ulang tanpa tombol start) ---
+// --- FUNGSI RESET ---
 function resetSimulation() {
-    // 1. Ambil elemen
     container = document.getElementById('simulation-container');
     const finishMsg = document.getElementById('finish-message');
 
-    // 2. Bersihkan & Reset
     container.innerHTML = '';
     if(finishMsg) finishMsg.style.display = 'none';
     
     arr = [...initialData];
     i = 0; j = 0;
     
-    // 3. Langsung jalankan langkah pertama lagi
     nextStep();
 }
 
 // --- LOGIKA STEP-BY-STEP ---
 function nextStep() {
-    // Pastikan container terambil (untuk berjaga-jaga jika script load duluan)
     if(!container) container = document.getElementById('simulation-container');
     
     const n = arr.length;
@@ -128,87 +44,171 @@ function nextStep() {
 
     let valA = arr[j];
     let valB = arr[j+1];
-    let isSwapNeeded = valA > valB;
 
-    // Teks Penjelasan
     let explanationText = `
-        Iterasi ke-${i+1}, langkah ke-${j+1}: Bandingkan data posisi 
-        <strong>${j+1}</strong>  dan data posisi <strong>${j+2}</strong>. 
+        <div class="mb-2"><span class="badge bg-secondary">Iterasi ke-${i+1} | Langkah ke-${j+1}</span></div>
+        Berdasarkan prinsip algoritma Bubble Sort untuk pengurutan <em>ascending</em> (menaik), analisislah apakah kedua elemen tersebut memerlukan pertukaran posisi?
     `;
-    
-    explanationText += `
-        <br>Apakah buku edisi <strong>${valA}</strong> lebih besar dari buku edisi
-        <strong>${valB}</strong>? 
-        Jika ya, apa yang seharusnya dilakukan?
-    `;
-
-
-    // Status Tombol
-    let btnTukarClass = isSwapNeeded ? "btn-tukar active" : "btn-tukar disabled"; 
-    let btnStayClass = !isSwapNeeded ? "btn-stay active" : "btn-stay disabled"; 
-    
-    let statusMsg = isSwapNeeded 
-        ? `Klik tombol <strong>Tukar</strong> untuk melanjutkan.`
-        : `Klik tombol <strong>Tidak Ditukar</strong> untuk melanjutkan.`;
 
     let currentArrSnapshot = [...arr]; 
     let highlightIndices = [j, j+1];
 
-    // HTML Template
+    // HTML Template - (DITAMBAHKAN id="book-container-${i}-${j}" UNTUK TARGET ANIMASI)
     const cardHTML = `
     <div class="sim-card fade-in">
-        <div class="sim-header">${explanationText}</div>
+        <div class="sim-header" style="font-size: 0.95rem; line-height: 1.5;">${explanationText}</div>
         <div class="sim-body">
-            <div class="iter-title">Proses Iterasi ke-${i+1}</div>
             
-            <div class="book-container">
+            <div class="book-container" id="book-container-${i}-${j}">
                 ${renderBooksHTML(currentArrSnapshot, highlightIndices)}
             </div>
 
-            <div class="action-buttons">
-                <button class="btn-sim btn-tukar"
-                    onclick="checkAnswer(true, ${valA}, ${valB}, ${j})">
-                    Tukar
+            <div class="action-buttons" id="action-btn-${i}-${j}">
+                <button class="btn-sim btn-tukar fw-bold"
+                    onclick="checkAnswer(true, ${valA}, ${valB}, ${j}, ${i})">
+                    Perlu Ditukar
                 </button>
 
-                <button class="btn-sim btn-stay"
-                    onclick="checkAnswer(false, ${valA}, ${valB}, ${j})">
+                <button class="btn-sim btn-stay fw-bold"
+                    onclick="checkAnswer(false, ${valA}, ${valB}, ${j}, ${i})">
                     Tidak Ditukar
                 </button>
             </div>
 
-            <div class="status-text"><small>${statusMsg}</small></div>
+            <div id="explanation-${i}-${j}" class="mt-3 p-3 rounded-3 bg-success bg-opacity-10 border border-success border-opacity-25" style="display: none;">
+                </div>
+
         </div>
     </div>`;
 
     container.insertAdjacentHTML('beforeend', cardHTML);
     
-    // Auto scroll ke elemen baru
     requestAnimationFrame(() => {
         const lastCard = container.lastElementChild;
         if (lastCard) {
-            lastCard.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
+            lastCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     });
-
 }
 
-// --- FUNGSI EKSEKUSI ---
+// --- FUNGSI PENGECEKAN JAWABAN ---
+function checkAnswer(userChoice, valA, valB, idx, iterI) {
+    if (isProcessing) return;
+    isProcessing = true;
+
+    let correctAnswer = valA > valB;
+
+    const actionContainer = document.getElementById(`action-btn-${iterI}-${idx}`);
+    const explanationBox = document.getElementById(`explanation-${iterI}-${idx}`);
+
+    if (userChoice === correctAnswer) {
+        // Matikan tombol
+        const buttons = actionContainer.querySelectorAll('.btn-sim');
+        buttons.forEach(btn => {
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            btn.style.cursor = 'not-allowed';
+            if((userChoice && btn.classList.contains('btn-stay')) || (!userChoice && btn.classList.contains('btn-tukar'))) {
+                btn.style.display = 'none'; 
+            }
+        });
+
+        let explText = "";
+        let actionType = correctAnswer ? 'swap' : 'stay';
+
+        if (correctAnswer) {
+            explText = `
+                <div class="text-success fw-bold mb-2"><i class="fa-solid fa-circle-check fs-5 me-1 align-middle"></i> Analisis Anda Tepat!</div>
+                <div class="text-dark" style="font-size: 0.9rem;">
+                    Pertukaran <strong>wajib dilakukan</strong> karena nilai Buku Edisi ${valA} lebih besar daripada Edisi ${valB} (${valA} > ${valB}). 
+                </div>`;
+        } else {
+            explText = `
+                <div class="text-success fw-bold mb-2"><i class="fa-solid fa-circle-check fs-5 me-1 align-middle"></i> Analisis Anda Tepat!</div>
+                <div class="text-dark" style="font-size: 0.9rem;">
+                    Pertukaran <strong>tidak perlu dilakukan</strong> karena nilai Buku Edisi ${valA} lebih kecil atau sama dengan Edisi ${valB} (${valA} &le; ${valB}). 
+                    Kedua elemen tersebut sudah berada pada urutan yang benar untuk langkah saat ini.
+                </div>`;
+        }
+
+        // DITAMBAHKAN PARAMETER event AGAR TOMBOL BISA DIMATIKAN
+        explText += `
+            <div class="mt-3 text-end">
+                <button class="btn btn-sm btn-success px-4 rounded-pill fw-bold" onclick="proceedNext('${actionType}', ${idx}, ${iterI}, event)">
+                    Lanjutkan Simulasi <i class="fa-solid fa-arrow-right ms-1"></i>
+                </button>
+            </div>
+        `;
+
+        explanationBox.innerHTML = explText;
+        explanationBox.style.display = 'block';
+        
+        isProcessing = false; 
+
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Analisis Kurang Tepat',
+            text: 'Coba evaluasi kembali aturan pengurutan ascending (dari kecil ke besar) pada algoritma Bubble Sort.',
+            confirmButtonColor: '#e74c3c'
+        }).then(() => {
+            isProcessing = false;
+        });
+    }
+}
+
+// --- FUNGSI MELANJUTKAN (TOMBOL DIMATIKAN DISINI) ---
+function proceedNext(actionType, idx, iterI, event) {
+    if (isProcessing) return;
+    isProcessing = true; // Kunci saat animasi berjalan
+
+    // Matikan Tombol
+    const btnLanjut = event.currentTarget;
+    btnLanjut.disabled = true;
+    btnLanjut.style.opacity = '0.6';
+    btnLanjut.style.cursor = 'not-allowed';
+
+    if (actionType === 'swap') {
+        executeSwapWithAnimation(idx, iterI); // Panggil fungsi animasi
+    } else {
+        executeStay();
+    }
+}
+// --- FUNGSI ANIMASI TRANSFORM (FUNGSI BARU) ---
+function executeSwapWithAnimation(idx, iterI) {
+    const bookContainer = document.getElementById(`book-container-${iterI}-${idx}`);
+    const books = bookContainer.querySelectorAll('.book-img-wrap');
+    
+    const bookA = books[idx];
+    const bookB = books[idx+1];
+
+    if(!bookA || !bookB) {
+        executeSwap(idx); // Jika error, langsung tukar tanpa animasi
+        return;
+    }
+
+    // Hitung jarak pergeseran
+    const distance = bookB.offsetLeft - bookA.offsetLeft;
+
+    // Terapkan Transform (Dilengkapi scale 1.15 agar buku kuning tidak mengecil)
+    bookA.style.transform = `translateX(${distance}px) scale(1.15)`;
+    bookB.style.transform = `translateX(-${distance}px) scale(1.15)`;
+
+    // Tunggu animasi CSS selesai (600ms), lalu eksekusi array sebenarnya
+    setTimeout(() => {
+        executeSwap(idx);
+    }, 600); 
+}
+
+// --- FUNGSI EKSEKUSI ARRAY ---
 function executeSwap(idx) {
-    disableLastCardButtons();   
     let temp = arr[idx];
     arr[idx] = arr[idx+1];
     arr[idx+1] = temp;
     advanceLoop();
 }
 
-
-
 function executeStay() {
-    disableLastCardButtons();
     advanceLoop();
 }
 
@@ -218,9 +218,10 @@ function advanceLoop() {
         i++;
         j = 0;
         if(i < arr.length - 1) {
-            container.insertAdjacentHTML('beforeend', `<div style="text-align:center; padding:15px; color:#aaa; font-style:italic;">--- Selesai Iterasi ${i} ---</div>`);
+            container.insertAdjacentHTML('beforeend', `<div style="text-align:center; padding:15px; color:#aaa; font-style:italic; font-size:0.85rem;">--- Iterasi ${i} Selesai ---</div>`);
         }
     }
+    isProcessing = false; // Buka kunci sistem
     nextStep();
 }
 
@@ -236,172 +237,259 @@ function renderBooksHTML(dataArr, highlights) {
     }).join('');
 }
 
-function disableLastCardButtons() {
-    const lastCard = container.lastElementChild;
-    if (!lastCard) return;
-
-    const buttons = lastCard.querySelectorAll('.btn-sim');
-    buttons.forEach(btn => {
-        btn.disabled = true;
-        btn.style.opacity = '0.6';
-        btn.style.cursor = 'not-allowed';
-    });
-}
-
-
-
 function showFinishMessage() {
     const finishMsg = document.getElementById('finish-message');
     if(finishMsg) finishMsg.style.display = 'block';
-    
     window.scrollTo(0, document.body.scrollHeight);
 }
 
-function checkAnswer(userChoice, valA, valB, idx) {
-
-    if (isProcessing) return;
-    isProcessing = true;
-
-    // 🔥 VALIDASI PAKAI NILAI YANG DITAMPILKAN
-    let correctAnswer = valA > valB;
-
-    disableLastCardButtons();
-
-    if (userChoice === correctAnswer) {
-
-        if (correctAnswer) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Benar!',
-                text: 'Data ditukar karena nilai kiri lebih besar.',
-                confirmButtonColor: '#28a745'
-            }).then(() => {
-                executeSwap(idx);
-                isProcessing = false;
-            });
-
-        } else {
-            Swal.fire({
-                icon: 'success',
-                title: 'Benar!',
-                text: 'Data tidak ditukar karena sudah urut.',
-                confirmButtonColor: '#28a745'
-            }).then(() => {
-                executeStay();
-                isProcessing = false;
-            });
-        }
-
-    } else {
-
-        Swal.fire({
-            icon: 'error',
-            title: 'Jawaban kurang tepat',
-            text: 'Coba pikirkan kembali.',
-            confirmButtonColor: '#e74c3c'
-        }).then(() => {
-
-            // aktifkan lagi tombol
-            const lastCard = container.lastElementChild;
-            if (lastCard) {
-                const buttons = lastCard.querySelectorAll('.btn-sim');
-                buttons.forEach(btn => {
-                    btn.disabled = false;
-                    btn.style.opacity = '1';
-                });
-            }
-
-            isProcessing = false;
-        });
-
-    }
-}
-
-
-
-
 // --- AUTO START ---
-nextStep();
+resetSimulation();
+
+// // =========================================================
+// // BAGIAN 2: LOGIKA SIMULASI BUBBLE SORT
+// // =========================================================
+
+// const IMG_PATH = window.IMG_PATH || ''; 
+// const initialData = [4, 2, 5, 1, 3]; 
+
+// let arr = [...initialData];
+// let i = 0; 
+// let j = 0; 
+// let isProcessing = false;
+
+
+// let container = document.getElementById('simulation-container');
+
+
+// function resetSimulation() {
+//     // 1. Ambil elemen
+//     container = document.getElementById('simulation-container');
+//     const finishMsg = document.getElementById('finish-message');
+
+//     // 2. Bersihkan & Reset
+//     container.innerHTML = '';
+//     if(finishMsg) finishMsg.style.display = 'none';
+    
+//     arr = [...initialData];
+//     i = 0; j = 0;
+    
+//     // 3. Langsung jalankan langkah pertama lagi
+//     nextStep();
+// }
+
+// // --- LOGIKA STEP-BY-STEP ---
+// function nextStep() {
+//     // Pastikan container terambil (untuk berjaga-jaga jika script load duluan)
+//     if(!container) container = document.getElementById('simulation-container');
+    
+//     const n = arr.length;
+
+//     // Cek Selesai
+//     if (i >= n - 1) {
+//         showFinishMessage();
+//         return;
+//     }
+
+//     let valA = arr[j];
+//     let valB = arr[j+1];
+//     let isSwapNeeded = valA > valB;
+
+//     // Teks Penjelasan
+//     let explanationText = `
+//         Iterasi ke-${i+1}, langkah ke-${j+1}: Bandingkan data posisi 
+//         <strong>${j+1}</strong>  dan data posisi <strong>${j+2}</strong>. 
+//     `;
+    
+//     explanationText += `
+//         <br>Apakah buku edisi <strong>${valA}</strong> lebih besar dari buku edisi
+//         <strong>${valB}</strong>? 
+//         Jika ya, apa yang seharusnya dilakukan?
+//     `;
+
+
+//     // Status Tombol
+//     let btnTukarClass = isSwapNeeded ? "btn-tukar active" : "btn-tukar disabled"; 
+//     let btnStayClass = !isSwapNeeded ? "btn-stay active" : "btn-stay disabled"; 
+    
+//     let statusMsg = isSwapNeeded 
+//         ? `Klik tombol <strong>Tukar</strong> untuk melanjutkan.`
+//         : `Klik tombol <strong>Tidak Ditukar</strong> untuk melanjutkan.`;
+
+//     let currentArrSnapshot = [...arr]; 
+//     let highlightIndices = [j, j+1];
+
+//     // HTML Template
+//     const cardHTML = `
+//     <div class="sim-card fade-in">
+//         <div class="sim-header">${explanationText}</div>
+//         <div class="sim-body">
+//             <div class="iter-title">Proses Iterasi ke-${i+1}</div>
+            
+//             <div class="book-container">
+//                 ${renderBooksHTML(currentArrSnapshot, highlightIndices)}
+//             </div>
+
+//             <div class="action-buttons">
+//                 <button class="btn-sim btn-tukar"
+//                     onclick="checkAnswer(true, ${valA}, ${valB}, ${j})">
+//                     Tukar
+//                 </button>
+
+//                 <button class="btn-sim btn-stay"
+//                     onclick="checkAnswer(false, ${valA}, ${valB}, ${j})">
+//                     Tidak Ditukar
+//                 </button>
+//             </div>
+
+//             <div class="status-text"><small>${statusMsg}</small></div>
+//         </div>
+//     </div>`;
+
+//     container.insertAdjacentHTML('beforeend', cardHTML);
+    
+//     // Auto scroll ke elemen baru
+//     requestAnimationFrame(() => {
+//         const lastCard = container.lastElementChild;
+//         if (lastCard) {
+//             lastCard.scrollIntoView({
+//                 behavior: 'smooth',
+//                 block: 'center'
+//             });
+//         }
+//     });
+
+// }
+
+// // --- FUNGSI EKSEKUSI ---
+// function executeSwap(idx) {
+//     disableLastCardButtons();   
+//     let temp = arr[idx];
+//     arr[idx] = arr[idx+1];
+//     arr[idx+1] = temp;
+//     advanceLoop();
+// }
+
+
+
+// function executeStay() {
+//     disableLastCardButtons();
+//     advanceLoop();
+// }
+
+// function advanceLoop() {
+//     j++;
+//     if (j >= arr.length - 1 - i) {
+//         i++;
+//         j = 0;
+//         if(i < arr.length - 1) {
+//             container.insertAdjacentHTML('beforeend', `<div style="text-align:center; padding:15px; color:#aaa; font-style:italic;">--- Selesai Iterasi ${i} ---</div>`);
+//         }
+//     }
+//     nextStep();
+// }
+
+// // --- HELPER FUNCTIONS ---
+// function renderBooksHTML(dataArr, highlights) {
+//     return dataArr.map((val, idx) => {
+//         let activeClass = highlights.includes(idx) ? 'comparing' : '';
+//         return `
+//             <div class="book-img-wrap ${activeClass}">
+//                 <img src="${IMG_PATH}edisi${val}.png" width="80" alt="${val}">
+//             </div>
+//         `;
+//     }).join('');
+// }
+
+// function disableLastCardButtons() {
+//     const lastCard = container.lastElementChild;
+//     if (!lastCard) return;
+
+//     const buttons = lastCard.querySelectorAll('.btn-sim');
+//     buttons.forEach(btn => {
+//         btn.disabled = true;
+//         btn.style.opacity = '0.6';
+//         btn.style.cursor = 'not-allowed';
+//     });
+// }
+
+
+
+// function showFinishMessage() {
+//     const finishMsg = document.getElementById('finish-message');
+//     if(finishMsg) finishMsg.style.display = 'block';
+    
+//     window.scrollTo(0, document.body.scrollHeight);
+// }
+
+// function checkAnswer(userChoice, valA, valB, idx) {
+
+//     if (isProcessing) return;
+//     isProcessing = true;
+
+//     // 🔥 VALIDASI PAKAI NILAI YANG DITAMPILKAN
+//     let correctAnswer = valA > valB;
+
+//     disableLastCardButtons();
+
+//     if (userChoice === correctAnswer) {
+
+//         if (correctAnswer) {
+//             Swal.fire({
+//                 icon: 'success',
+//                 title: 'Benar!',
+//                 text: 'Data ditukar karena nilai kiri lebih besar.',
+//                 confirmButtonColor: '#28a745'
+//             }).then(() => {
+//                 executeSwap(idx);
+//                 isProcessing = false;
+//             });
+
+//         } else {
+//             Swal.fire({
+//                 icon: 'success',
+//                 title: 'Benar!',
+//                 text: 'Data tidak ditukar karena sudah urut.',
+//                 confirmButtonColor: '#28a745'
+//             }).then(() => {
+//                 executeStay();
+//                 isProcessing = false;
+//             });
+//         }
+
+//     } else {
+
+//         Swal.fire({
+//             icon: 'error',
+//             title: 'Jawaban kurang tepat',
+//             text: 'Coba pikirkan kembali.',
+//             confirmButtonColor: '#e74c3c'
+//         }).then(() => {
+
+//             // aktifkan lagi tombol
+//             const lastCard = container.lastElementChild;
+//             if (lastCard) {
+//                 const buttons = lastCard.querySelectorAll('.btn-sim');
+//                 buttons.forEach(btn => {
+//                     btn.disabled = false;
+//                     btn.style.opacity = '1';
+//                 });
+//             }
+
+//             isProcessing = false;
+//         });
+
+//     }
+// }
+
+// // --- AUTO START ---
+// nextStep();
 
 
 
 
 
-// =========================================================
-// BAGIAN 4: LOGIKA KUIS
-// =========================================================
-document.addEventListener('DOMContentLoaded', function () {
 
-    const kunciJawaban = {
-        q1: 'B',
-        q2: 'C',
-        q3: 'B',
-        q4: 'A',
-        q5: 'D'
-    };
-
-    let indexSoal = 0;
-    const daftarSoal = document.querySelectorAll('.soal');
-
-    function tampilkanSoal(i){
-        daftarSoal.forEach((soal, idx)=>{
-            soal.classList.toggle('d-none', idx !== i);
-        });
-        indexSoal = i;
-    }
-
-    function nextSoal(){
-        if(indexSoal < daftarSoal.length - 1){
-            tampilkanSoal(indexSoal + 1);
-        } else {
-            hitungNilai();
-        }
-    }
-
-    function prevSoal(){
-        if(indexSoal > 0){
-            tampilkanSoal(indexSoal - 1);
-        }
-    }
-
-    function hitungNilai(){
-        let benar = 0;
-
-        for(const key in kunciJawaban){
-            const jawaban = document.querySelector(`input[name="${key}"]:checked`);
-            if(jawaban && jawaban.value === kunciJawaban[key]){
-                benar++;
-            }
-        }
-
-        Swal.fire({
-            title: 'Hasil Kuis',
-            html: `
-              <p>Jawaban benar: <b>${benar} dari ${Object.keys(kunciJawaban).length}</b></p>
-              <p>Skor: <b>${benar * 20}</b></p>
-            `,
-            icon: 'info',
-            showCancelButton: true,
-            confirmButtonText: 'Ulangi',
-            cancelButtonText: 'Selesai'
-        }).then((result)=>{
-            if(result.isConfirmed){
-                resetKuis();
-            }
-        });
-    }
-
-    function resetKuis(){
-        document.querySelectorAll('input[type="radio"]').forEach(r=>r.checked=false);
-        tampilkanSoal(0);
-    }
-
-    // expose
-    window.nextSoal = nextSoal;
-    window.prevSoal = prevSoal;
-
-    tampilkanSoal(0);
-});
 
 
 

@@ -2,13 +2,15 @@
 
 use App\Http\Controllers\AktivitasController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ButirSoalController;
+use App\Http\Controllers\DataMahasiswaController;
 use App\Http\Controllers\DosenDashboardController;
 use App\Http\Controllers\KategoriSoalController;
 use App\Http\Controllers\KelasController;
-// use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MahasiswaDashboardController;
-// use App\Http\Controllers\NilaiController;
+use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\PraktikumController;
+use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,14 +21,30 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/', function () {
         return view('landing');
-    });
+    })->name('home');
 
     Route::get('/kodeku', function () {
         return view('kodeku');
     })->name('kodeku');
 
+    Route::get('/tentang', function () {
+        return view('tentang');
+    })->name('tentang');
+
+    Route::get('/petunjuk', function () {
+        return view('petunjuk');
+    })->name('petunjuk');
+
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+
+    // Route Register
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.process');
+
+    // === Route Register Dosen ===
+    Route::get('/register-dosen', [AuthController::class, 'showRegisterDosen'])->name('register.dosen');
+    Route::post('/register-dosen', [AuthController::class, 'registerDosen'])->name('register.dosen.process');
 
 });
 
@@ -60,202 +78,97 @@ Route::prefix('mahasiswa')
         [KategoriSoalController::class,'quiz']
     )->name('quiz.show');
 
+    Route::post('/quiz/{id}/start', [KategoriSoalController::class, 'start'])
+    ->name('quiz.start');
+
     Route::post('/quiz/submit/{id_aktivitas}',
         [KategoriSoalController::class,'submit']
     )->name('quiz.submit');
 
     Route::get('/{folder}/{slug}',
-        [AktivitasController::class,'show']
-    )->name('aktivitas.show');
+        [AktivitasController::class,'show'])
+    ->name('aktivitas.show');
 
 
-//     /* ===== MATERI UMUM ===== */
-//     Route::get('/sorting', function () {
-//         return view('mahasiswa.pendahuluan.sorting');
-//     })->name('sorting');
+    Route::post('/aktivitas/tandai-selesai', 
+        [AktivitasController::class, 'tandaiSelesai'])
+    ->name('aktivitas.tandai_selesai');
 
-//     Route::get('/quiz-test/{id}', 
-//     [AktivitasController::class, 'showById']
-//     )->name('quiz.test');
-
-
-//     /* ===== PENDAHULUAN ===== */
-//     Route::prefix('pendahuluan')->name('pendahuluan.')->group(function () {
-
-//         // Route::get('/materi', function () {
-//         //     return view('mahasiswa.pendahuluan.materi');
-//         // })->name('materi');
-
-//         Route::get('/sorting', function () {
-//             return view('mahasiswa.pendahuluan.sorting');
-//         })->name('sorting');
-
-
-//         Route::get('/kompleksitas', function () {
-//             return view('mahasiswa.pendahuluan.kompleksitas');
-//         })->name('kompleksitas');
-
-//         Route::get('/quiz', function () {
-//             return view('mahasiswa.pendahuluan.quiz');
-//         })->name('quiz');
-
-//         // Route::get('/latihan', function () {
-//         //     return view('mahasiswa.pendahuluan.latihan');
-//         // })->name('latihan');
-//     });
-
-
-//     /* ===== BUBBLE SORT ===== */
-//     Route::prefix('bubble')->name('bubble.')->group(function () {
-
-//         Route::get('/materi', function () {
-//             return view('mahasiswa.bubble.materi');
-//         })->name('materi');
-
-//         Route::get('/simulasi', function () {
-//             return view('mahasiswa.bubble.simulasi');
-//         })->name('simulasi');
-
-//         Route::get('/program', function () {
-//             return view('mahasiswa.bubble.program');
-//         })->name('program');
-
-//         Route::get('/quiz', function () {
-//             return view('mahasiswa.bubble.quiz');
-//         })->name('quiz');
-
-//         Route::get('/praktikum', function () {
-//             return view('mahasiswa.bubble.praktikum');
-//         })->name('praktikum');
-
-//         Route::get('/mahasiswa/praktikum/{id}', [PraktikumController::class, 'show']);
-//         Route::post('/praktikum/submit',
-//             [PraktikumController::class, 'submit']
-//         )->name('praktikum.submit');
-
-
-//     });
-
-
-//     /* ===== SELECTION SORT ===== */
-//     Route::prefix('selection')->name('selection.')->group(function () {
-
-//         Route::get('/materi', function () {
-//             return view('mahasiswa.selection.materi');
-//         })->name('materi');
-
-//         Route::get('/simulasi', function () {
-//             return view('mahasiswa.selection.simulasi');
-//         })->name('simulasi');
-
-//         Route::get('/program', function () {
-//             return view('mahasiswa.selection.program');
-//         })->name('program');
-
-//         Route::get('/quiz', function () {
-//             return view('mahasiswa.selection.quiz');
-//         })->name('quiz');
-
-//         Route::get('/praktikum', function () {
-//             return view('mahasiswa.selection.praktikum');
-//         })->name('praktikum');
-//     });
-
-
-//     /* ===== INSERTION SORT ===== */
-//     Route::prefix('insertion')->name('insertion.')->group(function () {
-
-//         Route::get('/materi', function () {
-//             return view('mahasiswa.insertion.materi');
-//         })->name('materi');
-
-//         Route::get('/simulasi', function () {
-//             return view('mahasiswa.insertion.simulasi');
-//         })->name('simulasi');
-
-//         Route::get('/program', function () {
-//             return view('mahasiswa.insertion.program');
-//         })->name('program');
-
-//         Route::get('/quiz', function () {
-//             return view('mahasiswa.insertion.quiz');
-//         })->name('quiz');
-
-//         Route::get('/praktikum', function () {
-//             return view('mahasiswa.insertion.praktikum');
-//         })->name('praktikum');
-//     });
-
-
-//     /* ===== MERGE SORT ===== */
-//     Route::prefix('merge')->name('merge.')->group(function () {
-
-//         Route::get('/materi', function () {
-//             return view('mahasiswa.merge.materi');
-//         })->name('materi');
-
-//                 Route::get('/simulasi', function () {
-//             return view('mahasiswa.merge.simulasi');
-//         })->name('simulasi');
-
-//         Route::get('/program', function () {
-//             return view('mahasiswa.merge.program');
-//         })->name('program');
-
-//         Route::get('/quiz', function () {
-//             return view('mahasiswa.merge.quiz');
-//         })->name('quiz');
-
-//         Route::get('/praktikum', function () {
-//             return view('mahasiswa.merge.praktikum');
-//         })->name('praktikum');
-//     });
+    // Rute profil mahasiswa
+    Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
+    Route::post('/profil/update', [ProfilController::class, 'update'])->name('profil.update');
 
 });
 
 
-/* =====================================================
-   DOSEN
-===================================================== */
-Route::prefix('dosen')
-    ->name('dosen.')
-    ->middleware(['auth','role:dosen'])
-    ->group(function(){
+    /* =====================================================
+    DOSEN
+    ===================================================== */
+    Route::prefix('dosen')
+        ->name('dosen.')
+        ->middleware(['auth','role:dosen'])
+        ->group(function(){
 
     Route::get('/dashboard', [DosenDashboardController::class,'index'])
         ->name('dashboard');
 
+    // ---------------------------------------------------------
+    // ROUTE MANAJEMEN PRAKTIKUM
+    // ---------------------------------------------------------
+
+    Route::get('/praktikum/kelola-soal', [PraktikumController::class, 'kelolasoal'])->name('praktikum.soal');
+    Route::post('/praktikum/simpan-soal/{id}', [PraktikumController::class, 'simpanSoal'])->name('praktikum.simpanSoal');
+
     Route::get('/praktikum', [PraktikumController::class, 'index'])
     ->name('praktikum.index');
-
     Route::get('/praktikum/{id}', [PraktikumController::class, 'dosenShow'])
         ->name('praktikum.show');
     Route::put('/praktikum/update/{id}', [PraktikumController::class, 'update']);
-
-
     Route::post('/dosen/praktikum/nilai', [PraktikumController::class, 'beriNilai']);
 
-    // Route::prefix('nilai')->name('nilai.')->group(function(){
-    //     Route::get('/', [NilaiController::class,'index'])
-    //         ->name('index');
-    // });
+    // ---------------------------------------------------------
+    // ROUTE MANAJEMEN KELAS
+    // ---------------------------------------------------------
+    Route::get('/kelas', [KelasController::class, 'index'])
+        ->name('kelas.index');
+    Route::post('/kelas', [KelasController::class, 'store'])
+        ->name('kelas.store');
+    Route::put('/kelas/{id}', [KelasController::class, 'update'])
+    ->name('dosen.kelas.update');
+    Route::delete('/kelas/{id}', [KelasController::class, 'destroy'])
+    ->name('kelas.destroy');
 
-    
+    // ---------------------------------------------------------
+    // ROUTE MANAJEMEN MAHASISWA
+    // ---------------------------------------------------------
+    Route::get('/datamahasiswa', [DataMahasiswaController::class, 'index'])->name('datamahasiswa.index');
+    Route::put('/datamahasiswa/{id}', [DataMahasiswaController::class, 'update'])->name('datamahasiswa.update');
+    Route::delete('/datamahasiswa/{id}', [DataMahasiswaController::class, 'destroy'])->name('datamahasiswa.destroy');
 
-    // Route::prefix('mahasiswa')->name('mahasiswa.')->group(function(){
-    //     Route::get('/', [MahasiswaController::class,'index'])
-    //         ->name('index');
-    // });
+    // ---------------------------------------------------------
+    // ROUTE MANAJEMEN MAHASISWA
+    // ---------------------------------------------------------
+    Route::get('/soal', [ButirSoalController::class, 'index'])->name('soal.index');
+    Route::post('/soal', [ButirSoalController::class, 'store'])->name('soal.store');
+    Route::put('/soal/{id}', [ButirSoalController::class, 'update'])->name('soal.update');
+    Route::delete('/soal/{id}', [ButirSoalController::class, 'destroy'])->name('soal.destroy');
 
-    Route::prefix('kelas')->name('kelas.')->group(function(){
-        Route::get('/', [KelasController::class,'index'])->name('index');
-    });
+
+    Route::get('/pengaturan-kkm', [SettingController::class, 'index'])->name('kkm.index');
+    Route::post('/pengaturan-kkm', [SettingController::class, 'update'])->name('kkm.update');
+
+    Route::get('/rekap-nilai', [NilaiController::class, 'index'])
+    ->name('nilai.index');
 
     Route::post('/set-kkm', [DosenDashboardController::class, 'setKkm'])
     ->name('setKkm');
 
     Route::get('/setting', [SettingController::class,'index'])
         ->name('setting');
+
+    // Rute profil dosen
+    Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
+    Route::post('/profil/update', [ProfilController::class, 'update'])->name('profil.update');
 
 
 

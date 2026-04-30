@@ -1,5 +1,8 @@
 @extends('layouts.hlmnd')
 
+@section('title', 'Show-Praktikum')
+
+
 <style>
 /* Header Styling */
 .title-card {
@@ -108,9 +111,8 @@
         <div class="card-body">
             <div class="mb-4">
                 <label class="fw-bold text-primary mb-2 small text-uppercase">Penjelasan:</label>
-                <div class="p-3 bg-light rounded border-start border-primary border-4">
-                    {{ $item->penjelasan }}
-                </div>
+                <div class="p-3 bg-light rounded border-start border-primary border-4" style="white-space: pre-wrap;">
+                    {{ $item->penjelasan }}</div>
             </div>
 
             <div class="row">

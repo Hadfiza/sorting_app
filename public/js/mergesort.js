@@ -1,3 +1,6 @@
+// =========================================================
+// BAGIAN 1: PENGATURAN TAB HALAMAN & NAVIGASI (MESIN UTAMA)
+// =========================================================
 document.addEventListener('DOMContentLoaded', function () {
     const materiPages = document.querySelectorAll('.materi-page');
     if (materiPages.length === 0) return; 
@@ -29,13 +32,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (materiPages[i].querySelector('#code')) {
             setTimeout(() => {
                 initPythonEditor();
-                editor.refresh(); // WAJIB
+                if(typeof editor !== 'undefined') editor.refresh(); // WAJIB
             }, 50);
         }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-
 
     function updateButtonState() {
         if (btnPrev) btnPrev.disabled = materiIndex === 0;
@@ -57,15 +59,16 @@ document.addEventListener('DOMContentLoaded', function () {
     // Init halaman pertama
     tampilMateri(0);
     
-
     // JALANKAN EDITOR
     initPythonEditor();
 });
 
 // =========================================================
-// BAGIAN 3: LOGIKA EDITOR PYTHON
+// BAGIAN 2: LOGIKA EDITOR PYTHON
 // =========================================================
 let editorInitialized = false;
+let editor; 
+let pyodideInstance;
 
 async function initPythonEditor() {
     if (editorInitialized) return;
@@ -89,32 +92,36 @@ async function initPythonEditor() {
     const outputDiv = document.getElementById("output");
     const runBtn = document.getElementById("runBtn");
 
-    pyodideInstance = await loadPyodide({
-        stdout: (t) => outputDiv.innerText += t + "\n",
-        stderr: (t) => outputDiv.innerText += t + "\n"
-    });
+    if (runBtn) runBtn.disabled = true;
 
-    runBtn.disabled = false;
+    try {
+        pyodideInstance = await loadPyodide({
+            stdout: (t) => { if (outputDiv) outputDiv.innerText += t + "\n" },
+            stderr: (t) => { if (outputDiv) outputDiv.innerText += t + "\n" }
+        });
+        if (runBtn) runBtn.disabled = false;
+    } catch (err) {
+        console.error("Gagal memuat Pyodide", err);
+    }
 
-    runBtn.onclick = async () => {
-        outputDiv.innerText = "";
-        runBtn.disabled = true;
-        try {
-            await pyodideInstance.runPythonAsync(editor.getValue());
-        } finally {
-            runBtn.disabled = false;
-        }
-    };
+    if (runBtn) {
+        runBtn.onclick = async () => {
+            outputDiv.innerText = "";
+            runBtn.disabled = true;
+            try {
+                await pyodideInstance.runPythonAsync(editor.getValue());
+            } finally {
+                runBtn.disabled = false;
+            }
+        };
+    }
 
     editorInitialized = true;
 }
 
-// SIMULASI
-
-// ===============================
-// SIMULASI MERGE SORT (FINAL)
-// ===============================
-
+// =========================================================
+// BAGIAN 3: SIMULASI MERGE SORT (FINAL BUG-FREE + NARASI)
+// =========================================================
 
 const IMG_PATH = window.IMG_PATH || '';
 
@@ -126,44 +133,34 @@ const initialData = [
     { id: 'b5', val: 6 }
 ];
 
-// ===============================
-// GLOBAL
-// ===============================
 let queue = [];
 let currentTask = null;
 let currentCardId = null;
+let isProcessing = false;
 let container = document.getElementById('simulation-container');
 
-// ===============================
-// STATE MERGE
-// ===============================
 let mergeState = {
-    leftArr: [],
-    rightArr: [],
-    resultArr: [],
-    i: 0,
-    j: 0,
-    phase: 'COMPARE',   // COMPARE | MOVE
-    nextMove: null,     // LEFT | RIGHT
-    highlightCompare: false
+    leftArr: [], rightArr: [], resultArr: [],
+    i: 0, j: 0, phase: 'COMPARE'
 };
 
-// ===============================
-// RESET
-// ===============================
 function resetSimulation() {
-    container.innerHTML = '';
+    container = document.getElementById('simulation-container');
+    const finishMsg = document.getElementById('finish-message');
+    
+    if (container) container.innerHTML = '';
+    if (finishMsg) finishMsg.style.display = 'none';
+
     queue = [];
-    generateTasks([...initialData]);
-    processNextTask();
+    isProcessing = false;
+    
+    generateTasks([...initialData]); 
+    processNextTask();               
 }
 
-// ===============================
-// GENERATE TASK (REKURSIF)
-// ===============================
 function generateTasks(arr) {
     if (arr.length <= 1) return arr;
-
+    
     const mid = Math.floor(arr.length / 2);
     const left = arr.slice(0, mid);
     const right = arr.slice(mid);
@@ -174,335 +171,476 @@ function generateTasks(arr) {
     const sortedRight = generateTasks(right);
 
     queue.push({ type: 'MERGE', left: sortedLeft, right: sortedRight });
-
+    
     return [...sortedLeft, ...sortedRight].sort((a, b) => a.val - b.val);
 }
 
-// ===============================
-// PROCESS TASK
-// ===============================
 function processNextTask() {
-
-    // ===============================
-    // JIKA SEMUA TUGAS SELESAI
-    // ===============================
     if (queue.length === 0) {
-
-        const lastCard = container.lastElementChild;
+        const lastCard = container ? container.lastElementChild : null;
         if (lastCard) {
             const btnArea = lastCard.querySelector('.action-buttons');
-            if (btnArea) {
-                btnArea.remove(); 
-            }
+            if (btnArea) btnArea.remove(); 
         }
 
-
-        // Tampilkan kartu selesai
-        container.insertAdjacentHTML('beforeend', `
-            <div class="sim-card fade-in" style="
-                margin-top:30px;
-                padding:30px;
-                background:#eafaf1;
-                border:2px solid #27ae60;
-                border-radius:12px;
-                text-align:center;
-            ">
-                <h3 style="color:#1e8449;">
-                    <i class="fa fa-check-circle"></i>
-                    Pengurutan Selesai!
-                </h3>
-
-                <button class="btn-sim active" 
-                        style="margin-top:15px; background:#27ae60;"
-                        onclick="resetSimulation()">
-                    Ulangi Simulasi
-                </button>
-            </div>
-        `);
-
-        window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: "smooth"
-        });
-
+        const finishMsg = document.getElementById('finish-message');
+        if (finishMsg) {
+            finishMsg.style.display = 'block'; 
+        }
+        
+        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
         return;
     }
 
-    // ===============================
-    // LANJUT TASK NORMAL
-    // ===============================
     currentTask = queue.shift();
     currentCardId = `card-${Date.now()}`;
 
     if (currentTask.type === 'DIVIDE') {
         renderDivideCard();
     } else {
-        initMergeState();
+        mergeState = { leftArr: currentTask.left, rightArr: currentTask.right, resultArr: [], i: 0, j: 0, phase: 'COMPARE' };
         renderMergeCard();
     }
 }
 
-
 // ===============================
-// INIT MERGE STATE
-// ===============================
-function initMergeState() {
-    mergeState = {
-        leftArr: currentTask.left,
-        rightArr: currentTask.right,
-        resultArr: [],
-        i: 0,
-        j: 0,
-        phase: 'COMPARE',
-        nextMove: null,
-        highlightCompare: false
-    };
-}
-
-// ===============================
-// DIVIDE CARD
+// FASE 1: DIVIDE (MEMECAH)
 // ===============================
 function renderDivideCard() {
+    const combinedArr = [...currentTask.left, ...currentTask.right];
+    const totalKarung = combinedArr.length;
+    
     const html = `
     <div class="sim-card fade-in" id="${currentCardId}">
         <div class="sim-header">
-            <strong>MEMECAH DATA (DIVIDE)</strong>
+            <strong><span class="badge bg-primary">Fase Pemecahan (DIVIDE)</span></strong>
+            <p id="exp-${currentCardId}" class="mt-2 mb-0" style="font-size: 0.95rem;">
+                Sistem mendeteksi <strong>${totalKarung} karung beras</strong> yang masih tergabung.<br>
+                Berdasarkan prinsip algoritma <em>Merge Sort</em> (Divide), tindakan apa yang wajib dieksekusi oleh sistem?
+            </p>
         </div>
         <div class="sim-body">
-            <div class="book-container">
-                <div class="group-box" data-label="KIRI">
+            <div class="book-container" id="${currentCardId}-combined" style="display: flex; justify-content: center; margin-bottom: 20px;">
+                <div class="group-box" style="border-color: #34495e; background: #f8f9fa;">
+                    <div class="group-title" style="background: #34495e;">Blok Data Saat Ini</div>
+                    ${renderBooksHTML(combinedArr)}
+                </div>
+            </div>
+
+            <div class="book-container fade-in" id="${currentCardId}-visual" style="display: none; justify-content: center; gap: 30px;">
+                <div class="group-box" style="border-color: #fca130; background: #fffaf0;">
+                    <div class="group-title" style="background: #fca130;">Pecahan Kiri</div>
                     ${renderBooksHTML(currentTask.left)}
                 </div>
-                <div class="group-box" data-label="KANAN">
+                <div class="group-box" style="border-color: #fca130; background: #fffaf0;">
+                    <div class="group-title" style="background: #fca130;">Pecahan Kanan</div>
                     ${renderBooksHTML(currentTask.right)}
                 </div>
             </div>
-            <div class="action-buttons">
-                <button class="btn-sim active" onclick="processNextTask()">Lanjut</button>
+
+            <div id="explanation-box-${currentCardId}" class="mt-4 mb-3 fade-in" style="display:none; font-size: 0.9rem; color: #333; background: #eafaf1; padding: 12px; border-radius: 6px; border-left: 4px solid #2ecc71; text-align: left;">
+                <div id="explanation-text-${currentCardId}"></div>
+            </div>
+
+            <div class="action-buttons" id="action-btn-${currentCardId}">
+                <button class="btn-sim" style="background: #3498db;" onclick="checkDivideAnswer(true, '${currentCardId}')"><i class="fa-solid fa-arrows-split-up-and-left me-1"></i> Membaginya jadi 2 sub-kelompok</button>
+                <button class="btn-sim" style="background: #e67e22;" onclick="checkDivideAnswer(false, '${currentCardId}')"><i class="fa-solid fa-arrow-down-short-wide me-1"></i> Langsung mengurutkannya</button>
             </div>
         </div>
     </div>`;
-    container.insertAdjacentHTML('beforeend', html);
+    
+    if (container) container.insertAdjacentHTML('beforeend', html);
     scrollToCard();
 }
 
 // ===============================
-// MERGE CARD (DOM TETAP)
+// FASE 2: MERGE (MENGGABUNGKAN)
 // ===============================
 function renderMergeCard() {
     const html = `
     <div class="sim-card fade-in" id="${currentCardId}">
         <div class="sim-header">
-            <strong>MENGGABUNG & MENGURUTKAN (MERGE)</strong>
-            <p class="exp-text">Bandingkan nilai kiri dan kanan.</p>
+            <strong><span class="badge bg-warning text-dark">Fase Penggabungan (MERGE)</span></strong>
+            <p class="exp-text mt-2 mb-0" style="font-size: 0.95rem;"></p>
         </div>
         <div class="sim-body">
-            <div class="book-container">
-                <div class="group-box" data-label="KIRI" id="${currentCardId}-left"></div>
-                <div class="group-box" data-label="KANAN" id="${currentCardId}-right"></div>
-                <div class="group-box result-group" data-label="HASIL (URUT)" id="${currentCardId}-result"></div>
+            <div class="merge-board">
+                <div class="source-row">
+                    <div class="group-box" id="${currentCardId}-left"></div>
+                    <div class="group-box" style="border-color: #9b59b6; background: #f9f0ff;" id="${currentCardId}-right"></div>
+                </div>
+                
+                <i class="fa-solid fa-angles-down text-muted fs-4 my-1"></i>
+
+                <div class="result-box" id="${currentCardId}-result"></div>
             </div>
-            <div class="action-buttons">
-                <button class="btn-sim active" onclick="stepMerge()">Cek Kondisi</button>
+
+            <div id="explanation-box-${currentCardId}" class="mt-4 mb-3 fade-in" style="display:none; font-size: 0.9rem; color: #333; background: #eafaf1; padding: 12px; border-radius: 6px; border-left: 4px solid #2ecc71; text-align: left;">
+                <div class="fw-bold mb-1 border-bottom border-success pb-1" style="border-color: #2ecc71 !important;">Catatan Proses Penggabungan:</div>
+                <div id="explanation-text-${currentCardId}" style="line-height: 1.6;"></div>
             </div>
+            
+            <div class="action-buttons" id="action-btn-${currentCardId}"></div>
         </div>
     </div>`;
-    container.insertAdjacentHTML('beforeend', html);
+    
+    if (container) container.insertAdjacentHTML('beforeend', html);
     updateMergeVisuals();
     scrollToCard();
 }
 
-// ===============================
-// STEP MERGE (INTI LOGIKA)
-// ===============================
-function stepMerge() {
-    const { leftArr, rightArr, i, j, phase } = mergeState;
-
-    // SELESAI SEGMENT
-    if (i >= leftArr.length && j >= rightArr.length) {
-        document.querySelector(`#${currentCardId} .exp-text`)
-            .innerHTML = '<strong>SELESAI!</strong> Segmen ini telah terurut.';
-        document.querySelector(`#${currentCardId} .action-buttons`)
-            .innerHTML = `<button class="btn-sim active" onclick="processNextTask()">Lanjut</button>`;
-        return;
-    }
-
-    // =====================
-    // FASE COMPARE
-    // =====================
-    if (mergeState.phase === 'COMPARE') {
-
-        // =========================
-        // JIKA KIRI HABIS
-        // =========================
-        if (mergeState.i >= mergeState.leftArr.length) {
-            mergeState.nextMove = 'RIGHT';
-            mergeState.moveReason = 'LEFT_EMPTY';
-            mergeState.phase = 'MOVE';
-            mergeState.highlightCompare = false;
-            updateMergeVisuals();
-            return;
-        }
-
-        // =========================
-        // JIKA KANAN HABIS
-        // =========================
-        if (mergeState.j >= mergeState.rightArr.length) {
-            mergeState.nextMove = 'LEFT';
-            mergeState.moveReason = 'RIGHT_EMPTY';
-            mergeState.phase = 'MOVE';
-            mergeState.highlightCompare = false;
-            updateMergeVisuals();
-            return;
-        }
-
-        // =========================
-        // BARU BOLEH BANDINGKAN
-        // =========================
-        mergeState.highlightCompare = true;
-        mergeState.moveReason = 'COMPARE';
-
-        if (mergeState.leftArr[mergeState.i].val <= mergeState.rightArr[mergeState.j].val) {
-            mergeState.nextMove = 'LEFT';
-        } else {
-            mergeState.nextMove = 'RIGHT';
-        }
-
-        mergeState.phase = 'MOVE';
-        updateMergeVisuals();
-        return;
-    }
-
-
-    // =====================
-    // FASE MOVE
-    // =====================
-    else if (phase === 'MOVE') {
-        mergeState.highlightCompare = false;
-
-        if (mergeState.nextMove === 'LEFT') {
-            mergeState.resultArr.push(leftArr[i]);
-            mergeState.i++;
-        } else {
-            mergeState.resultArr.push(rightArr[j]);
-            mergeState.j++;
-        }
-
-        mergeState.phase = 'COMPARE';
-    }
-
-    updateMergeVisuals();
-}
-
-// ===============================
-// UPDATE VISUAL (TANPA HAPUS DOM)
-// ===============================
 function updateMergeVisuals() {
     const leftBox   = document.getElementById(`${currentCardId}-left`);
     const rightBox  = document.getElementById(`${currentCardId}-right`);
     const resultBox = document.getElementById(`${currentCardId}-result`);
     const card      = document.getElementById(currentCardId);
+    const exp       = card.querySelector('.exp-text');
+    const btnArea   = card.querySelector('.action-buttons');
 
-    leftBox.innerHTML = renderBooksWithIndex(
-        mergeState.leftArr,
-        mergeState.i,
-        mergeState.highlightCompare ? 'comparing' : ''
-    );
-
-    rightBox.innerHTML = renderBooksWithIndex(
-        mergeState.rightArr,
-        mergeState.j,
-        mergeState.highlightCompare ? 'comparing' : ''
-    );
-
-    resultBox.innerHTML = mergeState.resultArr.map(item => `
+    resultBox.innerHTML = `<div class="result-title">KOTAK HASIL GABUNGAN</div>` + mergeState.resultArr.map(item => `
         <div class="book-img-wrap merged-item">
-            <img src="${IMG_PATH}${item.val}.png">
-            <span class="book-label">${item.val}</span>
+            <img src="${IMG_PATH}${item.val}.png" onerror="this.src='/img/karung_merah_error.png';">
+            <span class="book-label">${item.val} kg</span>
         </div>
     `).join('');
 
-    const btn = card.querySelector('.action-buttons button');
-    const exp = card.querySelector('.exp-text');
+    // JIKA PROSES PENGGABUNGAN SELESAI
+    if (mergeState.i >= mergeState.leftArr.length && mergeState.j >= mergeState.rightArr.length) {
+        leftBox.innerHTML = '<div class="group-title">Grup Kiri</div><span class="text-muted small mt-4">Habis</span>';
+        rightBox.innerHTML = '<div class="group-title" style="background: #9b59b6;">Grup Kanan</div><span class="text-muted small mt-4">Habis</span>';
+        
+        exp.innerHTML = `<strong class="text-success"><i class="fa-solid fa-check-double"></i> PENGGABUNGAN SELESAI!</strong> Segmen ini telah terurut.`;
+        btnArea.innerHTML = `<button class="btn-sim active" style="background:#2ecc71;" onclick="processNextTask()">Lanjut ke Segmen Berikutnya <i class="fa-solid fa-arrow-right ms-1"></i></button>`;
+        
+        // MUNCULKAN KOTAK PENJELASAN HANYA SAAT SUDAH SELESAI
+        const expBox = document.getElementById(`explanation-box-${currentCardId}`);
+        const expText = document.getElementById(`explanation-text-${currentCardId}`);
+        if (expBox && expText) {
+            expText.innerHTML += `<div class="mt-2 pt-2" style="border-top: 1px dashed #2ecc71;"><strong>Kesimpulan:</strong> Kedua grup asal (Kiri dan Kanan) telah habis dipindahkan. Karung pada segmen gabungan ini kini tersusun rapi dari yang paling ringan.</div>`;
+            expBox.style.display = 'block'; // TAMPILKAN SEKARANG!
+        }
+        return; 
+    }
 
-    if (mergeState.phase === 'COMPARE') {
+    leftBox.innerHTML = `<div class="group-title">Grup Kiri</div>` + renderBooksWithIndex(mergeState.leftArr, mergeState.i, 'comparing', 'left');
+    rightBox.innerHTML = `<div class="group-title" style="background: #9b59b6;">Grup Kanan</div>` + renderBooksWithIndex(mergeState.rightArr, mergeState.j, 'comparing', 'right');
+    
+    const leftVal  = mergeState.i < mergeState.leftArr.length ? mergeState.leftArr[mergeState.i].val : null;
+    const rightVal = mergeState.j < mergeState.rightArr.length ? mergeState.rightArr[mergeState.j].val : null;
 
-        const leftVal  = mergeState.i < mergeState.leftArr.length
-            ? mergeState.leftArr[mergeState.i].val
-            : '-';
-
-        const rightVal = mergeState.j < mergeState.rightArr.length
-            ? mergeState.rightArr[mergeState.j].val
-            : '-';
-
-        exp.innerHTML = `
-            Bandingkan nilai <b>KIRI (${leftVal})</b>
-            dengan <b>KANAN (${rightVal})</b>.
+    if (leftVal !== null && rightVal !== null) {
+        exp.innerHTML = `Bandingkan ujung Grup KIRI (<b>${leftVal} kg</b>) dengan KANAN (<b>${rightVal} kg</b>).<br>Berdasarkan urutan <em>ascending</em>, karung mana yang harus diturunkan ke HASIL?`;
+        btnArea.innerHTML = `
+            <button class="btn-sim btn-kiri" onclick="checkMergeAnswer('LEFT', ${leftVal}, ${rightVal})"><i class="fa-solid fa-arrow-down me-1"></i> Pilih Kiri (${leftVal} kg)</button>
+            <button class="btn-sim btn-kanan" onclick="checkMergeAnswer('RIGHT', ${leftVal}, ${rightVal})"><i class="fa-solid fa-arrow-down me-1"></i> Pilih Kanan (${rightVal} kg)</button>
         `;
-        btn.innerText = 'Cek Kondisi';
-
+    } else if (leftVal === null) {
+        exp.innerHTML = `Grup KIRI sudah habis. Apa yang harus dilakukan pada sisa Grup KANAN?`;
+        btnArea.innerHTML = `<button class="btn-sim btn-auto" onclick="checkMergeAnswer('RIGHT', null, ${rightVal})"><i class="fa-solid fa-check-double me-1"></i> Turunkan Sisa Kanan (${rightVal} kg)</button>`;
     } else {
-    let chosenVal, source, reasonText;
-
-    if (mergeState.nextMove === 'LEFT') {
-        chosenVal = mergeState.leftArr[mergeState.i].val;
-        source = 'KIRI';
-    } else {
-        chosenVal = mergeState.rightArr[mergeState.j].val;
-        source = 'KANAN';
+        exp.innerHTML = `Grup KANAN sudah habis. Apa yang harus dilakukan pada sisa Grup KIRI?`;
+        btnArea.innerHTML = `<button class="btn-sim btn-auto" onclick="checkMergeAnswer('LEFT', ${leftVal}, null)"><i class="fa-solid fa-check-double me-1"></i> Turunkan Sisa Kiri (${leftVal} kg)</button>`;
     }
-
-    if (mergeState.moveReason === 'COMPARE') {
-        reasonText = `Karena nilai <b>${chosenVal}</b> dari <b>${source}</b> lebih kecil,`;
-    }
-    else if (mergeState.moveReason === 'LEFT_EMPTY') {
-        reasonText = `Karena <b>seluruh elemen KIRI telah habis</b>,`;
-    }
-    else if (mergeState.moveReason === 'RIGHT_EMPTY') {
-        reasonText = `Karena <b>seluruh elemen KANAN telah habis</b>,`;
-    }
-
-    exp.innerHTML = `
-        ${reasonText}
-        maka nilai <b>${chosenVal}</b> dipindahkan ke <b>HASIL</b>.
-    `;
-
-    btn.innerText = 'Pindahkan ke Hasil';
 }
 
+window.checkMergeAnswer = function(choice, leftVal, rightVal) {
+    if (isProcessing) return;
+    isProcessing = true; 
 
+    try {
+        let isCorrect = false;
+        if (leftVal !== null && rightVal !== null) {
+            let correctChoice = (leftVal <= rightVal) ? 'LEFT' : 'RIGHT';
+            isCorrect = (choice === correctChoice);
+        } else {
+            isCorrect = true; 
+        }
+
+        if (isCorrect) {
+            const actionBtn = document.getElementById(`action-btn-${currentCardId}`);
+            if (actionBtn) {
+                const btns = actionBtn.querySelectorAll('.btn-sim');
+                btns.forEach(b => { b.disabled = true; b.style.opacity = '0.5'; });
+            }
+
+            const exp = document.getElementById(currentCardId).querySelector('.exp-text');
+            let chosenVal = (choice === 'LEFT') ? leftVal : rightVal;
+            
+            exp.innerHTML = `<span class="text-success fw-bold"><i class="fa-solid fa-circle-check"></i> Analisis Tepat!</span> Karung <b>${chosenVal} kg</b> otomatis diturunkan ke Hasil...`;
+
+            let reasonText = "";
+            if (leftVal !== null && rightVal !== null) {
+                reasonText = `Sesuai aturan ascending, karung <b>${chosenVal} kg</b> lebih ringan (atau sama) sehingga diturunkan.`;
+            } else {
+                reasonText = `Karena grup lain kosong, sisa karung <b>${chosenVal} kg</b> langsung digabungkan.`;
+            }
+
+            // SIMPAN PENJELASAN DIAM-DIAM (Tanpa Memunculkan Kotak)
+            const expBox = document.getElementById(`explanation-box-${currentCardId}`);
+            const expText = document.getElementById(`explanation-text-${currentCardId}`);
+            if (expBox && expText) {
+                expText.innerHTML += `<div><i class="fa-solid fa-caret-right text-success me-1"></i> ${reasonText}</div>`;
+            }
+
+            const activeItem = document.getElementById(choice === 'LEFT' ? 'current-left' : 'current-right');
+            if (activeItem) {
+                activeItem.classList.add('slide-down-anim'); 
+            }
+
+            setTimeout(() => {
+                if (choice === 'LEFT') {
+                    mergeState.resultArr.push(mergeState.leftArr[mergeState.i]);
+                    mergeState.i++;
+                } else {
+                    mergeState.resultArr.push(mergeState.rightArr[mergeState.j]);
+                    mergeState.j++;
+                }
+                
+                isProcessing = false; 
+                updateMergeVisuals(); 
+            }, 600); // Animasi dipercepat sedikit
+
+        } else {
+            Swal.fire({
+                icon: 'error', 
+                title: 'Kurang Tepat', 
+                text: 'Ingat! Dalam pengurutan ascending, karung yang beratnya LEBIH RINGAN harus diturunkan dan digabungkan terlebih dahulu.', 
+                confirmButtonColor: '#e74c3c'
+            }).then(() => {
+                isProcessing = false; 
+            });
+        }
+    } catch (error) {
+        isProcessing = false; 
+    }
+}
+
+// =========================================================
+// GANTI 3 FUNGSI INI UNTUK MEMPERKAYA NARASI PENJELASAN
+// =========================================================
+
+window.checkDivideAnswer = function(isCorrect, cardId) {
+    if (isProcessing) return;
+    isProcessing = true; 
+
+    try {
+        if (isCorrect) {
+            // ... (Bagian jawaban benar tetap sama seperti sebelumnya) ...
+            const actionBtn = document.getElementById(`action-btn-${cardId}`);
+            if (actionBtn) {
+                const btns = actionBtn.querySelectorAll('.btn-sim');
+                btns.forEach(b => { b.disabled = true; b.style.opacity = '0.5'; });
+            }
+
+            document.getElementById(`${cardId}-combined`).style.display = 'none';
+            document.getElementById(`${cardId}-visual`).style.display = 'flex';
+            
+            document.getElementById(`exp-${cardId}`).innerHTML = `
+                <span class="text-success fw-bold"><i class="fa-solid fa-circle-check"></i> Analisis Tepat!</span>
+            `;
+            
+            const leftCount = currentTask.left.length;
+            const rightCount = currentTask.right.length;
+            const totalCount = leftCount + rightCount;
+            if (actionBtn) {
+                actionBtn.insertAdjacentHTML('afterend', `
+                    <div class="mt-4 fade-in" style="font-size: 0.9rem; color: #333; background: #eafaf1; padding: 12px; border-radius: 6px; border-left: 4px solid #2ecc71; text-align: left; line-height: 1.5;">
+                        <strong>Penjelasan:</strong> Sesuai prinsip <em>Divide</em> (Pecah), masalah yang besar harus dipecah menjadi bagian-bagian kecil. Blok yang tadinya berisi ${totalCount} karung ini dibagi dua tepat di tengah. Hal ini akan dilakukan terus-menerus secara rekursif hingga tersisa 1 karung per blok agar lebih mudah diurutkan. <br><br>Hasil pemecahan kali ini: <b>Pecahan Kiri (${leftCount} karung)</b> dan <b>Pecahan Kanan (${rightCount} karung)</b>.
+                    </div>
+                `);
+            }
+            
+            setTimeout(() => {
+                isProcessing = false;
+                processNextTask();
+            }, 2500);
+
+        } else {
+            // --- REVISI SWEETALERT SANGAT SINGKAT ---
+            Swal.fire({
+                icon: 'warning', 
+                title: 'Kurang Tepat!', 
+                html: `Ingat kembali prinsip dasar <b>Merge Sort</b>: Pecah (Divide) datanya terlebih dahulu!`,
+                confirmButtonText: 'Oke!',
+                confirmButtonColor: '#f39c12'
+            }).then(() => {
+                isProcessing = false; 
+            });
+        }
+    } catch (error) {
+        isProcessing = false; 
+    }
+}
+
+function updateMergeVisuals() {
+    const leftBox   = document.getElementById(`${currentCardId}-left`);
+    const rightBox  = document.getElementById(`${currentCardId}-right`);
+    const resultBox = document.getElementById(`${currentCardId}-result`);
+    const card      = document.getElementById(currentCardId);
+    const exp       = card.querySelector('.exp-text');
+    const btnArea   = card.querySelector('.action-buttons');
+
+    resultBox.innerHTML = `<div class="result-title">KOTAK HASIL GABUNGAN</div>` + mergeState.resultArr.map(item => `
+        <div class="book-img-wrap merged-item">
+            <img src="${IMG_PATH}${item.val}.png" onerror="this.src='/img/karung_merah_error.png';">
+            <span class="book-label">${item.val} kg</span>
+        </div>
+    `).join('');
+
+    if (mergeState.i >= mergeState.leftArr.length && mergeState.j >= mergeState.rightArr.length) {
+        leftBox.innerHTML = '<div class="group-title">Grup Kiri</div><span class="text-muted small mt-4">Habis</span>';
+        rightBox.innerHTML = '<div class="group-title" style="background: #9b59b6;">Grup Kanan</div><span class="text-muted small mt-4">Habis</span>';
+        
+        exp.innerHTML = `<strong class="text-success"><i class="fa-solid fa-check-double"></i> PENGGABUNGAN SELESAI!</strong> Segmen ini telah terurut.`;
+        btnArea.innerHTML = `<button class="btn-sim active" style="background:#2ecc71;" onclick="processNextTask()">Lanjut ke Segmen Berikutnya <i class="fa-solid fa-arrow-right ms-1"></i></button>`;
+        
+        // --- REVISI NARASI KESIMPULAN MERGE ---
+        const expBox = document.getElementById(`explanation-box-${currentCardId}`);
+        const expText = document.getElementById(`explanation-text-${currentCardId}`);
+        if (expBox && expText) {
+            expText.innerHTML += `
+                <div class="mt-3 pt-2" style="border-top: 1px dashed #2ecc71;">
+                    <strong>Kesimpulan:</strong> Proses <em>Conquer & Merge</em> (Taklukkan & Gabung) pada segmen ini telah tuntas. Kedua grup asal (Kiri dan Kanan) telah habis dipindahkan. Karung-karung pada segmen gabungan ini kini bersatu dan 100% terurut rapi dari yang paling ringan (ascending).
+                </div>`;
+            expBox.style.display = 'block'; 
+        }
+        return; 
+    }
+
+    leftBox.innerHTML = `<div class="group-title">Grup Kiri</div>` + renderBooksWithIndex(mergeState.leftArr, mergeState.i, 'comparing', 'left');
+    rightBox.innerHTML = `<div class="group-title" style="background: #9b59b6;">Grup Kanan</div>` + renderBooksWithIndex(mergeState.rightArr, mergeState.j, 'comparing', 'right');
+    
+    const leftVal  = mergeState.i < mergeState.leftArr.length ? mergeState.leftArr[mergeState.i].val : null;
+    const rightVal = mergeState.j < mergeState.rightArr.length ? mergeState.rightArr[mergeState.j].val : null;
+
+    if (leftVal !== null && rightVal !== null) {
+        exp.innerHTML = `Bandingkan ujung Grup KIRI (<b>${leftVal} kg</b>) dengan KANAN (<b>${rightVal} kg</b>).<br>Berdasarkan urutan <em>ascending</em>, karung mana yang harus diturunkan ke HASIL?`;
+        btnArea.innerHTML = `
+            <button class="btn-sim btn-kiri" onclick="checkMergeAnswer('LEFT', ${leftVal}, ${rightVal})"><i class="fa-solid fa-arrow-down me-1"></i> Pilih Kiri (${leftVal} kg)</button>
+            <button class="btn-sim btn-kanan" onclick="checkMergeAnswer('RIGHT', ${leftVal}, ${rightVal})"><i class="fa-solid fa-arrow-down me-1"></i> Pilih Kanan (${rightVal} kg)</button>
+        `;
+    } else if (leftVal === null) {
+        exp.innerHTML = `Grup KIRI sudah habis terurut. Apa yang harus dilakukan pada sisa Grup KANAN?`;
+        btnArea.innerHTML = `<button class="btn-sim btn-auto" onclick="checkMergeAnswer('RIGHT', null, ${rightVal})"><i class="fa-solid fa-check-double me-1"></i> Turunkan Sisa Kanan (${rightVal} kg)</button>`;
+    } else {
+        exp.innerHTML = `Grup KANAN sudah habis terurut. Apa yang harus dilakukan pada sisa Grup KIRI?`;
+        btnArea.innerHTML = `<button class="btn-sim btn-auto" onclick="checkMergeAnswer('LEFT', ${leftVal}, null)"><i class="fa-solid fa-check-double me-1"></i> Turunkan Sisa Kiri (${leftVal} kg)</button>`;
+    }
+}
+
+window.checkMergeAnswer = function(choice, leftVal, rightVal) {
+    if (isProcessing) return;
+    isProcessing = true; 
+
+    try {
+        let isCorrect = false;
+        if (leftVal !== null && rightVal !== null) {
+            let correctChoice = (leftVal <= rightVal) ? 'LEFT' : 'RIGHT';
+            isCorrect = (choice === correctChoice);
+        } else {
+            isCorrect = true; 
+        }
+
+        if (isCorrect) {
+            const actionBtn = document.getElementById(`action-btn-${currentCardId}`);
+            if (actionBtn) {
+                const btns = actionBtn.querySelectorAll('.btn-sim');
+                btns.forEach(b => { b.disabled = true; b.style.opacity = '0.5'; });
+            }
+
+            const exp = document.getElementById(currentCardId).querySelector('.exp-text');
+            let chosenVal = (choice === 'LEFT') ? leftVal : rightVal;
+            
+            exp.innerHTML = `<span class="text-success fw-bold"><i class="fa-solid fa-circle-check"></i> Analisis Tepat!</span> Karung <b>${chosenVal} kg</b> otomatis diturunkan ke Hasil...`;
+
+            // --- REVISI NARASI LOG MERGE MENJADI LEBIH DINAMIS ---
+            let reasonText = "";
+            if (leftVal !== null && rightVal !== null) {
+                let terpilih = choice === 'LEFT' ? leftVal : rightVal;
+                let sumberTerpilih = choice === 'LEFT' ? 'Grup Kiri' : 'Grup Kanan';
+                reasonText = `Membandingkan Kiri (<b>${leftVal} kg</b>) vs Kanan (<b>${rightVal} kg</b>). Karena <b>${terpilih} kg</b> dari ${sumberTerpilih} lebih ringan (atau sama), maka karung ini diturunkan terlebih dahulu.`;
+            } else if (leftVal === null) {
+                reasonText = `Grup Kiri telah habis. Maka, sisa elemen terdepan di Grup Kanan (<b>${rightVal} kg</b>) otomatis dipindahkan ke hasil tanpa perlu perbandingan lagi.`;
+            } else if (rightVal === null) {
+                reasonText = `Grup Kanan telah habis. Maka, sisa elemen terdepan di Grup Kiri (<b>${leftVal} kg</b>) otomatis dipindahkan ke hasil tanpa perlu perbandingan lagi.`;
+            }
+
+            const expBox = document.getElementById(`explanation-box-${currentCardId}`);
+            const expText = document.getElementById(`explanation-text-${currentCardId}`);
+            if (expBox && expText) {
+                expText.innerHTML += `<div class="mb-1"><i class="fa-solid fa-caret-right text-success me-1"></i> ${reasonText}</div>`;
+            }
+
+            const activeItem = document.getElementById(choice === 'LEFT' ? 'current-left' : 'current-right');
+            if (activeItem) {
+                activeItem.classList.add('slide-down-anim'); 
+            }
+
+            setTimeout(() => {
+                if (choice === 'LEFT') {
+                    mergeState.resultArr.push(mergeState.leftArr[mergeState.i]);
+                    mergeState.i++;
+                } else {
+                    mergeState.resultArr.push(mergeState.rightArr[mergeState.j]);
+                    mergeState.j++;
+                }
+                
+                isProcessing = false; 
+                updateMergeVisuals(); 
+            }, 600); 
+
+        } else {
+            Swal.fire({
+                icon: 'error', 
+                title: 'Kurang Tepat', 
+                text: 'Ingat! Dalam pengurutan ascending, karung yang beratnya LEBIH RINGAN harus diturunkan dan digabungkan terlebih dahulu.', 
+                confirmButtonColor: '#e74c3c'
+            }).then(() => {
+                isProcessing = false; 
+            });
+        }
+    } catch (error) {
+        isProcessing = false; 
+    }
 }
 
 // ===============================
-// RENDER HELPER
+// HELPER VISUAL 
 // ===============================
 function renderBooksHTML(arr) {
     return arr.map(item => `
         <div class="book-img-wrap">
-            <img src="${IMG_PATH}${item.val}.png">
-            <span class="book-label">${item.val}</span>
+            <img src="${IMG_PATH}${item.val}.png" onerror="this.src='/img/karung_merah_error.png';">
+            <span class="book-label">${item.val} kg</span>
         </div>
     `).join('');
 }
 
-function renderBooksWithIndex(arr, currentIndex, highlightClass) {
+function renderBooksWithIndex(arr, currentIndex, highlightClass, side) {
+    if (currentIndex >= arr.length) return '';
     return arr
-        .slice(currentIndex) // 🔥 INI KUNCI UTAMA
+        .slice(currentIndex)
         .map((item, idx) => `
-            <div class="book-img-wrap ${idx === 0 ? highlightClass : ''}">
-                <img src="${IMG_PATH}${item.val}.png">
-                <span class="book-label">${item.val}</span>
+            <div class="book-img-wrap ${idx === 0 ? highlightClass : ''}" ${idx === 0 && side ? `id="current-${side}"` : ''}>
+                <img src="${IMG_PATH}${item.val}.png" onerror="this.src='/img/karung_merah_error.png';">
+                <span class="book-label">${item.val} kg</span>
             </div>
         `)
         .join('');
 }
 
-
 function scrollToCard() {
-    setTimeout(() => {
-        document.getElementById(currentCardId)
-            .scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 100);
+    setTimeout(() => { 
+        if (document.getElementById(currentCardId)) {
+            document.getElementById(currentCardId).scrollIntoView({ behavior: 'smooth', block: 'center' }); 
+        }
+    }, 150);
+}
+
+function showFinishMessage() {
+    const finishMsg = document.getElementById('finish-message');
+    if(finishMsg) finishMsg.style.display = 'block';
+    window.scrollTo(0, document.body.scrollHeight);
 }
 
 // ===============================

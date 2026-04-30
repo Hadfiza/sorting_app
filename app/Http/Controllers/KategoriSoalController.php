@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Aktivitas;
 use App\Models\ButirSoal;
 use App\Models\JawabanMahasiswa;
-// use App\Models\KategoriSoal;
-// use App\Models\Materi;
+use App\Models\ProgresMahasiswa;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class KategoriSoalController extends Controller
@@ -29,56 +29,130 @@ class KategoriSoalController extends Controller
         ]);
     }
 
+    public function start($id)
+    {
+        session([
+            'quiz_start_'.$id => now()
+        ]);
+
+        return response()->json(['status' => 'started']);
+    }
+
     public function submit(Request $request, $id_aktivitas)
     {
         $aktivitas = Aktivitas::with('butirSoal')->findOrFail($id_aktivitas);
-
         $jawabanUser = $request->json('jawaban') ?? [];
 
-        $waktuMulai = \Carbon\Carbon::parse(
-            $request->json('waktu_mulai')
-        )->format('Y-m-d H:i:s');
+        $mahasiswa = auth()->user()->mahasiswa;
 
+        // ================= HITUNG ATTEMPT =================
+        $last = JawabanMahasiswa::where('id_mahasiswa', $mahasiswa->id)
+            ->where('id_aktivitas', $id_aktivitas)
+            ->orderByDesc('attempt')
+            ->first();
+
+        $attemptBaru = $last ? $last->attempt + 1 : 1;
+
+        // ================= HITUNG NILAI =================
         $totalSoal = $aktivitas->butirSoal->count();
         $bobotPerSoal = $totalSoal > 0 ? 100 / $totalSoal : 0;
 
         $skor = 0;
 
-        foreach ($aktivitas->butirSoal as $soal) {
+        // ARRAY: Untuk menyimpan jawaban user sekaligus status benar/salahnya
+        $detailJawabanLengkap = [];
 
+        foreach ($aktivitas->butirSoal as $soal) {
             $key = 'q'.$soal->nomor;
 
-            $user = strtolower(trim($jawabanUser[$key] ?? ''));
-            $correct = strtolower(trim($soal->jawaban_benar));
+            $jawabanMhs = $jawabanUser[$key] ?? '';
+            $correctRaw = $soal->jawaban_benar;
+            
+            $isCorrect = false; // Asumsi awal salah
 
-            if ($user === $correct) {
-                $skor += $bobotPerSoal;
+            // Cek apakah jawaban merupakan JSON (dragdrop/array)
+            $decoded = json_decode($correctRaw, true);
+
+            if (is_array($decoded) && isset($decoded['correct'])) {
+                $correctArr = $decoded['correct']; // array kunci jawaban
+                $userArr = json_decode($jawabanMhs, true);
+
+                if ($userArr === $correctArr) {
+                    $skor += $bobotPerSoal;
+                    $isCorrect = true;
+                }
+            } else {
+                // Evaluasi pilihan ganda biasa
+                $userStr = strtolower(trim($jawabanMhs));
+                $correctStr = strtolower(trim($correctRaw));
+
+                if ($userStr === $correctStr) {
+                    $skor += $bobotPerSoal;
+                    $isCorrect = true;
+                }
             }
+
+            // SIMPAN DATA LENGKAP KE ARRAY BARU
+            $detailJawabanLengkap[$key] = [
+                'jawaban'    => $jawabanMhs,
+                'is_correct' => $isCorrect
+            ];
         }
 
         $skor = round($skor);
 
-        $mahasiswa = auth()->user()->mahasiswa;
+        // 1. Ambil Tahun Ajaran dari Kelas yang diikuti mahasiswa saat ini
+        $tahunKelas = $mahasiswa->kelas->tahun_ajaran; 
 
-        $attempt = JawabanMahasiswa::where('id_mahasiswa',$mahasiswa->id)
-            ->where('id_aktivitas',$aktivitas->id)
-            ->count() + 1;
+        // 2. Cari tahu siapa Dosen dari Mahasiswa yang sedang mengerjakan kuis
+        $id_dosen = $mahasiswa->kelas->id_dosen;
 
-        $statusLulus = $skor >= 60 ? 1 : 0;
+        // 3. Cari KKM dari tabel setting berdasarkan Dosen, Kuis ini, dan TAHUN KELAS
+        $settingKkm = Setting::where('id_dosen', $id_dosen) 
+                        ->where('id_aktivitas', $id_aktivitas)
+                        ->where('tahun', $tahunKelas) 
+                        ->first();
+
+        // 4. Jika dosen belum pernah mengatur KKM untuk tahun tersebut, gunakan default 75
+        $kkmDosen = $settingKkm ? $settingKkm->kkm : 75;
+
+        // 5. Tentukan status lulus berdasarkan KKM Dosen
+        $statusLulus = $skor >= $kkmDosen ? 1 : 0;
+
+        // ================= SIMPAN KE JAWABAN MAHASISWA =================
+        $start = session('quiz_start_'.$id_aktivitas);
 
         JawabanMahasiswa::create([
             'id_mahasiswa' => $mahasiswa->id,
-            'id_aktivitas' => $aktivitas->id,
+            'id_aktivitas' => $id_aktivitas,
+            'attempt' => $attemptBaru,
             'skor' => $skor,
-            'attempt' => $attempt,
             'status_lulus' => $statusLulus,
-            'detail_jawaban' => json_encode($jawabanUser),
-            'waktu_mulai' => $waktuMulai,
+            'detail_jawaban' => json_encode($detailJawabanLengkap),
+            'waktu_mulai' => $start,
             'waktu_selesai' => now()
         ]);
 
+        // ==========================================================
+        // CATAT PROGRES JIKA LULUS KKM
+        // ==========================================================
+        if ($statusLulus == 1) {
+            ProgresMahasiswa::updateOrCreate(
+                [
+                    'id_mahasiswa' => $mahasiswa->id,
+                    'id_aktivitas' => $id_aktivitas
+                ],
+                [
+                    'status' => 'selesai'
+                ]
+            );
+        }
+        // ==========================================================
+
         return response()->json([
-            'skor' => $skor
+            'skor' => $skor,
+            'lulus' => $statusLulus == 1,
+            'kkm' => $kkmDosen
         ]);
     }
 

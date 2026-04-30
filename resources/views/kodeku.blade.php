@@ -1,22 +1,16 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>SortLearn - Kodeku</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@extends('layouts.landing_layouts')
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+@section('title', 'Kodeku - SortLearn')
+
+@section('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
-
-    <link href="{{ asset('css/landing.css') }}" rel="stylesheet">
 
     <style>
         /* Penyesuaian agar konten tidak tertutup Navbar Fixed */
         body {
             background-color: #f8f9fa; /* Abu-abu terang agar kontras dengan editor */
-            padding-top: 80px; /* Jarak untuk navbar fixed-top */
+            padding-top: 80px;
         }
 
         /* --- STYLING EDITOR PYTHON --- */
@@ -47,9 +41,10 @@
             justify-content: space-between;
             align-items: center;
             color: white;
+            height: 60px;          /* Tambahkan sedikit tinggi agar tidak sesak */
         }
 
-        .editor-header h1 { margin: 0; font-size: 1.1rem; font-weight: bold; }
+        .editor-header h2 { margin: 0 0 0 10px; font-size: 1.1rem; font-weight: bold; line-height: 1;}
 
         /* Container Split Kiri-Kanan */
         .split-container {
@@ -120,89 +115,77 @@
         #status { color: #aaa; font-size: 0.9rem; margin-right: 10px; }
 
         .editor-logo {
-    height: 35px;       /* Sesuaikan tinggi logo agar sejajar teks */
-    width: auto;        /* Biar lebar mengikuti proporsi gambar */
-    object-fit: contain;/* Mencegah gambar gepeng */
-    display: block;     /* Memastikan logo dianggap sebagai box */
-}
+            height: 30px;          /* Tinggi tetap agar proporsional */
+            width: auto;           /* Lebar mengikuti proporsi asli gambar */
+            display: block;
+            object-fit: contain;    /* Mencegah gambar terpotong */
+            flex-shrink: 0;         /* Mencegah logo mengecil jika ruang sempit */
+        }
 
-/* Pastikan pembungkus logo dan teks menggunakan flexbox */
-.editor-header .flex.items-center {
-    display: flex;
-    align-items: center; /* Menjaga logo dan teks sejajar vertikal */
-}
+        /* Pastikan pembungkus logo dan teks menggunakan flexbox */
+        .editor-header .flex.items-center {
+            display: flex;
+            align-items: center; /* Menjaga logo dan teks sejajar vertikal */
+        }
 
-.editor-logo {
-    height: 30px;           /* Tinggi tetap agar proporsional */
-    width: auto;            /* Lebar mengikuti proporsi asli gambar */
-    display: block;
-    object-fit: contain;    /* Mencegah gambar terpotong */
-    flex-shrink: 0;         /* Mencegah logo mengecil jika ruang sempit */
-}
+        @media (max-width: 768px){
+            body{
+                padding-top: 0px;
+            }
+            
+            .app-wrapper{
+                height: auto;        /* 🔥 hilangkan fixed height */
+            }
 
-.editor-header h2 {
-    margin: 0 0 0 10px;     /* Hilangkan margin default dan beri jarak kiri 10px */
-    font-size: 1.1rem;
-    line-height: 1;         /* Menjaga alignment teks */
-}
+            .split-container{
+                flex-direction: column; /* 🔥 jadi atas-bawah */
+            }
 
-.editor-header {
-    padding: 10px 20px;
-    background: #2d2d2d;
-    border-bottom: 1px solid #444;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    height: 60px;           /* Tambahkan sedikit tinggi agar tidak sesak */
-    overflow: hidden;
+            .panel-left,
+            .panel-right{
+                flex: none;
+                width: 100%;
+            }
+
+            .panel-left{
+                height: 250px; /* editor */
+            }
+
+            .panel-right{
+                height: 200px; /* output */
+            }
+
+            .editor-header{
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                height: auto;
+            }
+
+            .btn-run{
+                width: 100%;
+            }
+
+            #output{
+                font-size: 12px;
+                padding: 10px;
+            }
+
+            .CodeMirror{
+                font-size: 12px;
+            }
+
+            .btn-run{
+                width: auto;               /* 🔥 jangan full */
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+    
 }
     </style>
-</head>
+@endsection
 
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
-    <div class="container">
-        
-        <a class="navbar-brand fw-bold d-flex align-items-center fs-3" href="/">
-            <img src="{{ asset('images/LOGO.png') }}" alt="Logo" height="50" class="me-2">
-            SortLearn
-        </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Beranda</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/fitur">Fitur</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('mahasiswa.pendahuluan.materi') }}">Materi</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active fw-bold text-primary" href="{{ route('kodeku') }}">Kodeku</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/kontak">Kontak</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/bantuan">Bantuan</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('login') }}">Masuk</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
+@section('content')
 <section class="container mt-4 mb-5">
     <div class="row text-center mb-4">
         <div class="col-12">
@@ -215,9 +198,9 @@
         <div class="app-wrapper">
             
             <header class="editor-header">
-                <div class="flex items-center">
-                <img src="{{ asset('images/LOGO.png') }}" alt="Logo"  class="editor-logo">
-                <h2 class="text-white font-bold ml-2">Python Editor</h2>
+                <div class="d-flex align-items-center">
+                    <img src="{{ asset('images/LOGO.png') }}" alt="Logo"  class="editor-logo">
+                    <h2 class="text-white font-bold ml-2">Python Editor</h2>
                 </div>
 
                 <div>
@@ -252,77 +235,77 @@ print(f"Total penjumlahan: {total}")
             </div>
     
         </div>
-        </div>
+    </div>
 </section>
+@endsection
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
-<script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
 
-<script>
-    // 1. Konfigurasi CodeMirror (Editor)
-    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-        mode: {name: "python", version: 3},
-        theme: "dracula",
-        lineNumbers: true,
-        indentUnit: 4,
-        smartIndent: true
-    });
+    <script>
+        // 1. Konfigurasi CodeMirror (Editor)
+        var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+            mode: {name: "python", version: 3},
+            theme: "dracula",
+            lineNumbers: true,
+            indentUnit: 4,
+            smartIndent: true
+        });
 
-    // 2. Konfigurasi Pyodide (Runner)
-    const outputDiv = document.getElementById("output");
-    const runBtn = document.getElementById("runBtn");
-    const statusSpan = document.getElementById("status");
-    let pyodideInstance = null;
+        // 2. Konfigurasi Pyodide (Runner)
+        const outputDiv = document.getElementById("output");
+        const runBtn = document.getElementById("runBtn");
+        const statusSpan = document.getElementById("status");
+        let pyodideInstance = null;
 
-    // Fungsi menambahkan teks ke panel output kanan
-    function addToOutput(text) {
-        outputDiv.innerText += text + "\n";
-        outputDiv.scrollTop = outputDiv.scrollHeight; // Auto scroll ke bawah
-    }
-
-    // Fungsi Utama Loading Pyodide
-    async function main() {
-        try {
-            pyodideInstance = await loadPyodide({
-                stdout: (text) => addToOutput(text),
-                stderr: (text) => addToOutput(text)
-            });
-            
-            // Jika berhasil load
-            runBtn.disabled = false;
-            statusSpan.innerText = "";
-            
-        } catch (err) {
-            statusSpan.innerText = "Error Loading Pyodide";
-            console.error(err);
+        // Fungsi menambahkan teks ke panel output kanan
+        function addToOutput(text) {
+            outputDiv.innerText += text + "\n";
+            outputDiv.scrollTop = outputDiv.scrollHeight; // Auto scroll ke bawah
         }
-    }
 
-    // Event Listener Tombol Run
-    runBtn.addEventListener('click', async () => {
-        outputDiv.innerText = ""; // Bersihkan output lama
-        const code = editor.getValue(); // Ambil kode dari editor
-        
-        try {
-            runBtn.disabled = true;
-            statusSpan.innerText = "Running...";
-            
-            await pyodideInstance.runPythonAsync(code);
-            
-            statusSpan.innerText = "";
-        } catch (err) {
-            addToOutput(err); // Tampilkan error di output panel
-        } finally {
-            runBtn.disabled = false;
+        // Fungsi Utama Loading Pyodide
+        async function main() {
+            try {
+                pyodideInstance = await loadPyodide({
+                    stdout: (text) => addToOutput(text),
+                    stderr: (text) => addToOutput(text)
+                });
+                
+                // Jika berhasil load
+                runBtn.disabled = false;
+                statusSpan.innerText = "";
+                
+            } catch (err) {
+                statusSpan.innerText = "Error Loading Pyodide";
+                console.error(err);
+            }
         }
-    });
 
-    // Jalankan inisialisasi
-    main();
-</script>
+        // Event Listener Tombol Run
+        runBtn.addEventListener('click', async () => {
+            outputDiv.innerText = ""; // Bersihkan output lama
+            const code = editor.getValue(); // Ambil kode dari editor
+            
+            try {
+                runBtn.disabled = true;
+                statusSpan.innerText = "Running...";
+                
+                await pyodideInstance.runPythonAsync(code);
+                
+                statusSpan.innerText = "";
+            } catch (err) {
+                addToOutput(err); // Tampilkan error di output panel
+            } finally {
+                runBtn.disabled = false;
+            }
+        });
 
-</body>
-</html>
+        // Jalankan inisialisasi
+        main();
+    </script>
+@endsection

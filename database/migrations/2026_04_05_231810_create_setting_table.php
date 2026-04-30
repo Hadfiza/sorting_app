@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('setting', function (Blueprint $table) {
@@ -17,19 +14,23 @@ return new class extends Migration
             $table->foreignId('id_dosen')
                 ->constrained('dosen')
                 ->onDelete('cascade');
+                
+            // Menambahkan relasi ke aktivitas (kuis)
+            $table->foreignId('id_aktivitas')
+                ->constrained('aktivitas')
+                ->onDelete('cascade');
+                        
+            $table->integer('tahun')->nullable();
 
-            $table->integer('kkm_quiz')->default(75);
-            $table->integer('kkm_evaluasi')->default(75);
+            // KKM spesifik untuk aktivitas tersebut
+            $table->integer('kkm')->default(75);
 
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('setting');
     }
 };

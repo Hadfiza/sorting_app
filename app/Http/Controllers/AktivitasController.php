@@ -5,17 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Aktivitas;
 use App\Models\ButirSoal;
-// use App\Models\ProgresMahasiswa;
-// use Illuminate\Http\Request;
+use App\Models\ProgresMahasiswa;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class AktivitasController extends Controller
 {
 
     public function show($folder, $slug)
     {
+        $mahasiswa = Auth::user()->mahasiswa;
 
         $aktivitas = Aktivitas::orderByRaw("
-            FIELD(folder,'pendahuluan','bubble','selection','insertion','merge')
+            FIELD(folder,'pendahuluan','bubble','selection','insertion','merge', 'evaluasi')
         ")
         ->orderBy('urutan')
         ->get()
@@ -25,63 +27,54 @@ class AktivitasController extends Controller
             ->where('slug',$slug)
             ->firstOrFail();
 
+        // 1. Ambil daftar ID aktivitas yang sudah diselesaikan mahasiswa ini
+        $progresSelesai = ProgresMahasiswa::where('id_mahasiswa', $mahasiswa->id)
+            ->where('status', 'selesai')
+            ->pluck('id_aktivitas')
+            ->toArray(); // mengirimkan data progres menggunakan variabel $progresSelesai, yang bentuknya adalah Array berisi kumpulan ID aktivitas (pluck('id_aktivitas')->toArray()).
+
+        $isSelesai = in_array($item->id, $progresSelesai);
+            
         return view("mahasiswa.$folder.$slug", compact(
             'item',
-            'aktivitas'
+            'aktivitas',
+            'progresSelesai', // 2. Kirim data ini ke tampilan (View)
+            'isSelesai'
         ));
     }
 
-// public function show($folder, $slug)
-    // {
-    //     $aktivitas = Aktivitas::where('folder', $folder)
-    //                         ->where('slug', $slug)
-    //                         ->firstOrFail();
+    // Fungsi untuk mencatat bahwa mahasiswa telah menyelesaikan aktivitas
+    public function tandaiSelesai(Request $request)
+    {
+        $request->validate([
+            'id_aktivitas' => 'required|exists:aktivitas,id',
+            'next_route' => 'nullable' // Nullable karena AJAX tidak butuh URL redirect
+        ]);
 
-    //     // 🔒 Cek aktivitas sebelumnya (LOCK SYSTEM)
-    //     $previous = Aktivitas::where('folder', $folder)
-    //                         ->where('urutan', $aktivitas->urutan - 1)
-    //                         ->first();
+        $mahasiswa = Auth::user()->mahasiswa;
 
-    //     if ($previous) {
-    //         $completed = ProgresMahasiswa::where('id_mahasiswa', auth()->id())
-    //             ->where('id_aktivitas', $previous->id)
-    //             ->where('status', 'selesai')
-    //             ->exists();
+        // Simpan atau perbarui progres menjadi 'selesai'
+        ProgresMahasiswa::updateOrCreate(
+            [
+                'id_mahasiswa' => $mahasiswa->id,
+                'id_aktivitas' => $request->id_aktivitas,
+            ],
+            [
+                'status' => 'selesai' // Sesuai dengan kolom enum di database 
+            ]
+        );
 
-    //         if (!$completed) {
-    //             abort(403, 'Selesaikan aktivitas sebelumnya dulu.');
-    //         }
-    //     }
+        // Jika request datang dari JavaScript (AJAX) seperti di halaman Simulasi
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true, 
+                // 'message' => 'Progres berhasil disimpan!'
+            ]);
+        }
 
-    //     // 🔥 TAMBAHAN: Kalau quiz, ambil soal
-    //     if ($aktivitas->tipe == 'quiz') {
-
-    //         $soal = ButirSoal::where('id_aktivitas', $aktivitas->id)
-    //                     ->orderBy('nomor')
-    //                     ->get();
-
-    //         return view("mahasiswa.$folder.$slug", compact('aktivitas','soal'));
-    //     }
-
-    //     // Kalau bukan quiz
-    //     return view("mahasiswa.$folder.$slug", compact('aktivitas'));
-    // }
-
-    // public function selesai(Request $request)
-    // {
-    //     ProgresMahasiswa::updateOrCreate(
-    //         [
-    //             'id_mahasiswa' => auth()->id(),
-    //             'id_aktivitas' => $request->id_aktivitas,
-    //         ],
-    //         [
-    //             'status' => 'selesai'
-    //         ]
-    //     );
-
-    //     return back()->with('success', 'Aktivitas selesai!');
-    // }
-
+        // Jika request datang dari tombol biasa (Form HTML) seperti di halaman Materi
+        return redirect($request->next_route)->with('success', 'Materi selesai, lanjut ke tahap berikutnya!');
+    }
 
     public function showById($id)
     {
@@ -93,13 +86,18 @@ class AktivitasController extends Controller
                         ->orderBy('nomor')
                         ->get();
 
-            return view("mahasiswa.$aktivitas->folder.$aktivitas->slug",
-                compact('aktivitas','soal')
-            );
+        } elseif ($aktivitas->tipe == 'evaluasi') {
+
+            $soal = ButirSoal::where('id_aktivitas', $id)
+                        ->inRandomOrder()
+                        ->get();
+
+        } else {
+            $soal = collect(); // kosong kalau bukan soal
         }
 
         return view("mahasiswa.$aktivitas->folder.$aktivitas->slug",
-            compact('aktivitas')
+            compact('aktivitas','soal')
         );
     }
 
