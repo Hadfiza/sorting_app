@@ -152,7 +152,7 @@ function proceedAnimation(action, cardIdSuffix, event) {
     btnLanjut.style.cursor = 'not-allowed';
 
     let startX = 20;  // Posisi mulai dari kiri dalam kontainer 670px
-    let gap = 130;    // Jarak lebar antar kartu
+    let gap = Math.min(130, (window.innerWidth -170) / arr.length);    // Jarak lebar antar kartu
 
     if (action === 'GESER') {
         let elToShift = document.getElementById(`file-${cardIdSuffix}-${j}`);
@@ -201,7 +201,7 @@ function proceedAnimation(action, cardIdSuffix, event) {
 function renderFilesHTML(arrData, currentHole, compareIdx, keyString, suffix) {
     let html = '';
     let startX = 20; 
-    let gap = 130; 
+    let gap = Math.min(130, (window.innerWidth - 170) / arr.length); 
 
     arrData.forEach((val, idx) => {
         let leftPos = startX + (idx * gap);

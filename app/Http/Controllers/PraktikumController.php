@@ -8,7 +8,7 @@ use App\Models\PengumpulanPraktikum;
 use App\Models\Praktikum;
 use App\Models\Aktivitas;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+// use Illuminate\Support\Facades\Storage;
 
 class PraktikumController extends Controller
 {
@@ -163,33 +163,83 @@ public function submit(Request $request)
     // =====================================================================
     // FITUR DOSEN MENG-UPLOAD SOAL (PDF) & DESKRIPSI PRAKTIKUM
     // =====================================================================
+    
+    // public function simpanSoal(Request $request, $id_aktivitas)
+    // {
+    //     $request->validate([
+    //         'judul'     => 'required|string|max:255',
+    //         'deskripsi' => 'required|string',
+    //         'file_soal' => 'nullable|mimes:pdf|max:5120', // Wajib PDF, Max 5MB
+    //     ]);
+
+    //     $praktikum = Praktikum::firstOrNew(['id_aktivitas' => $id_aktivitas]);
+        
+    //     $praktikum->judul = $request->judul;
+    //     $praktikum->deskripsi = $request->deskripsi;
+
+    //     // Logika Upload File PDF (Menggunakan Disk Public Eksplisit)
+    //     if ($request->hasFile('file_soal')) {
+    //         // Hapus file lama jika ada
+    //         if ($praktikum->file_soal && Storage::disk('public')->exists('soal_praktikum/' . $praktikum->file_soal)) {
+    //             Storage::disk('public')->delete('soal_praktikum/' . $praktikum->file_soal);
+    //         }
+
+    //         // Simpan file baru dengan paksaan ke Disk Public
+    //         $file = $request->file('file_soal');
+    //         $filename = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
+            
+    //         // Parameter ke-3 ('public') akan memaksa Laravel menaruhnya di storage/app/public
+    //         $file->storeAs('soal_praktikum', $filename, 'public');
+
+    //         $praktikum->file_soal = $filename;
+    //     }
+
+    //     $praktikum->save();
+
+    //     return back()->with('success', 'Tugas Praktikum & File Soal berhasil disimpan.');
+    // }
+
+    //dihosting
     public function simpanSoal(Request $request, $id_aktivitas)
     {
         $request->validate([
             'judul'     => 'required|string|max:255',
             'deskripsi' => 'required|string',
-            'file_soal' => 'nullable|mimes:pdf|max:5120', // Wajib PDF, Max 5MB
+            'file_soal' => 'nullable|mimes:pdf|max:5120', // max 5MB
         ]);
 
         $praktikum = Praktikum::firstOrNew(['id_aktivitas' => $id_aktivitas]);
-        
+
         $praktikum->judul = $request->judul;
         $praktikum->deskripsi = $request->deskripsi;
 
-        // Logika Upload File PDF (Menggunakan Disk Public Eksplisit)
+    //     // =========================
+    //     // UPLOAD FILE KE PUBLIC
+    //     // =========================
         if ($request->hasFile('file_soal')) {
+
+            $folderPath = public_path('file/soal_praktikum');
+
+    //         // Pastikan folder ada
+    //         if (!file_exists($folderPath)) {
+    //             mkdir($folderPath, 0775, true);
+    //         }
+
             // Hapus file lama jika ada
-            if ($praktikum->file_soal && Storage::disk('public')->exists('soal_praktikum/' . $praktikum->file_soal)) {
-                Storage::disk('public')->delete('soal_praktikum/' . $praktikum->file_soal);
+            if ($praktikum->file_soal) {
+                $oldPath = public_path('file/soal_praktikum/' . $praktikum->file_soal);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
             }
 
-            // Simpan file baru dengan paksaan ke Disk Public
+            // Upload file baru
             $file = $request->file('file_soal');
             $filename = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
-            
-            // Parameter ke-3 ('public') akan memaksa Laravel menaruhnya di storage/app/public
-            $file->storeAs('soal_praktikum', $filename, 'public');
 
+            $file->move($folderPath, $filename);
+
+            // Simpan nama file saja (biar fleksibel)
             $praktikum->file_soal = $filename;
         }
 

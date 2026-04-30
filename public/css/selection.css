@@ -331,6 +331,91 @@
         height: 150px;
         font-size: 12px;
     }
+
+    .sim-visual-container {
+        padding: 10px;
+    }
+
+    .visualizer-area {
+        gap: 4px;
+        height: 220px;
+        overflow-x: auto;
+        justify-content: flex-start; /* 🔥 penting */
+        padding-bottom: 5px;
+
+    }
+
+    .bar-item {
+        width: 18px; /* dari 35 → 18 */
+    }
+
+    .bar-item span {
+        font-size: 0.6rem;
+        top: -18px;
+    }
+
+    .stats-row {
+        font-size: 0.7rem;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .legend-row {
+        flex-wrap: wrap;
+        font-size: 0.7rem;
+        gap: 10px;
+    }
+
+    .controls-row {
+        flex-direction: column;
+        gap: 4px;
+        justify-content: flex-start;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        font-size: 0.65rem;
+        line-height: 1.2;         /* ini penting banget */
+        margin: 0;                /* buang jarak default */
+        padding: 2px 4px;         /* kecilin tinggi item */
+    }
+
+    .color-box {
+        width: 10px;
+        height: 10px;
+        flex-shrink: 0;
+    }
+
+    .btn-visual {
+        width: 100%;
+        font-size: 0.8rem;
+        padding: 8px;
+    }
+
+    .can-container {
+        justify-content: space-between;
+        gap: 6px; /* sedikit lebih lega biar gambar bisa naik */
+    }
+
+    .can-img-wrap {
+        width: 19%;        /* dari 18% → naik sedikit biar gambar bisa besar */
+        padding: 2px;
+    }
+
+    .can-img-wrap img {
+        width: 100%;
+        max-width: 48px;   /* BESARIN gambar */
+        margin-bottom: 1px; /* 🔥 rapetin ke label */
+    }
+
+    .can-label {
+        font-size: 0.65rem;
+        margin-top: 0;       /* 🔥 hilangkan jarak atas */
+        line-height: 1;      /* 🔥 rapetin tinggi baris */
+    }
 }
 
 

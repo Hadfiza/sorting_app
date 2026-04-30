@@ -293,4 +293,57 @@
         height: 150px;
         font-size: 12px;
     }
+
+    /* ilustrasi */
+    .legend-row {
+        display: flex;
+        flex-direction: column;   /* 🔥 ini kunci: turun ke bawah */
+        align-items: flex-start;  /* 🔥 biar rata kiri */
+        gap: 6px;
+        margin-top: 10px;
+    }
+
+    .legend-item {
+        font-size: 0.7rem;
+        line-height: 1.2;
+        gap: 6px;
+    }
+
+    .color-box {
+        width: 10px;
+        height: 10px;
+    }
+
+    .controls-row {
+        flex-direction: column;  /* tetap stack */
+        gap: 8px;
+    }
+
+    .btn-visual {
+        width: 100%;
+        padding: 8px 10px;   /* 🔥 diperkecil */
+        font-size: 0.75rem;  /* 🔥 lebih kecil */
+        border-radius: 6px;
+    }
+
+    /* simulasi */
+    .file-container {
+        height: 140px; /* 🔥 kecilin area */
+    }
+
+    .file-wrap {
+        width: 35px;   /* 🔥 dari 100 → 60 */
+        transform: scale(0.85); /* 🔥 rapetin antar item */
+    }
+
+    .file-wrap img {
+        width: 35px;   /* 🔥 sinkron */
+    }
+
+    .file-label {
+        font-size: 0.6rem; /* 🔥 kecilin teks */
+        margin-top: 4px;
+    }
+
+
 }

@@ -140,9 +140,6 @@
 .btn-kanan { background: #9b59b6; }
 .btn-auto { background: #e67e22; }
 
-
-
-
 .code-container {
     background: #1e1e2f;
     border-radius: 16px;
@@ -314,5 +311,59 @@
     .live-editor #output {
         height: 150px;
         font-size: 12px;
+    }
+
+/* ILUSTRASI */
+/* MENGATASI KIRI KEPOTONG */
+    .sim-visual-container {
+        display: block; /* Pastikan tidak menggunakan flex di level pembungkus utama */
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 20px 10px !important;
+        text-align: left;
+    }
+
+    .tree-level {
+            display: flex;
+            /* GANTI center menjadi flex-start agar scroll mulai dari titik 0 (kiri) */
+            justify-content: flex-star !important; 
+            /* Berikan padding kanan agar elemen terakhir tidak menempel di pinggir */
+            padding-left: 15px;
+            width: max-content; 
+            /* min-width: 100%; */
+            width: max-content;
+            gap: 15px !important;
+        }
+    .data-element {
+            width: 25px !important; /* Ukuran kotak angka lebih kecil */
+            height: 25px !important;
+            font-size: 0.7rem !important;
+        }
+    
+    .array-node {
+        padding: 2px !important;
+        gap: 1px !important;
+    }
+
+    .tree-root {
+        gap: 15px !important; /* Jarak antar level vertikal diperkecil */
+        min-height: 150px; /* Lebih kecil untuk HP */
+    }
+
+    .legend-row {
+        flex-wrap: wrap; /* Legend agar turun ke bawah jika tidak muat */
+        gap: 10px;
+        font-size: 0.7rem !important;
+    }
+    
+    #insertion-visualizer {
+        justify-content: flex-start !important;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .bar-item {
+        min-width: 30px; /* Ukuran bar tidak gepeng di HP */
+        font-size: 10px;
     }
 }

@@ -292,9 +292,15 @@
                             </a>
                         </div>
                         
-                        <iframe src="{{ asset('storage/soal_praktikum/' . $praktikumData->file_soal) }}"
+                        {{-- <iframe src="{{ asset('storage/soal_praktikum/' . $praktikumData->file_soal) }}"
                                 width="100%" height="600px"
                                 style="border: none; border-radius: 8px;">
+                        </iframe> --}}
+                        {{-- hostingan --}}
+                        <iframe 
+                            src="{{ asset('file/soal_praktikum/' . $praktikumData->file_soal) }}" 
+                            width="100%" 
+                            height="500">
                         </iframe>
                     </div>
                 @else

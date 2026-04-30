@@ -10,10 +10,13 @@
         background: #161b22;
         border: 1px solid #30363d;
         border-radius: 12px;
-        padding: 25px;
+        /* padding: 25px; */
         margin: 20px 0;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         text-align: center;
+        overflow-x: auto; /* Memungkinkan scroll horizontal jika tree terlalu lebar */
+        -webkit-overflow-scrolling: touch;
+        padding: 15px !important;
     }
 
     .stats-row {
@@ -109,6 +112,28 @@
     .btn-reset-v { background: #21262d; color: white; }
     
     .btn-visual:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .tree-level {
+        display: flex;
+        justify-content: center;
+        gap: 10px !important; /* Perkecil jarak antar node di HP */
+        width: max-content; /* Pastikan container mengikuti lebar isi agar bisa di-scroll */
+        min-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    #insertion-visualizer {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center; /* Center di desktop */
+        gap: 5px;
+        height: 200px;
+        padding: 10px;
+        overflow-x: auto; /* Wajib untuk responsif HP */
+        -webkit-overflow-scrolling: touch;
+        background: #161b22;
+        border-radius: 8px;
+    }
 </style>
 @endsection
 
@@ -398,10 +423,24 @@
     const iResetBtn = document.getElementById("iResetBtn");
 
     function initI() {
-        iData = Array.from({ length: 10 }, () => Math.floor(Math.random() * 70) + 15);
+        // Menyesuaikan jumlah data untuk layar kecil agar tidak terlalu panjang
+        const dataCount = window.innerWidth < 768 ? 6 : 10;
+        iData = Array.from({ length: dataCount }, () => Math.floor(Math.random() * 70) + 15);
         renderI();
         iStartBtn.disabled = false;
         iResetBtn.disabled = false;
+    }
+
+    // Fungsi pembantu untuk scroll otomatis di HP
+    function scrollToActiveBar(idx) {
+        const bars = iCont.getElementsByClassName("bar-item");
+        if (bars[idx]) {
+            bars[idx].scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
+        }
     }
 
     function renderI(activeKey = -1, compareIdx = -1, sortedLimit = -1) {
@@ -409,10 +448,16 @@
         iData.forEach((val, idx) => {
             const bar = document.createElement("div");
             bar.className = "bar-item";
+            
+            // Menggunakan transform atau variabel CSS agar lebih fleksibel di HP
             bar.style.height = `${val * 2}px`;
             
             if (idx <= sortedLimit) bar.classList.add("is-sorted");
-            if (idx === activeKey) bar.classList.add("active-key");
+            if (idx === activeKey) {
+                bar.classList.add("active-key");
+                // Scroll otomatis ke elemen yang sedang aktif
+                setTimeout(() => scrollToActiveBar(idx), 50);
+            }
             if (idx === compareIdx) bar.classList.add("comparing");
             
             const txt = document.createElement("span");
@@ -433,37 +478,37 @@
             let key = iData[i];
             let j = i - 1;
 
-            // Highlight elemen yang sedang "dipegang" (Key)
             renderI(i, -1, i - 1);
             await sleepI(700);
 
             while (j >= 0 && iData[j] > key) {
-                // Visualisasi perbandingan
                 renderI(j + 1, j, i - 1);
                 await sleepI(500);
 
                 iData[j + 1] = iData[j];
                 j = j - 1;
                 
-                // Visualisasi pergeseran
                 renderI(j + 1, -1, i - 1);
                 await sleepI(300);
             }
             iData[j + 1] = key;
             
-            // Visualisasi setelah elemen disisipkan
             renderI(-1, -1, i);
             await sleepI(600);
         }
 
         iResetBtn.disabled = false;
         
-        // === KODE YANG DIEDIT AI MULAI: MENGHAPUS SWEETALERT ===
-        // Menghapus notifikasi SweetAlert "Selesai!" agar tidak mengganggu fokus.
-        // === KODE YANG DIEDIT AI SELESAI ===
+        // Tetap memberikan feedback visual tanpa SweetAlert
+        iCont.style.border = "2px solid #3fb950";
+        setTimeout(() => { iCont.style.border = "1px solid #30363d"; }, 2000);
     }
 
     document.addEventListener('DOMContentLoaded', initI);
+    // Re-init saat layar diputar/diubah ukurannya
+    window.addEventListener('resize', () => {
+        if (!iStartBtn.disabled) initI();
+    });
 </script>
 
 <script>
