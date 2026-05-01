@@ -28,9 +28,9 @@
                 </div>
                 
                 <div class="mt-4 mt-md-0 d-flex gap-2">
-                    <button class="btn btn-outline-secondary rounded-3 shadow-sm px-4 fw-medium">
+                    {{-- <button class="btn btn-outline-secondary rounded-3 shadow-sm px-4 fw-medium">
                         <i class="fa-solid fa-print me-1"></i> Cetak
-                    </button>
+                    </button> --}}
                     <button class="btn btn-success rounded-3 shadow-sm px-4 fw-medium">
                         <i class="fa-solid fa-file-excel me-1"></i> Export Excel
                     </button>
@@ -130,7 +130,6 @@
                             ];
 
                             $detail_kuis_array = [];
-                            $total_skor_kuis = 0;
 
                             foreach ($list_modul as $modul) {
                                 $history = $jawaban->where('id_aktivitas', $modul['id'])->sortBy('created_at')->values();
@@ -179,7 +178,6 @@
                                 }
 
                                 $skor_terakhir = $total_attempt > 0 ? $history->last()->skor : 0;
-                                $total_skor_kuis += $skor_terakhir;
 
                                 $detail_kuis_array[] = [
                                     'nama'          => $modul['nama'],
@@ -190,22 +188,22 @@
                                 ];
                             }
                             
-                            $rataKuis = $total_skor_kuis / 5;
+                            // =========================================================
+                            // PENYESUAIAN PENTING: RUMUS RATA-RATA DIHAPUS DI SINI
+                            // =========================================================
 
-                            // PRAKTIKUM
+                            // PRAKTIKUM (Dipertahankan hanya untuk memunculkan kolom P1, P2, P3, P4)
                             $praktikum = $mahasiswa->pengumpulanPraktikum;
                             $p1 = $praktikum->where('id_praktikum', $id_p_bubble)->sortByDesc('created_at')->first()->nilai ?? 0;
                             $p2 = $praktikum->where('id_praktikum', $id_p_selection)->sortByDesc('created_at')->first()->nilai ?? 0;
                             $p3 = $praktikum->where('id_praktikum', $id_p_insertion)->sortByDesc('created_at')->first()->nilai ?? 0;
                             $p4 = $praktikum->where('id_praktikum', $id_p_merge)->sortByDesc('created_at')->first()->nilai ?? 0;
-                            $rataPraktikum = ($p1 + $p2 + $p3 + $p4) / 4;
 
-                            // EVALUASI
+                            // EVALUASI (Dipertahankan hanya untuk memunculkan kolom Eval)
                             $evaluasi = $jawaban->where('id_aktivitas', $id_k_evaluasi)->sortByDesc('created_at')->first()->skor ?? 0; 
                             
-                            // RATA-RATA
-                            $rataAkhir = ($rataKuis + $rataPraktikum + $evaluasi) / 3;
-                            $formatRata = number_format($rataAkhir, 1);
+                            // NILAI AKHIR: Panggil Langsung Dari Koki (Model Mahasiswa)
+                            $rataAkhir = $mahasiswa->nilai_akhir;
                         @endphp
 
                         <tr>
@@ -241,7 +239,9 @@
                             <td class="text-center border-0 border-bottom border-end bg-light"><span class="{{ $p4 >= $kkmPrak4 ? 'text-primary' : 'text-secondary' }} fw-bold">{{ $p4 }}</span></td>
 
                             <td class="text-center border-0 border-bottom border-end"><span class="fw-bold {{ $evaluasi >= $kkmEvaluasi ? 'text-success' : 'text-danger' }}">{{ $evaluasi }}</span></td>
-                            <td class="text-center border-0 border-bottom border-end"><span class="badge {{ $rataAkhir >= $kkmRataRata ? 'bg-success' : 'bg-warning text-dark' }} fs-6 shadow-sm">{{ $formatRata }}</span></td>
+                            
+                            <!-- KOLOM INI SEKARANG MENGGUNAKAN $rataAkhir (YANG BERSUMBER DARI MODEL) -->
+                            <td class="text-center border-0 border-bottom border-end"><span class="badge {{ $rataAkhir >= $kkmRataRata ? 'bg-success' : 'bg-warning text-dark' }} fs-6 shadow-sm">{{ $rataAkhir }}</span></td>
 
                             <td class="text-center border-0 border-bottom">
                                 <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-medium"
@@ -252,7 +252,7 @@
                                         data-kkm-evaluasi="{{ $kkmEvaluasi }}"
                                         data-kuis-detail="{{ json_encode($detail_kuis_array) }}"
                                         onclick="openDetailModal(this)" title="Lihat Rincian Attempt & Evaluasi">
-                                    <i class="fa-solid fa-expand"></i> Detail
+                                    <i class="fa-solid fa-eye"></i> Detail
                                 </button>
                             </td>
                         </tr>

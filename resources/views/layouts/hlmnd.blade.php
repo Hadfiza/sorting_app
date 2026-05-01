@@ -18,6 +18,9 @@
 <!-- ===== NAVBAR ===== -->
 <nav class="navbar navbar-expand-lg fixed-top navbar-dosen">
     <div class="container-fluid px-4">
+        <button class="btn text-white me-2 d-lg-none" onclick="toggleSidebar()">
+            <i class="fa fa-bars"></i>
+        </button>
         <!-- BRAND -->
         <a class="navbar-brand fw-bold text-white d-flex align-items-center" href="/">
             <img src="{{ asset('images/LOGO.png') }}" 
@@ -153,6 +156,10 @@
 function toggleMenu(btn){
     const item = btn.closest('.menu-item');
     item.classList.toggle('open');
+}
+
+function toggleSidebar() {
+    document.querySelector('.sidebar').classList.toggle('show');
 }
 </script>
 

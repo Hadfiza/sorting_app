@@ -23,17 +23,25 @@
         <div class="card-body p-4">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
                 <div>
-                    <span class="badge bg-primary bg-opacity-10 text-primary mb-2 px-3 py-2 rounded-pill fw-semibold">
-                        <i class="fa-solid fa-database me-1"></i> Manajemen Bank Soal
-                    </span>
-                    <h2 class="fw-bold text-dark mb-1">Daftar Soal Kuis & Evaluasi</h2>
-                    <p class="text-muted mb-0">Kelola pertanyaan, pilihan ganda, dan kunci jawaban untuk setiap materi.</p>
+                    {{-- <span class="badge bg-primary bg-opacity-10 text-primary mb-2 px-3 py-2 rounded-pill fw-semibold">
+                        <i class="fa-solid fa-database me-1"></i> Manajemen Quiz & Evaluasi
+                    </span> --}}
+                    <h2 class="fw-bold text-dark mb-1">Kelolo Kuis & Evaluasi</h2>
+                    <p class="text-muted mb-0">Kelola Durasi, pertanyaan, dan kunci jawaban untuk setiap materi.</p>
                 </div>
                 
                 <div class="mt-4 mt-md-0">
-                    <button class="btn btn-primary rounded-3 shadow-sm px-4 fw-medium" data-bs-toggle="modal" data-bs-target="#modalTambahSoal" onclick="resetModal()">
-                        <i class="fa-solid fa-plus me-1"></i> Tambah Soal Baru
-                    </button>
+                    <div class="d-flex flex-column gap-2">
+                        <!-- Tombol 1: Tambah Soal -->
+                        <button type="button" class="btn btn-primary rounded-3 shadow-sm px-4 py-2 fw-medium text-start" data-bs-toggle="modal" data-bs-target="#modalTambahSoal" onclick="resetModal()">
+                            <i class="fa-solid fa-plus me-2"></i> Tambah Soal Baru
+                        </button>
+                        
+                        <!-- Tombol 2: Atur Durasi -->
+                        <button type="button" class="btn btn-primary rounded-3 shadow-sm px-4 py-2 fw-medium text-start" data-bs-toggle="modal" data-bs-target="#modalAturDurasi">
+                            <i class="fa-solid fa-stopwatch me-2"></i> Atur Durasi Pengerjaan
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -229,31 +237,82 @@
     </div>
 </div>
 
+<!-- MODAL ATUR DURASI -->
+<div class="modal fade" id="modalAturDurasi" tabindex="-1" aria-labelledby="modalAturDurasiLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+            <div class="modal-header bg-slate-50 border-bottom-0">
+                <h5 class="modal-title font-bold text-slate-700" id="modalAturDurasiLabel">
+                    <i class="fa-solid fa-stopwatch text-blue-600 me-2"></i> Pengaturan Durasi Kuis & Evaluasi
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="alert alert-info text-sm rounded-xl">
+                    <i class="fa-solid fa-circle-info me-2"></i> Atur batas waktu pengerjaan (dalam menit) untuk masing-masing kuis.
+                </div>
+
+                <div class="table-responsive border rounded-xl">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-secondary text-sm">Nama Kuis / Evaluasi</th>
+                                <th class="text-secondary text-sm text-center" width="250px">Durasi (Menit)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- HANYA MENAMPILKAN TIPE QUIZ & EVALUASI, DAN MENGGUNAKAN NAMA BUKAN JUDUL -->
+                            @foreach(\App\Models\Aktivitas::whereIn('tipe', ['quiz', 'evaluasi'])->get() as $akt)
+                            <tr>
+                                <td class="font-bold text-slate-700">{{ $akt->nama }}</td>
+                                <td>
+                                    <form action="{{ route('dosen.aktivitas.durasi', $akt->id) }}" method="POST" class="d-flex gap-2">
+                                        @csrf
+                                        <input type="number" name="durasi" class="form-control form-control-sm text-center font-bold" value="{{ $akt->durasi ?? 60 }}" min="1" required>
+                                        <button type="submit" class="btn btn-sm btn-primary px-3 rounded-lg"><i class="fa-solid fa-save"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // Fungsi Menyembunyikan/Menampilkan Elemen berdasarkan Tipe Soal
     function togglePilihanGanda() {
-        const tipe = document.getElementById('input_tipe').value;
+        const tipeSelect = document.getElementById('input_tipe');
         const areaPilgan = document.getElementById('areaPilihanGanda');
         const hintJawaban = document.getElementById('hint_jawaban');
         const inputJawaban = document.getElementById('input_jawaban_benar');
 
-        if(tipe === 'pilgan') {
+        // Pengamanan: Cegah error jika elemen tidak ditemukan di DOM
+        if (!tipeSelect || !areaPilgan || !hintJawaban || !inputJawaban) return;
+
+        const tipe = tipeSelect.value;
+
+        if (tipe === 'pilgan') {
             areaPilgan.style.display = 'block';
             hintJawaban.innerText = "Ketik satu huruf saja (a, b, c, atau d).";
             inputJawaban.placeholder = "Contoh: a";
         } 
-        else if(tipe === 'dragdrop') {
+        else if (tipe === 'dragdrop') {
             // Sembunyikan opsi ABCD karena DragDrop menggunakan JSON di jawaban_benar
             areaPilgan.style.display = 'none'; 
             hintJawaban.innerText = "Masukkan format JSON. Contoh: {\"source\":[5,2,8],\"correct\":[2,5,8]}";
             inputJawaban.placeholder = '{"source":[5,2,8],"correct":[2,5,8]}';
         }
-        else if(tipe === 'truefalse') {
+        else if (tipe === 'truefalse') {
             areaPilgan.style.display = 'none';
             hintJawaban.innerText = "Ketik 'true' untuk Benar, atau 'false' untuk Salah.";
             inputJawaban.placeholder = "true / false";
         }
         else {
+            // Default (misal: essay)
             areaPilgan.style.display = 'none';
             hintJawaban.innerText = "Ketik teks yang menjadi kunci kata untuk Essay.";
             inputJawaban.placeholder = "Jawaban essay...";
@@ -262,11 +321,18 @@
 
     // Fungsi Reset Form Saat Tombol "Tambah Soal" diklik
     function resetModal() {
-        document.getElementById('modalSoalTitle').innerHTML = '<i class="fa-solid fa-plus text-primary me-2"></i> Tambah Soal Baru';
-        document.getElementById('formSoal').action = "{{ route('dosen.soal.store') }}";
-        document.getElementById('methodField').value = "POST";
+        const modalTitle = document.getElementById('modalSoalTitle');
+        const formSoal = document.getElementById('formSoal');
+        const methodField = document.getElementById('methodField');
+
+        if (modalTitle) modalTitle.innerHTML = '<i class="fa-solid fa-plus text-primary me-2"></i> Tambah Soal Baru';
+        if (formSoal) {
+            formSoal.action = "{{ route('dosen.soal.store') }}";
+            formSoal.reset();
+        }
+        if (methodField) methodField.value = "POST";
         
-        document.getElementById('formSoal').reset();
+        // Panggil untuk mereset tampilan sesuai pilihan default (biasanya pilgan)
         togglePilihanGanda();
     }
 
@@ -277,30 +343,53 @@
         // Ubah action form menjadi update
         let url = "{{ route('dosen.soal.update', ':id') }}";
         url = url.replace(':id', soal.id);
+        
         document.getElementById('formSoal').action = url;
         document.getElementById('methodField').value = "PUT";
 
         // Isi form dengan data soal
-        document.getElementById('input_id_aktivitas').value = soal.id_aktivitas;
-        document.getElementById('input_nomor').value = soal.nomor;
-        document.getElementById('input_tipe').value = soal.tipe;
-        document.getElementById('input_pertanyaan').value = soal.pertanyaan;
-        document.getElementById('input_jawaban_benar').value = soal.jawaban_benar;
+        if (document.getElementById('input_id_aktivitas')) document.getElementById('input_id_aktivitas').value = soal.id_aktivitas;
+        if (document.getElementById('input_nomor')) document.getElementById('input_nomor').value = soal.nomor;
         
-        document.getElementById('input_pilihan_a').value = soal.pilihan_a || '';
-        document.getElementById('input_pilihan_b').value = soal.pilihan_b || '';
-        document.getElementById('input_pilihan_c').value = soal.pilihan_c || '';
-        document.getElementById('input_pilihan_d').value = soal.pilihan_d || '';
+        // Pilih tipe yang sesuai dan paksa update tampilan
+        if (document.getElementById('input_tipe')) {
+            document.getElementById('input_tipe').value = soal.tipe;
+        }
 
+        if (document.getElementById('input_pertanyaan')) document.getElementById('input_pertanyaan').value = soal.pertanyaan;
+        if (document.getElementById('input_jawaban_benar')) document.getElementById('input_jawaban_benar').value = soal.jawaban_benar;
+        
+        if (document.getElementById('input_pilihan_a')) document.getElementById('input_pilihan_a').value = soal.pilihan_a || '';
+        if (document.getElementById('input_pilihan_b')) document.getElementById('input_pilihan_b').value = soal.pilihan_b || '';
+        if (document.getElementById('input_pilihan_c')) document.getElementById('input_pilihan_c').value = soal.pilihan_c || '';
+        if (document.getElementById('input_pilihan_d')) document.getElementById('input_pilihan_d').value = soal.pilihan_d || '';
+
+        // Sesuaikan tampilan area pilihan ganda dengan data yang diload
         togglePilihanGanda();
 
         // Tampilkan Modal
-        new bootstrap.Modal(document.getElementById('modalTambahSoal')).show();
+        const modalElement = document.getElementById('modalTambahSoal');
+        if (modalElement) {
+            new bootstrap.Modal(modalElement).show();
+        }
     }
 
-    // Jalankan pemeriksaan tipe soal saat halaman dimuat
+    // Jalankan pemeriksaan tipe soal saat halaman pertama kali dimuat
     document.addEventListener("DOMContentLoaded", function() {
         togglePilihanGanda();
     });
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Cari semua tombol close di dalam modal
+    let closeButtons = document.querySelectorAll('.modal .btn-close, .modal [data-bs-dismiss="modal"]');
+    
+    closeButtons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            // Hilangkan fokus dari tombol segera setelah diklik
+            this.blur();
+        });
+    });
+});
 </script>
 @endsection

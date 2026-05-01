@@ -29,6 +29,7 @@ class KelasController extends Controller
     {
         $request->validate([
             'nama_kelas' => 'required|string|max:255',
+            'tahun_ajaran' => 'required|integer|max:11',
             'token'      => 'required|string|max:10|unique:kelas,token',
         ], [
             'token.unique' => 'Token sudah digunakan, silakan ganti token.',
@@ -40,6 +41,7 @@ class KelasController extends Controller
         Kelas::create([
             'nama_kelas' => $request->nama_kelas,
             'id_dosen'   => $idDosen,
+            'tahun_ajaran' => $request->tahun_ajaran,
             'token'      => strtoupper($request->token),
         ]);
 

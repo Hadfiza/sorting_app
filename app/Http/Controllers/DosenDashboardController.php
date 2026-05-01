@@ -50,21 +50,27 @@ class DosenDashboardController extends Controller
         }
 
         // B. Nilai Tertinggi (Berdasarkan skor kuis tertinggi yang pernah didapat)
-        $nilaiTertinggi = JawabanMahasiswa::whereIn('id_mahasiswa', $semuaMahasiswaIds)->max('skor') ?? 0;
+        // $nilaiTertinggi = JawabanMahasiswa::whereIn('id_mahasiswa', $semuaMahasiswaIds)->max('skor') ?? 0;
 
         // 5. Query Data Mahasiswa untuk Tabel (Bisa difilter)
         $mahasiswaQuery = Mahasiswa::with(['user', 'kelas'])->whereIn('id_kelas', $kelasIds);
-        
         if ($request->filled('kelas_id')) {
             $mahasiswaQuery->where('id_kelas', $request->kelas_id);
         }
-        
         $mahasiswas = $mahasiswaQuery->get();
+
+        // Menyisipkan persentase progress DAN mencari Nilai Tertinggi
+        $nilaiTertinggi = 0; // Siapkan penampung nilai awal
 
         // Menyisipkan persentase progress ke dalam masing-masing object mahasiswa
         foreach ($mahasiswas as $mhs) {
             $completed = $progresDataAll[$mhs->id] ?? 0;
             $mhs->progress_percentage = round(($completed / $totalAktivitas) * 100);
+
+            // MENCARI NILAI TERTINGGI: Bandingkan nilai_akhir milik mahasiswa ini
+            if ($mhs->nilai_akhir > $nilaiTertinggi) {
+                $nilaiTertinggi = $mhs->nilai_akhir;
+            }
         }
 
         return view('dosen.dashboard', compact(

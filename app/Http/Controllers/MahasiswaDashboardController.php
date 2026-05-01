@@ -37,7 +37,7 @@ public function index()
 
         return view('mahasiswa.dashboard', [
             'kelas' => $mahasiswa->kelas->nama_kelas,
-            'nilai' => 0,
+            'nilai' => $mahasiswa->nilai_akhir,
             'progress' => $progress, // Variabel ini sekarang berisi angka 0 - 100
             'aktivitas' => $aktivitas
         ]);

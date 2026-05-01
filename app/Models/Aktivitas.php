@@ -13,7 +13,8 @@ class Aktivitas extends Model
         'folder',
         'slug',
         'urutan',
-        'tipe'
+        'tipe',
+        'durasi'
     ];
 
     public function butirSoal()

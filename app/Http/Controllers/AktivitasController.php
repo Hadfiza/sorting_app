@@ -101,6 +101,20 @@ class AktivitasController extends Controller
         );
     }
 
+    public function updateDurasi(Request $request, $id)
+    {
+        $request->validate([
+            'durasi' => 'required|integer|min:1'
+        ]);
+
+        $aktivitas = Aktivitas::findOrFail($id);
+        $aktivitas->update([
+            'durasi' => $request->durasi
+        ]);
+
+        return back()->with('success', 'Durasi kuis ' . $aktivitas->judul . ' berhasil diatur menjadi ' . $request->durasi . ' menit!');
+    }
+
     public function latihanSorting()
     {
         $soal = ButirSoal::orderBy('nomor')->get();

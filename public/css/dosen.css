@@ -32,7 +32,7 @@ body {
 
 /* ===== SIDEBAR DOSEN ===== */
 .sidebar {
-    position: fixed;
+    position: fixed !important;
     top: var(--navbar-h);
     left: 0;
     width: var(--sidebar-w);
@@ -189,14 +189,26 @@ body {
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 767.98px) {
+
     .sidebar {
-        transform: translateX(-100%);
+        width: 260px;
+        transform: translateX(-100%); /* sembunyi ke kiri */
+        transition: transform 0.3s ease;
+        z-index: 1050;
     }
+
     .sidebar.show {
-        transform: translateX(0);
+        transform: translateX(0); /* muncul */
     }
+
     .content {
         margin-left: 0;
+    }
+
+    .sidebar.offcanvas {
+        top: 60px;
+        height: calc(100vh - 60px);
+        position: fixed;
     }
 }
 

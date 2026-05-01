@@ -144,10 +144,17 @@
             <form action="{{ route('dosen.kelas.store') }}" method="POST">
                 @csrf
                 <div class="modal-body p-4">
+                    {{-- nama kelas --}}
                     <div class="mb-4">
                         <label for="nama_kelas" class="form-label fw-medium">Nama Kelas <span class="text-danger">*</span></label>
                         <input type="text" class="form-control form-control-lg fs-6" id="nama_kelas" name="nama_kelas" placeholder="Contoh: Struktur Data A" required>
                     </div>
+                    {{-- tahun ajaran --}}
+                    <div class="mb-3">
+                        <label for="tahun_ajaran" class="form-label font-bold text-slate-700">Tahun Ajaran</label>
+                        <input type="number" class="form-control rounded-xl" id="tahun_ajaran" name="tahun_ajaran" placeholder="Contoh: 2026" min="2020" max="2099" required>
+                    </div>
+                    {{-- token --}}
                     <div class="mb-2">
                         <label for="token" class="form-label fw-medium">Token Akses <span class="text-danger">*</span></label>
                         <div class="input-group">

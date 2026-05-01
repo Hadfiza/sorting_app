@@ -152,6 +152,7 @@ Route::prefix('mahasiswa')
     Route::post('/soal', [ButirSoalController::class, 'store'])->name('soal.store');
     Route::put('/soal/{id}', [ButirSoalController::class, 'update'])->name('soal.update');
     Route::delete('/soal/{id}', [ButirSoalController::class, 'destroy'])->name('soal.destroy');
+    Route::post('/aktivitas/{id}/durasi', [AktivitasController::class, 'updateDurasi'])->name('aktivitas.durasi');
 
 
     Route::get('/pengaturan-kkm', [SettingController::class, 'index'])->name('kkm.index');
