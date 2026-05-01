@@ -7,7 +7,7 @@
 
 {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="{{ asset('css/dosen.css') }}" rel="stylesheet">
+<link href="{{ asset('css/dosen.css?v=2.0') }}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 @yield('css')
 {{-- @vite('resources/css/app.css') --}}
@@ -18,7 +18,7 @@
 <!-- ===== NAVBAR ===== -->
 <nav class="navbar navbar-expand-lg fixed-top navbar-dosen">
     <div class="container-fluid px-4">
-        <button class="btn text-white me-2 d-lg-none" onclick="toggleSidebar()">
+        <button class="btn text-white me-2 d-md-none" onclick="toggleSidebar()">
             <i class="fa fa-bars"></i>
         </button>
         <!-- BRAND -->

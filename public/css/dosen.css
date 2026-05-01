@@ -194,7 +194,9 @@ body {
         width: 260px;
         transform: translateX(-100%); /* sembunyi ke kiri */
         transition: transform 0.3s ease;
-        z-index: 1050;
+        position: fixed !important;
+		z-index: 1050 !important; 
+        box-shadow: 5px 0 20px rgba(0,0,0,0.2);
     }
 
     .sidebar.show {
@@ -205,10 +207,6 @@ body {
         margin-left: 0;
     }
 
-    .sidebar.offcanvas {
-        top: 60px;
-        height: calc(100vh - 60px);
-        position: fixed;
-    }
+
 }
 

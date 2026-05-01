@@ -34,10 +34,9 @@
                 <div class="me-md-4 mb-3 mb-md-0 position-relative">
                     @php
                         $dosen = auth()->user()->dosen;
-                        $fotoPath = ($dosen && $dosen->foto) 
-                                    ? asset('storage/profil_dosen/' . $dosen->foto) 
-                                    : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->nama) . '&background=0d6efd&color=fff&size=200';
-                    @endphp
+                        $fotoPath = ($dosen && $dosen->foto && file_exists(public_path('profil_dosen/' . $dosen->foto))) 
+                            ? asset('profil_dosen/' . $dosen->foto)
+                            : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->nama) . '&background=0d6efd&color=fff&size=200';
                     
                     <img src="{{ $fotoPath }}" alt="Foto Profil" class="rounded-circle border border-4 border-white shadow" style="width: 130px; height: 130px; object-fit: cover;">
                 </div>

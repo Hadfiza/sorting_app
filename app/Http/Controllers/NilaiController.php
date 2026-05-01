@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Mahasiswa;
-use App\Models\Kelas;
+use App\Exports\RekapNilaiExport;
+use App\Http\Controllers\Controller;
 use App\Models\Dosen; 
+use App\Models\Kelas;
+use App\Models\Mahasiswa;
 use App\Models\Setting; 
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class NilaiController extends Controller
 {
@@ -40,5 +43,13 @@ class NilaiController extends Controller
 
         // Kirim variabel kkmSettings
         return view('dosen.nilai.index', compact('mahasiswas', 'kelases', 'kkmSettings'));
+    }
+
+    public function export(Request $request) 
+    {
+        // Nama file Excel saat didownload
+        $namaFile = 'Rekap_Nilai_SortLearn_' . date('Y-m-d_H-i') . '.xlsx';
+        
+        return Excel::download(new RekapNilaiExport($request), $namaFile);
     }
 }

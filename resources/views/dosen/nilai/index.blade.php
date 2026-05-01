@@ -31,9 +31,9 @@
                     {{-- <button class="btn btn-outline-secondary rounded-3 shadow-sm px-4 fw-medium">
                         <i class="fa-solid fa-print me-1"></i> Cetak
                     </button> --}}
-                    <button class="btn btn-success rounded-3 shadow-sm px-4 fw-medium">
-                        <i class="fa-solid fa-file-excel me-1"></i> Export Excel
-                    </button>
+                <a href="{{ route('dosen.nilai.export', request()->all()) }}" class="btn btn-success rounded-3 shadow-sm px-4 fw-medium">
+                    <i class="fa-solid fa-file-excel me-1"></i> Export Excel
+                </a>
                 </div>
             </div>
         </div>
