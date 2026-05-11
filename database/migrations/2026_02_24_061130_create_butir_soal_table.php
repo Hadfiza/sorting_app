@@ -27,6 +27,8 @@ return new class extends Migration
             $table->text('pilihan_b')->nullable();
             $table->text('pilihan_c')->nullable();
             $table->text('pilihan_d')->nullable();
+            $table->text('pilihan_e')->nullable();
+
 
             $table->string('jawaban_benar'); // a,b,c,d
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\KategoriSoalController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MahasiswaDashboardController;
 use App\Http\Controllers\NilaiController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PraktikumController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\SettingController;
@@ -45,6 +46,12 @@ Route::middleware('guest')->group(function () {
     // === Route Register Dosen ===
     Route::get('/register-dosen', [AuthController::class, 'showRegisterDosen'])->name('register.dosen');
     Route::post('/register-dosen', [AuthController::class, 'registerDosen'])->name('register.dosen.process');
+
+// Route untuk menampilkan halaman form (GET)
+Route::get('/lupa-password', [PasswordResetController::class, 'showLupaPasswordForm'])->name('password.request');
+
+// Route untuk memproses form/menembak API Brevo (POST)
+Route::post('/lupa-password', [PasswordResetController::class, 'kirimLinkReset'])->name('password.email');
 
 });
 

@@ -76,7 +76,7 @@
                 
                 <div class="col-12 col-md-4">
                     <label class="form-label small fw-bold text-muted mb-1">Filter Kelas</label>
-                    <select name="kelas_id" class="form-select">
+                    <select name="id_kelas" class="form-select">
                         <option value="">-- Semua Kelas --</option>
                         @foreach($kelases as $kelas)
                             <option value="{{ $kelas->id }}" {{ request('kelas_id') == $kelas->id ? 'selected' : '' }}>
@@ -90,11 +90,11 @@
                     <button type="submit" class="btn btn-primary flex-grow-1 fw-medium shadow-sm">
                         <i class="bi bi-funnel"></i> Terapkan
                     </button>
-                    @if(request()->has('search') || request()->has('kelas_id'))
+                    {{-- @if(request()->has('search') || request()->has('kelas_id'))
                         <a href="{{ url()->current() }}" class="btn btn-light border fw-medium" title="Reset Filter">
                             <i class="bi bi-arrow-clockwise"></i>
                         </a>
-                    @endif
+                    @endif --}}
                 </div>
                 
             </form>
@@ -221,25 +221,45 @@
                     </div>
 
                     <div class="row">
+                        <!-- NIM (Read-Only) -->
                         <div class="col-md-6 mb-3">
-                            <label for="edit_nim" class="form-label fw-medium">NIM <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="edit_nim" name="nim" required>
+                            <label>NIM <span class="text-danger">*</span></label>
+                            <!-- HAPUS value PHP, tambahkan id="edit_nim" -->
+                            <input type="text" name="nim" id="edit_nim" class="form-control bg-light" readonly>
                         </div>
+                        
+                        <!-- ANGKATAN (Read-Only) -->
                         <div class="col-md-6 mb-3">
-                            <label for="edit_angkatan" class="form-label fw-medium">Angkatan <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="edit_angkatan" name="angkatan" required min="2000" max="2100">
+                            <label>Angkatan <span class="text-danger">*</span></label>
+                            <!-- HAPUS value PHP, tambahkan id="edit_angkatan" -->
+                            <input type="text" name="angkatan" id="edit_angkatan" class="form-control bg-light" readonly>
                         </div>
                     </div>
 
-                    <div class="mb-2">
-                        <label for="edit_id_kelas" class="form-label fw-medium">Pindah Kelas <span class="text-danger">*</span></label>
-                        <select class="form-select" id="edit_id_kelas" name="id_kelas" required>
-                            @foreach($kelases as $kelas)
-                                <option value="{{ $kelas->id }}">{{ $kelas->nama_kelas }}</option>
+                    <!-- PINDAH KELAS -->
+                    <div class="mb-3">
+                        <label>Pindah Kelas <span class="text-danger">*</span></label>
+                        <!-- Tambahkan id="edit_id_kelas" -->
+                        <select name="id_kelas" id="edit_id_kelas" class="form-control" required>
+                            <option value="">-- Pilih Kelas --</option>
+                            <!-- Perhatikan variabelnya adalah $kelases berdasarkan controller Anda -->
+                            @foreach($kelases as $k) 
+                                <!-- HAPUS logika selected PHP di sini -->
+                                <option value="{{ $k->id }}">
+                                    {{ $k->nama_kelas }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
+
+                    <!-- GANTI PASSWORD -->
+                    <div class="mb-3">
+                        <label>Ganti Password Mahasiswa (Opsional)</label>
+                        <input type="password" name="password" class="form-control" placeholder="Isi untuk mengganti password mahasiswa">
+                        <small class="text-muted">Biarkan kosong jika tidak ingin mengubah password.</small>
+                    </div>
                 </div>
+
                 <div class="modal-footer border-top-0 pt-0">
                     <button type="button" class="btn btn-light px-4 rounded-pill fw-medium" data-bs-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-primary px-4 rounded-pill shadow-sm fw-medium">Simpan Perubahan</button>
@@ -265,7 +285,7 @@
         document.getElementById('edit_nama').value = nama;
         document.getElementById('edit_nim').value = nim;
         document.getElementById('edit_angkatan').value = angkatan;
-        document.getElementById('edit_id_kelas').value = id_kelas;
+        document.getElementById('edit_id_kelas').value = id_kelas; // Ini akan otomatis memilih opsi kelas yang sesuai
 
         // Tampilkan Modal
         var editModal = new bootstrap.Modal(document.getElementById('editMahasiswaModal'));

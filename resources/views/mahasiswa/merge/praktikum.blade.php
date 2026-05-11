@@ -287,7 +287,7 @@
                         <div class="d-flex align-items-center gap-2 px-3 py-2 border-bottom bg-light rounded-top mb-2">
                             <i class="fa-solid fa-file-pdf text-danger fs-5"></i>
                             <h5 class="fw-bold mb-0 text-dark" style="font-size: 1rem;">File Soal Praktikum</h5>
-                            <a href="{{ asset('storage/soal_praktikum/' . $praktikumData->file_soal) }}" target="_blank" class="btn btn-sm btn-outline-primary ms-auto fw-bold">
+                            <a href="{{ asset('soal_praktikum/' . $praktikumData->file_soal) }}" target="_blank" class="btn btn-sm btn-outline-primary ms-auto fw-bold">
                                 <i class="fa-solid fa-expand"></i> Layar Penuh
                             </a>
                         </div>
@@ -298,10 +298,17 @@
                         </iframe> --}}
                         {{-- hostingan --}}
                         <iframe 
-                            src="{{ asset('file/soal_praktikum/' . $praktikumData->file_soal) }}" 
+                            src="{{ asset('soal_praktikum/' . $praktikumData->file_soal) }}" 
                             width="100%" 
-                            height="500">
+                            height="500"
+                            class="d-none d-md-block">
                         </iframe>
+
+                        <a href="{{ asset('soal_praktikum/' . $praktikumData->file_soal) }}" 
+                        target="_blank"
+                        class="btn btn-danger d-md-none mt-3">
+                            📄 Buka PDF
+                        </a>
                     </div>
                 @else
                     <div class="alert alert-warning mb-0 border-0 shadow-sm">

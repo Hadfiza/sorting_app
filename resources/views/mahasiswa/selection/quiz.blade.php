@@ -149,7 +149,7 @@
                     Soal {{ $s->nomor }}
                 </p>
 
-            @if($s->tipe == 'essay' && str_contains($s->pertanyaan,'___'))
+@if($s->tipe == 'essay' && str_contains($s->pertanyaan,'___'))
 
 @php
 $pertanyaan = e($s->pertanyaan);
@@ -161,23 +161,22 @@ $pertanyaan = preg_replace('/_{3,}/', '[[INPUT]]', $pertanyaan);
 $parts = explode('[[INPUT]]', $pertanyaan);
 @endphp
 
-<pre class="bg-slate-900 text-white p-6 rounded-2xl text-sm font-mono leading-relaxed">{{ $parts[0] }}<input
-name="q{{ $s->nomor }}"
+<pre class="bg-slate-900 text-white p-6 rounded-2xl text-sm font-mono leading-relaxed whitespace-pre-wrap overflow-x-auto">{{ $parts[0] }}<input name="q{{ $s->nomor }}"
 oninput="markAnswered({{ $s->nomor }})"
 class="inline-block w-24 mx-1 bg-slate-800 text-white border-b border-white outline-none text-center font-bold">{{ $parts[1] ?? '' }}</pre>
 
-            @else
+@else
 
-            <p class="text-slate-700 mb-8 text-lg leading-relaxed">
-            {{ $s->pertanyaan }}
-            </p>
+<pre class="text-slate-700 mb-8 text-lg leading-relaxed whitespace-pre-wrap font-mono overflow-x-auto">
+{{ $s->pertanyaan }}
+</pre>
 
             @endif
 
                 {{-- PILIHAN GANDA --}}
                 @if($s->tipe == 'pilgan')
                 <div class="quiz-options space-y-3">
-                    @foreach(['a','b','c','d'] as $opt)
+                    @foreach(['a','b','c','d','e'] as $opt)
                         @php $field = 'pilihan_'.$opt; @endphp
                         @if($s->$field)
                         <label class="option-box">

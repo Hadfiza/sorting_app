@@ -37,6 +37,7 @@
                         $fotoPath = ($dosen && $dosen->foto && file_exists(public_path('profil_dosen/' . $dosen->foto))) 
                             ? asset('profil_dosen/' . $dosen->foto)
                             : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->nama) . '&background=0d6efd&color=fff&size=200';
+                    @endphp
                     
                     <img src="{{ $fotoPath }}" alt="Foto Profil" class="rounded-circle border border-4 border-white shadow" style="width: 130px; height: 130px; object-fit: cover;">
                 </div>

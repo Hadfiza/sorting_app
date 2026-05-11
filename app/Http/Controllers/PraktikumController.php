@@ -218,7 +218,7 @@ public function submit(Request $request)
     //     // =========================
         if ($request->hasFile('file_soal')) {
 
-            $folderPath = public_path('file/soal_praktikum');
+            $folderPath = public_path('soal_praktikum');
 
     //         // Pastikan folder ada
     //         if (!file_exists($folderPath)) {
@@ -227,7 +227,7 @@ public function submit(Request $request)
 
             // Hapus file lama jika ada
             if ($praktikum->file_soal) {
-                $oldPath = public_path('file/soal_praktikum/' . $praktikum->file_soal);
+                $oldPath = public_path('soal_praktikum/' . $praktikum->file_soal);
                 if (file_exists($oldPath)) {
                     unlink($oldPath);
                 }

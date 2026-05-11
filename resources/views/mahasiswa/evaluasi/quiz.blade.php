@@ -104,24 +104,32 @@
                 
                 <p class="font-bold text-blue-600 mb-2 text-lg">Soal {{ $index + 1 }}</p>
 
-            @if($s->tipe == 'essay' && str_contains($s->pertanyaan,'___'))
-                @php
-                $pertanyaan = e($s->pertanyaan);
-                $pertanyaan = preg_replace('/_{3,}/', '[[INPUT]]', $pertanyaan);
-                $parts = explode('[[INPUT]]', $pertanyaan);
-                @endphp
-                <pre class="bg-slate-900 text-white p-6 rounded-2xl text-sm font-mono leading-relaxed">{{ $parts[0] }}<input
-                name="q{{ $s->nomor }}"
-                oninput="markAnswered({{ $s->nomor }})"
-                class="inline-block w-24 mx-1 bg-slate-800 text-white border-b border-white outline-none text-center font-bold">{{ $parts[1] ?? '' }}</pre>
-            @else
-                <p class="text-slate-700 mb-8 text-lg leading-relaxed">{{ $s->pertanyaan }}</p>
+@if($s->tipe == 'essay' && str_contains($s->pertanyaan,'___'))
+
+@php
+$pertanyaan = e($s->pertanyaan);
+
+// ganti ___ dengan placeholder unik
+$pertanyaan = preg_replace('/_{3,}/', '[[INPUT]]', $pertanyaan);
+
+// pecah berdasarkan placeholder
+$parts = explode('[[INPUT]]', $pertanyaan);
+@endphp
+
+<pre class="bg-slate-900 text-white p-6 rounded-2xl text-sm font-mono leading-relaxed whitespace-pre-wrap overflow-x-auto">{{ $parts[0] }}<input name="q{{ $s->nomor }}"
+oninput="markAnswered({{ $s->nomor }})"
+class="inline-block w-24 mx-1 bg-slate-800 text-white border-b border-white outline-none text-center font-bold">{{ $parts[1] ?? '' }}</pre>
+
+@else
+<pre class="text-slate-700 mb-8 text-lg leading-relaxed whitespace-pre-wrap font-mono overflow-x-auto">
+{{ $s->pertanyaan }}
+</pre>
             @endif
 
                 {{-- PILIHAN GANDA --}}
                 @if($s->tipe == 'pilgan')
                 <div class="quiz-options space-y-3">
-                    @foreach(['a','b','c','d'] as $opt)
+                    @foreach(['a','b','c','d','e'] as $opt)
                         @php $field = 'pilihan_'.$opt; @endphp
                         @if($s->$field)
                         <label class="option-box">
@@ -205,27 +213,41 @@
     let selectedItem = null; //TAP
     let isLocked = false;
 
-    const kunciJawaban = {
-        @foreach($soal as $s)
-            @if($s->tipe == 'dragdrop')
-                @php $data = json_decode($s->jawaban_benar, true); $correct = json_encode($data['correct']); @endphp
-                q{{ $s->nomor }}: {!! $correct !!},
-            @else
-                q{{ $s->nomor }}: "{{ strtolower($s->jawaban_benar) }}",
-            @endif
-        @endforeach
-    };
 
-    function mulaiLatihan() {
-        totalWaktu = {{ $quiz->durasi ?? 30 }} * 60;
-        fetch("{{ route('mahasiswa.quiz.start', $quiz->id ?? 0) }}", {
-            method: "POST",
-            headers: { "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content') }
-        });
-        document.getElementById('intro-area').classList.add('d-none');
-        document.getElementById('quiz-area').classList.remove('d-none');
-        startTimer();
-    }
+const kunciJawaban = {
+
+@foreach($soal as $s)
+
+@if($s->tipe == 'dragdrop')
+    @php
+        $data = json_decode($s->jawaban_benar, true);
+        $correct = json_encode($data['correct']);
+    @endphp
+    q{{ $s->nomor }}: {!! $correct !!},
+
+@else
+    q{{ $s->nomor }}: "{{ strtolower($s->jawaban_benar) }}",
+@endif
+
+@endforeach
+
+};
+
+function mulaiLatihan() {
+    totalWaktu = {{ $quiz->durasi }} * 60;
+
+    fetch("{{ route('mahasiswa.quiz.start', $quiz->id) }}", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    });
+
+    document.getElementById('intro-area').classList.add('d-none');
+    document.getElementById('quiz-area').classList.remove('d-none');
+
+    startTimer();
+}
 
     function tampilkanSoal(i) {
         daftarSoal.forEach((soal, idx) => {
@@ -237,158 +259,313 @@
         if(!isLocked) btnNext.innerText = (indexSoal === totalSoal - 1) ? 'Finish' : 'Lanjut';
     }
 
-    function markAnswered(nomor) {
-        if(isLocked) return;
-        
-        // PENCARIAN INDEX DINAMIS (Agar support random)
-        const allSoal = Array.from(document.querySelectorAll('.soal'));
-        const targetSoal = document.querySelector(`.soal[data-nomor="${nomor}"]`);
-        const actualIndex = allSoal.indexOf(targetSoal);
-        const navBtn = document.getElementById(`nav-${actualIndex}`);
+function markAnswered(nomor) {
 
-        if (navBtn.classList.contains('ragu')) return;
+    if(isLocked) return;
 
-        let filled = false;
-        const radios = document.querySelectorAll(`input[name="q${nomor}"][type="radio"]`);
-        if (radios.length > 0) {
-            filled = document.querySelector(`input[name="q${nomor}"]:checked`);
-        } else {
-            const input = document.querySelector(`input[name="q${nomor}"]`);
-            filled = input && input.value.trim().length > 0;
-        }
+    // cari soal berdasarkan data-nomor
+    const targetSoal = document.querySelector(`.soal[data-nomor="${nomor}"]`);
 
-        if(filled) {
-            navBtn.classList.remove('unanswered'); navBtn.classList.add('answered');
-        } else {
-            navBtn.classList.add('unanswered'); navBtn.classList.remove('answered');
-        }
+    // cari index tampilan setelah shuffle
+    const actualIndex = Array.from(daftarSoal).indexOf(targetSoal);
+
+    // ambil tombol nav yang sesuai tampilan
+    const navBtn = document.getElementById(`nav-${actualIndex}`);
+
+    if (navBtn.classList.contains('ragu')) return;
+
+    let filled = false;
+
+    // RADIO
+    const radios = document.querySelectorAll(`input[name="q${nomor}"][type="radio"]`);
+
+    if (radios.length > 0) {
+        filled = document.querySelector(`input[name="q${nomor}"]:checked`);
+    } else {
+        // ESSAY / DRAGDROP
+        const input = document.querySelector(`input[name="q${nomor}"]`);
+        filled = input && input.value.trim().length > 0;
     }
+
+    if(filled) {
+        navBtn.classList.remove('unanswered');
+        navBtn.classList.add('answered');
+    } else {
+        navBtn.classList.add('unanswered');
+        navBtn.classList.remove('answered');
+    }
+}
 
     function toggleRaguCurrent() {
         if (isLocked) return;
 
         const navBtn = document.getElementById(`nav-${indexSoal}`);
-        const aktifDiv = document.querySelectorAll('.soal')[indexSoal];
-        const nomor = aktifDiv.getAttribute('data-nomor'); // DAPATKAN NOMOR ASLI
+        const nomor = indexSoal + 1;
         const input = document.querySelector(`[name="q${nomor}"]`);
 
         let filled = false;
+
         if (input) {
-            filled = (input.type === "radio") ? document.querySelector(`input[name="q${nomor}"]:checked`) : input.value.trim().length > 0;
+            filled = (input.type === "radio")
+                ? document.querySelector(`input[name="q${nomor}"]:checked`)
+                : input.value.trim().length > 0;
         }
 
+        // Toggle ragu
         if (!navBtn.classList.contains('ragu')) {
-            navBtn.classList.remove('answered','unanswered'); navBtn.classList.add('ragu');
+            navBtn.classList.remove('answered','unanswered');
+            navBtn.classList.add('ragu');
         } else {
             navBtn.classList.remove('ragu');
-            if (filled) navBtn.classList.add('answered'); else navBtn.classList.add('unanswered');
+
+            if (filled) {
+                navBtn.classList.add('answered');
+            } else {
+                navBtn.classList.add('unanswered');
+            }
         }
     }
 
     function isSemuaTerjawab() {
-        const daftarSoalArr = document.querySelectorAll('.soal');
-        for (let i = 0; i < daftarSoalArr.length; i++) {
-            const nomor = daftarSoalArr[i].getAttribute('data-nomor');
-            const radios = document.querySelectorAll(`input[name="q${nomor}"]`);
-            const textInput = document.querySelector(`input[name="q${nomor}"]`);
+
+        for (let i = 1; i <= totalSoal; i++) {
+
+            const radios = document.querySelectorAll(`input[name="q${i}"]`);
+            const textInput = document.querySelector(`input[name="q${i}"]`);
 
             if (radios.length > 1) {
-                if (!document.querySelector(`input[name="q${nomor}"]:checked`)) return false;
+                if (!document.querySelector(`input[name="q${i}"]:checked`)) {
+                    return false;
+                }
             } else {
-                if (!textInput || textInput.value.trim() === "") return false;
+                if (!textInput || textInput.value.trim() === "") {
+                    return false;
+                }
             }
+
         }
+
         return true;
     }
     
+    // --- LOGIKA DRAG & DROP ---
     function allowDrop(ev) { ev.preventDefault(); }
     function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
     function drop(ev, nomorSoal) {
-        ev.preventDefault(); if(isLocked) return;
-        var data = ev.dataTransfer.getData("text");
-        var draggedElement = document.getElementById(data);
-        if (ev.target.classList.contains('border-dashed') && ev.target.children.length === 0) {
-            ev.target.appendChild(draggedElement);
-            ev.target.classList.remove('bg-slate-50'); ev.target.classList.add('bg-blue-50');
-            updateDragAnswer(nomorSoal);
+
+        ev.preventDefault();
+        if(isLocked) return;
+
+        let target = ev.target;
+
+        // ==== MODE DESKTOP (drag) ====
+        if (ev.dataTransfer) {
+            var data = ev.dataTransfer.getData("text");
+            var draggedElement = document.getElementById(data);
+
+            if (target.classList.contains('border-dashed') && target.children.length === 0) {
+                target.appendChild(draggedElement);
+            }
         }
+
+        updateAfterDrop(target, nomorSoal);
     }
 
-    function updateDragAnswer(nomor) {
-        let arr = [];
+function updateDragAnswer(nomor) {
+
+    let arr = [];
+
+    const drops = document.querySelectorAll(`[id^="drop"][id$="-${nomor}"]`);
+
+    drops.forEach(d => {
+        if (d.innerText.trim() !== "") {
+            arr.push(parseInt(d.innerText.trim()));
+        }
+    });
+
+    document.getElementById(`ans-q${nomor}`).value = JSON.stringify(arr);
+
+    // 🔥 INI WAJIB
+    markAnswered(nomor);
+}
+
+    function resetDrag(nomor) {
+
+        if (isLocked) return;
+
+        const source = document.getElementById(`source-${nomor}`);
+
+        // Ambil semua drop zone untuk nomor ini
         const drops = document.querySelectorAll(`[id^="drop"][id$="-${nomor}"]`);
-        drops.forEach(d => { if (d.innerText.trim() !== "") arr.push(parseInt(d.innerText.trim())); });
-        document.getElementById(`ans-q${nomor}`).value = JSON.stringify(arr);
-        markAnswered(nomor);
+
+        drops.forEach(drop => {
+
+            const child = drop.firstElementChild;
+
+            if (child) {
+                source.appendChild(child);
+            }
+
+            drop.classList.remove('bg-blue-50');
+            drop.classList.add('bg-slate-50');
+        });
+
+        document.getElementById(`ans-q${nomor}`).value = "";
+
+        const navBtn = document.getElementById(`nav-${nomor-1}`);
+        navBtn.classList.add('unanswered');
+        navBtn.classList.remove('answered');
     }
 
-    function hitungNilai() {
-        let benar = 0; clearInterval(intervalTimer);
-        let semuaJawaban = {};
-
-        for (const key in kunciJawaban) {
-            const radios = document.querySelectorAll(`input[name="${key}"]`);
-            const input = document.querySelector(`[name="${key}"]`);
-            let jawabanUser = "";
-
-            if (radios.length > 1) {
-                const checked = document.querySelector(`input[name="${key}"]:checked`);
-                jawabanUser = checked ? checked.value : "";
-            } else if (input) {
-                jawabanUser = input.value.trim();
-            }
-            semuaJawaban[key] = jawabanUser;
-
-            if (Array.isArray(kunciJawaban[key])) {
-                let userArr = [];
-                try { userArr = JSON.parse(jawabanUser); } catch(e) {}
-                if (JSON.stringify(userArr) === JSON.stringify(kunciJawaban[key])) benar++;
+    // --- LOGIKA PENILAIAN ---
+    function nextSoal() {
+        if (indexSoal < totalSoal - 1) {
+            tampilkanSoal(indexSoal + 1);
+        } else {
+            if (isSemuaTerjawab()) {
+                hitungNilai();
             } else {
-                if (jawabanUser.toLowerCase() === kunciJawaban[key].toLowerCase()) benar++;
+                Swal.fire({ icon: 'warning', title: 'Belum Selesai', text: 'Jawab semua soal terlebih dahulu!', buttonsStyling: false, customClass: {
+                        confirmButton: 'bg-blue-600 text-white px-8 py-2.5 rounded-lg hover:bg-blue-700 font-bold focus:ring-4 focus:ring-blue-300' }});
             }
         }
+    }
 
-        const skor = Math.round((benar / totalSoal) * 100);
+    //Hitung Nilai
+    function hitungNilai() {
 
-        Swal.fire({
-            title: 'Konfirmasi Selesai', text: "Setelah menekan Selesai, Anda tidak dapat mengubah jawaban lagi.", icon: 'question',
-            showCancelButton: true, confirmButtonText: 'Ya, Selesai', cancelButtonText: 'Cek Lagi', buttonsStyling: false,
-            customClass: {
-                confirmButton: 'bg-green-600 text-white px-6 py-2.5 rounded-lg mx-2 hover:bg-green-700 font-bold block',
-                cancelButton: 'bg-red-600 text-white px-6 py-2.5 rounded-lg mx-2 hover:bg-red-700 font-bold block'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                kunciKuis();
-                document.getElementById("btn-next").disabled = true;
+    let benar = 0;
+    clearInterval(intervalTimer);
 
-                fetch(submitQuizUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "X-CSRF-TOKEN": "{{ csrf_token() }}" },
-                    body: JSON.stringify({ jawaban: semuaJawaban })
+    let semuaJawaban = {};
+
+    for (const key in kunciJawaban) {
+
+        const radios = document.querySelectorAll(`input[name="${key}"]`);
+        const input = document.querySelector(`[name="${key}"]`);
+
+        let jawabanUser = "";
+
+        if (radios.length > 1) {
+
+            const checked = document.querySelector(`input[name="${key}"]:checked`);
+            jawabanUser = checked ? checked.value : "";
+
+        } else if (input) {
+
+            jawabanUser = input.value.trim();
+
+        }
+
+        semuaJawaban[key] = jawabanUser;
+
+if (Array.isArray(kunciJawaban[key])) {
+
+    let userArr = [];
+
+    try {
+        userArr = JSON.parse(jawabanUser);
+        } catch(e) {}
+
+        if (JSON.stringify(userArr) === JSON.stringify(kunciJawaban[key])) {
+            benar++;
+        }
+
+        } else {
+
+            if (jawabanUser.toLowerCase() === kunciJawaban[key].toLowerCase()) {
+                benar++;
+        }
+
+    }
+    }
+
+    const skor = Math.round((benar / totalSoal) * 100);
+
+    Swal.fire({
+        title: 'Konfirmasi Selesai',
+        text: "Setelah menekan Selesai, Anda tidak dapat mengubah jawaban lagi.",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Selesai',
+        cancelButtonText: 'Cek Lagi',
+        buttonsStyling: false,
+        customClass: {
+            confirmButton: 'bg-green-600 text-white px-6 py-2.5 rounded-lg mx-2 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-bold block',
+            cancelButton: 'bg-red-600 text-white px-6 py-2.5 rounded-lg mx-2 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-bold block'
+        }
+
+    }).then((result) => {
+
+        if (result.isConfirmed) {
+
+            kunciKuis();
+            document.getElementById("btn-next").disabled = true;
+
+            fetch(submitQuizUrl, {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+
+                body: JSON.stringify({
+                    jawaban: semuaJawaban,
                 })
-                .then(res => { if(!res.ok) throw new Error("Server Error"); return res.json(); })
-                .then(data => {
-                    Swal.fire({
-                        title: 'Hasil Kuis!',
-                        html: `
-                            <div class="p-6 bg-blue-50 rounded-xl border-2 border-blue-100 shadow-inner">
-                                <p class="text-slate-500 font-bold text-xs uppercase tracking-widest mb-2">Skor Akhir Anda</p>
-                                <p class="text-7xl font-black text-blue-600 mb-4">${data.skor}</p>
-                                <p class="text-xs text-slate-400 font-bold border-t pt-2 uppercase">Evaluasi Selesai</p>
-                            </div>
-                        `,
-                        icon: 'success', confirmButtonText: 'Selesai & Kembali ke Menu', allowOutsideClick: false, buttonsStyling: false,
-                        customClass: { confirmButton: 'bg-blue-600 text-white px-10 py-3 rounded-lg hover:bg-blue-700 font-bold mt-4' }
-                    }).then(() => {
-                        window.location.href = "{{ route('mahasiswa.dashboard') }}";
-                    });
-                })
-                .catch(err => {
-                    Swal.fire({ icon:'error', title:'Terjadi Kesalahan', text:'Jawaban gagal disimpan ke server.' });
+
+            })
+
+            .then(response => {
+                if(!response.ok){
+                    throw new Error("Server Error");
+                }
+                return response.json();
+            })
+
+            .then(data => {
+
+                const skorServer = data.skor;
+
+                Swal.fire({
+                    title: 'Hasil Kuis!',
+                    html: `
+                        <div class="p-6 bg-blue-50 rounded-xl border-2 border-blue-100 shadow-inner">
+                            <p class="text-slate-500 font-bold text-xs uppercase tracking-widest mb-2">Skor Akhir Anda</p>
+                            <p class="text-7xl font-black text-blue-600 mb-4">${skorServer}</p>
+                            <p class="text-xs text-slate-400 font-bold border-t pt-2 uppercase">Benar: ${Math.round(skorServer/10)} dari ${totalSoal}</p>
+                        </div>
+                    `,
+                    icon: 'success',
+                    confirmButtonText: 'Kembali ke Materi',
+                    allowOutsideClick: false,
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: 'bg-blue-600 text-white px-10 py-3 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-bold mt-4'
+                    }
+
+                }).then(() => {
+
+                    window.location.href = "{{ route('mahasiswa.aktivitas.show',['pendahuluan','sorting']) }}";
+
                 });
-            }
-        });
+
+            })
+
+            .catch(error => {
+
+                Swal.fire({
+                    icon:'error',
+                    title:'Terjadi Kesalahan',
+                    text:'Jawaban tidak dapat disimpan ke server.'
+                });
+
+            });
+
+        }
+
+    });
     }
 
     function kunciKuis() {
@@ -401,29 +578,60 @@
 
     function prevSoal() { if (indexSoal > 0) tampilkanSoal(indexSoal - 1); }
     function goSoal(i) { tampilkanSoal(i); }
+
+    // Start
     tampilkanSoal(0);
 
+
+    // ================= TIMER =================
     let intervalTimer = null;
+
     function startTimer() {
-        if (intervalTimer) clearInterval(intervalTimer);
+
+        // reset dulu kalau ada timer lama
+        if (intervalTimer) {
+            clearInterval(intervalTimer);
+        }
+
         intervalTimer = setInterval(function () {
+
             if (totalWaktu <= 0) {
-                clearInterval(intervalTimer); intervalTimer = null;
+                clearInterval(intervalTimer);
+                intervalTimer = null; // penting
                 document.getElementById("timer").innerText = "00:00";
-                waktuHabis(); return;
+                waktuHabis();
+                return;
             }
-            let menit = Math.floor(totalWaktu / 60); let detik = totalWaktu % 60;
-            document.getElementById("timer").innerText = (menit < 10 ? "0" + menit : menit) + ":" + (detik < 10 ? "0" + detik : detik);
+
+            let menit = Math.floor(totalWaktu / 60);
+            let detik = totalWaktu % 60;
+
+            // format 2 digit
+            menit = menit < 10 ? "0" + menit : menit;
+            detik = detik < 10 ? "0" + detik : detik;
+
+            document.getElementById("timer").innerText = menit + ":" + detik;
+
             totalWaktu--;
+
         }, 1000);
     }
 
-    function waktuHabis() {
-        Swal.fire({
-            title: 'Waktu Habis!', text: 'Kuis otomatis diselesaikan.', icon: 'warning', confirmButtonText: 'Lihat Hasil', allowOutsideClick: false, buttonsStyling: false,
-            customClass: { confirmButton: 'bg-blue-600 text-white px-8 py-2.5 rounded-lg font-bold' }
-        }).then(() => { hitungNilai(); });
-    }
+        function waktuHabis() {
+            Swal.fire({
+                title: 'Waktu Habis!',
+                text: 'Kuis otomatis diselesaikan.',
+                icon: 'warning',
+                confirmButtonText: 'Lihat Hasil',
+                allowOutsideClick: false,
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'bg-blue-600 text-white px-8 py-2.5 rounded-lg font-bold'
+                }
+            }).then(() => {
+                hitungNilai();
+            });
+        }
 
 function selectItem(el) {
     if (isLocked) return;
