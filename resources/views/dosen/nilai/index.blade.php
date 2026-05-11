@@ -6,12 +6,42 @@
 <style>
     .card-panel { border-radius: 16px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
     .table-rekap tbody tr:hover { background-color: #f8f9fa; transition: all 0.2s; }
-    .th-header { text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; color: #6c757d; border-bottom-width: 2px; }
-    .col-score { width: 50px; min-width: 50px; }
+    .th-header { 
+        text-transform: uppercase; 
+        font-size: 0.7rem; /* Diperkecil sedikit */
+        letter-spacing: 0.5px; 
+        color: #6c757d; 
+        border-bottom-width: 2px; 
+    }
     
-    /* Tambahan style untuk Accordion Kuis di dalam Modal */
+    /* Pengaturan kolom skor agar sangat ramping */
+    .col-score { 
+        width: 45px !important; 
+        min-width: 45px !important; 
+        padding-left: 2px !important; 
+        padding-right: 2px !important;
+        font-size: 0.85rem;
+    }
+
+    /* Mempersempit padding sel tabel agar muat lebih banyak */
+    .table-rekap td, .table-rekap th {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+    }
+    
     .accordion-button:not(.collapsed) { background-color: #f0fdf4; color: #0f5132; box-shadow: inset 0 -1px 0 rgba(0,0,0,.125); }
     .accordion-button:focus { box-shadow: none; border-color: rgba(0,0,0,.125); }
+
+    /* Mencegah nama membungkus terlalu lebar */
+    .nama-container {
+        max-width: 180px;
+    }
+
+    .table-wrapper {
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+}
 </style>
 
 <div class="container-fluid py-4 px-4">
@@ -67,12 +97,13 @@
 
     <div class="card card-panel bg-white border">
         <div class="card-body p-0">
+            <div class="table-wrapper">
             <div class="table-responsive">
                 <table class="table table-rekap table-bordered align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th scope="col" class="px-4 py-3 th-header fw-bold border-0 border-bottom border-end" rowspan="2" style="min-width: 220px;">Nama Siswa</th>
-                            <th scope="col" class="px-3 py-3 th-header fw-bold text-center border-0 border-bottom border-end" rowspan="2" style="min-width: 100px;">Kelas</th>
+                            <th scope="col" class="px-4 py-3 th-header fw-bold border-0 border-bottom border-end" rowspan="2" style="min-width: 180px;">Nama Siswa</th>
+                            <th scope="col" class="px-3 py-3 th-header fw-bold text-center border-0 border-bottom border-end" rowspan="2" style="min-width: 80px;">Kelas</th>
                             
                             <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end" colspan="5">Kuis (Modul)</th>
                             <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end" colspan="4">Praktikum</th>
@@ -101,7 +132,7 @@
                             // ID DATABASE ANDA
                             // -------------------------------------------------------------
                             $id_k_pendahuluan = 3; $id_k_bubble = 7; $id_k_selection = 12; $id_k_insertion = 17; $id_k_merge = 22;
-                            $id_p_bubble = 8; $id_p_selection = 13; $id_p_insertion = 18; $id_p_merge = 23;
+                            $id_p_bubble = 1; $id_p_selection = 2; $id_p_insertion = 3; $id_p_merge = 4;
                             $id_k_evaluasi = 24; 
 
                             $jawaban = $mahasiswa->jawaban;
@@ -207,19 +238,19 @@
                         @endphp
 
                         <tr>
-                            <td class="px-4 py-2 border-0 border-bottom border-end">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0" style="width: 40px; height: 40px; font-size: 1rem;">
-                                        {{ strtoupper(substr($mahasiswa->user->nama ?? $mahasiswa->user->name ?? 'M', 0, 1)) }}
-                                    </div>
-                                    <div>
-                                        <div class="fw-bold text-dark" style="font-size: 0.95rem;">{{ $mahasiswa->user->nama ?? $mahasiswa->user->name ?? 'Nama Siswa' }}</div>
-                                        <div class="text-muted small" style="font-size: 0.75rem;">
-                                            {{ $mahasiswa->nim }}
-                                        </div>
+                        <td class="px-3 py-2 border-0 border-bottom border-end">
+                            <div class="d-flex align-items-center gap-2 nama-container">
+                                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0" style="width: 32px; height: 32px; font-size: 0.85rem;">
+                                    {{ strtoupper(substr($mahasiswa->user->nama ?? $mahasiswa->user->name ?? 'M', 0, 1)) }}
+                                </div>
+                                <div class="text-truncate">
+                                    <div class="fw-bold text-dark text-truncate" style="font-size: 0.85rem;">{{ $mahasiswa->user->nama ?? $mahasiswa->user->name ?? 'Nama Siswa' }}</div>
+                                    <div class="text-muted small" style="font-size: 0.7rem;">
+                                        {{ $mahasiswa->nim }}
                                     </div>
                                 </div>
-                            </td>
+                            </div>
+                        </td>
 
                             <td class="px-2 py-2 text-center border-0 border-bottom border-end">
                                 <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-2 py-1">
@@ -266,6 +297,7 @@
                     </tbody>
                 </table>
             </div>
+        </div>
         </div>
     </div>
 </div>

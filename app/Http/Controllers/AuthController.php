@@ -10,6 +10,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -25,13 +27,24 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        if (Auth::attempt([
-            'email' => $request->email,
-            'password' => $request->password
-        ])) {
+        // Membuat key unik berdasarkan email dan IP user
+        $throttleKey = Str::transliterate(Str::lower($request->input('email')).'|'.$request->ip());
+
+        // 1. Cek apakah user sudah melampaui batas (5 kali)
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            
+            return back()->withErrors([
+                'email' => 'Terlalu banyak percobaan login. Silakan coba lagi dalam ' . $seconds . ' detik.'
+            ]);
+        }
+
+        // 2. Proses Attempt Login
+        if (Auth::attempt($request->only('email', 'password'))) {
+            // Jika login berhasil, hapus jejak percobaan (reset limiter)
+            RateLimiter::clear($throttleKey);
 
             $request->session()->regenerate();
-
             $user = auth()->user();
 
             if ($user->role === 'dosen') {
@@ -42,16 +55,17 @@ class AuthController extends Controller
                 return redirect()->route('mahasiswa.dashboard');
             }
 
-            // fallback kalau role tidak dikenali
             Auth::logout();
             return redirect('/login');
         }
+
+        // 3. Jika gagal, tambahkan hitungan percobaan (increment)
+        RateLimiter::hit($throttleKey, 60); // 60 detik cooldown setelah limit tercapai
 
         return back()->withErrors([
             'email' => 'Email atau password salah!'
         ])->onlyInput('email');
     }
-
 
     public function showRegister()
     {

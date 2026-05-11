@@ -34,7 +34,40 @@
         <div class="dropdown ms-auto">
             <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                href="#" data-bs-toggle="dropdown">
-                <img src="https://via.placeholder.com/32" class="rounded-circle me-2">
+                @php
+                    $user = auth()->user();
+                    $fotoPath = null;
+                    $fotoUrl = null;
+
+                    // Tentukan path file berdasarkan role
+                    if($user->mahasiswa && $user->mahasiswa->foto){
+                        $fotoPath = public_path('profil_mahasiswa/' . $user->mahasiswa->foto);
+                        $fotoUrl = asset('profil_mahasiswa/' . $user->mahasiswa->foto);
+                    } elseif($user->dosen && $user->dosen->foto){
+                        $fotoPath = public_path('profil_dosen/' . $user->dosen->foto);
+                        $fotoUrl = asset('profil_dosen/' . $user->dosen->foto);
+                    }
+
+                    // Cek apakah file fisik fotonya benar-benar ada di folder
+                    $hasFoto = ($fotoPath && file_exists($fotoPath));
+
+                    // Logika Inisial
+                    $nama = $user->nama ?? 'User';
+                    $inisial = collect(explode(' ', $nama))
+                        ->take(2)
+                        ->map(fn($word) => strtoupper(substr($word, 0, 1)))
+                        ->implode('');
+                @endphp
+                @if($hasFoto)
+                    <img src="{{ $fotoUrl }}"
+                        class="rounded-circle me-2"
+                        style="width:32px; height:32px; object-fit:cover; border: 1px solid #ddd;">
+                @else
+                    <div class="rounded-circle bg-light text-primary d-flex align-items-center justify-content-center fw-bold me-2"
+                        style="width:32px; height:32px; font-size:13px; border: 1px solid #ececec; text-transform: uppercase;">
+                        {{ $inisial }}
+                    </div>
+                @endif
                 <span>{{ auth()->user()->nama }}</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">

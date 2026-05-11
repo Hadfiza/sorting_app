@@ -172,7 +172,7 @@ class="inline-block w-24 mx-1 bg-slate-800 text-white border-b border-white outl
                 {{-- PILIHAN GANDA --}}
                 @if($s->tipe == 'pilgan')
                 <div class="quiz-options space-y-3">
-                    @foreach(['a','b','c','d'.'e'] as $opt)
+                    @foreach(['a','b','c','d','e'] as $opt)
                         @php $field = 'pilihan_'.$opt; @endphp
                         @if($s->$field)
                         <label class="option-box">

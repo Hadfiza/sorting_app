@@ -12,20 +12,42 @@ use Illuminate\Support\Facades\DB;
 
 class SettingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $dosen = auth()->user()->dosen;
         
-        $aktivitas = Aktivitas::where('slug', 'quiz')->get();
-        $settings = Setting::where('id_dosen', $dosen->id)->get()->keyBy('id_aktivitas');
+        // 1. Ambil daftar tahun yang pernah diinput oleh dosen ini untuk dropdown
+        $tahun_list = Setting::where('id_dosen', $dosen->id)
+                             ->select('tahun')
+                             ->distinct()
+                             ->pluck('tahun');
 
-        return view('dosen.kkm.index', compact('aktivitas', 'settings'));
+        // 2. Tentukan tahun yang sedang dilihat (dari filter, atau otomatis ambil yang paling baru)
+        $selected_tahun = $request->tahun;
+        if (!$selected_tahun && $tahun_list->isNotEmpty()) {
+            $selected_tahun = Setting::where('id_dosen', $dosen->id)
+                                     ->orderBy('updated_at', 'desc')
+                                     ->value('tahun');
+        }
+        
+        $aktivitas = Aktivitas::where('slug', 'quiz')->get();
+        
+        // 3. Ambil settings hanya untuk tahun yang dipilih
+        $settings = Setting::where('id_dosen', $dosen->id)
+                           ->when($selected_tahun, function($query) use ($selected_tahun) {
+                               return $query->where('tahun', $selected_tahun);
+                           })
+                           ->get()
+                           ->keyBy('id_aktivitas');
+
+        return view('dosen.kkm.index', compact('aktivitas', 'settings', 'tahun_list', 'selected_tahun'));
     }
 
     public function update(Request $request)
     {
-        // Validasi input berupa array
+        // Tambahkan validasi untuk tahun
         $request->validate([
+            'tahun' => 'required|string',
             'kkm' => 'required|array',
             'kkm.*' => 'required|integer|min:0|max:100',
         ]);
@@ -39,7 +61,7 @@ class SettingController extends Controller
         // Looping untuk menyimpan KKM baru dan mengupdate riwayat nilai mahasiswa
         foreach ($request->kkm as $id_aktivitas => $nilai_kkm) {
             
-            // Simpan KKM ke tabel Setting
+            // Simpan KKM ke tabel Setting berdasarkan tahun
             Setting::updateOrCreate(
                 [
                     'id_dosen' => $dosen->id,
@@ -61,5 +83,6 @@ class SettingController extends Controller
             }
         }
 
-        return back()->with('success', 'KKM tahun ' . $request->tahun . ' berhasil disimpan.');    }
+        return back()->with('success', 'KKM tahun ajaran ' . $request->tahun . ' berhasil disimpan & diperbarui pada riwayat nilai mahasiswa.');
+    }
 }

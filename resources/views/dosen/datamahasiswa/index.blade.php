@@ -21,8 +21,8 @@
         background-color: #e9ecef;
     }
     .avatar-circle {
-        width: 45px;
-        height: 45px;
+        width: 38px;
+        height: 38px;
         font-size: 1.2rem;
         border-radius: 50%;
         display: flex;
@@ -108,7 +108,7 @@
                     <thead class="table-light">
                         <tr>
                             <th scope="col" class="px-4 py-3 text-secondary fw-bold border-bottom-0">Profil Mahasiswa</th>
-                            <th scope="col" class="px-4 py-3 text-secondary fw-bold border-bottom-0 text-center">NIM & Angkatan</th>
+                            <th scope="col" class="px-4 py-3 text-secondary fw-bold border-bottom-0 text-center" style="width: 140px;">NIM & Angkatan</th>
                             <th scope="col" class="px-4 py-3 text-secondary fw-bold border-bottom-0 text-center">Kelas</th>
                             <th scope="col" class="px-4 py-3 text-secondary fw-bold border-bottom-0" style="min-width: 200px;">Progres Belajar</th>
                             <th scope="col" class="px-4 py-3 text-secondary fw-bold border-bottom-0 text-center">Aksi</th>
@@ -127,8 +127,8 @@
                                         </div>
                                     @endif
                                     <div>
-                                        <div class="fw-bold text-dark fs-6">{{ $mahasiswa->user->nama ?? 'Nama Mahasiswa' }}</div>
-                                        <div class="text-muted small"><i class="bi bi-envelope"></i> {{ $mahasiswa->user->email ?? '-' }}</div>
+                                        <div class="fw-bold text-dark  fs-6" style="font-size: 0.85rem;">{{ $mahasiswa->user->nama ?? 'Nama Mahasiswa' }}</div>
+                                        <div class="text-muted small" style="font-size: 0.7rem;"><i class="bi bi-envelope"></i> {{ $mahasiswa->user->email ?? '-' }}</div>
                                     </div>
                                 </div>
                             </td>
@@ -172,14 +172,14 @@
                                         data-angkatan="{{ $mahasiswa->angkatan }}"
                                         data-id_kelas="{{ $mahasiswa->id_kelas }}"
                                         onclick="openEditModal(this)" title="Edit Data">
-                                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                                        <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
                                     
                                     <form action="{{ route('dosen.datamahasiswa.destroy', $mahasiswa->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengeluarkan mahasiswa ini dari kelas? Data nilainya mungkin akan ikut terhapus.');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-outline-danger rounded-3 d-flex align-items-center gap-1" title="Hapus Data">
-                                            <i class="fa-solid fa-trash"></i> Hapus
+                                            <i class="fa-solid fa-trash"></i>
                                         </button>
                                     </form>
                                 </div>
