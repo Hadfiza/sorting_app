@@ -23,7 +23,14 @@ class RekapNilaiExport implements FromView, ShouldAutoSize
         $dosen = Dosen::where('id_user', auth()->id())->first();
         $idDosen = $dosen->id ?? null;
         
-        $kkmSettings = Setting::where('id_dosen', $idDosen)->pluck('kkm', 'id_aktivitas')->toArray();
+        // =========================================================
+        // KELOMPOKKAN KKM BERDASARKAN TAHUN DAN AKTIVITAS
+        // =========================================================
+        $semuaSetting = Setting::where('id_dosen', $idDosen)->get();
+        $kkmSettingsByYear = [];
+        foreach ($semuaSetting as $set) {
+            $kkmSettingsByYear[$set->tahun][$set->id_aktivitas] = $set->kkm;
+        }
 
         $query = Mahasiswa::with(['user', 'kelas', 'jawaban', 'pengumpulanPraktikum'])
             ->whereHas('kelas', function ($q) use ($idDosen) {
@@ -43,6 +50,7 @@ class RekapNilaiExport implements FromView, ShouldAutoSize
 
         $mahasiswas = $query->latest()->get();
 
-        return view('dosen.nilai.export_excel', compact('mahasiswas', 'kkmSettings'));
+        // Ganti compact('kkmSettings') menjadi compact('kkmSettingsByYear')
+        return view('dosen.nilai.export_excel', compact('mahasiswas', 'kkmSettingsByYear'));
     }
 }

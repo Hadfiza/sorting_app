@@ -38,10 +38,10 @@
     }
 
     .table-wrapper {
-    border-radius: 18px;
-    overflow: hidden;
-    border: 1px solid #dee2e6;
-}
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid #dee2e6;
+    }
 </style>
 
 <div class="container-fluid py-4 px-4">
@@ -58,9 +58,6 @@
                 </div>
                 
                 <div class="mt-4 mt-md-0 d-flex gap-2">
-                    {{-- <button class="btn btn-outline-secondary rounded-3 shadow-sm px-4 fw-medium">
-                        <i class="fa-solid fa-print me-1"></i> Cetak
-                    </button> --}}
                 <a href="{{ route('dosen.nilai.export', request()->all()) }}" class="btn btn-success rounded-3 shadow-sm px-4 fw-medium">
                     <i class="fa-solid fa-file-excel me-1"></i> Export Excel
                 </a>
@@ -137,19 +134,24 @@
 
                             $jawaban = $mahasiswa->jawaban;
 
-                            // AMBIL NILAI KKM DARI DATABASE (Gunakan variabel $kkmSettings dari Controller)
-                            $kkmKuis1 = $kkmSettings[3] ?? 75; 
-                            $kkmKuis2 = $kkmSettings[7] ?? 75; 
-                            $kkmKuis3 = $kkmSettings[12] ?? 75; 
-                            $kkmKuis4 = $kkmSettings[17] ?? 75; 
-                            $kkmKuis5 = $kkmSettings[22] ?? 75; 
+                            // =========================================================
+                            // PENYESUAIAN: AMBIL TAHUN KELAS MAHASISWA & KKM SESUAI TAHUN
+                            // =========================================================
+                            $thn_mhs = $mahasiswa->kelas->tahun_ajaran ?? date('Y');
+                            $kkmKelasIni = $kkmSettings[$thn_mhs] ?? []; // KKM Khusus tahun tersebut
 
-                            $kkmPrak1 = $kkmSettings[8] ?? 75; 
-                            $kkmPrak2 = $kkmSettings[13] ?? 75; 
-                            $kkmPrak3 = $kkmSettings[18] ?? 75; 
-                            $kkmPrak4 = $kkmSettings[23] ?? 75; 
+                            $kkmKuis1 = $kkmKelasIni[3] ?? 75; 
+                            $kkmKuis2 = $kkmKelasIni[7] ?? 75; 
+                            $kkmKuis3 = $kkmKelasIni[12] ?? 75; 
+                            $kkmKuis4 = $kkmKelasIni[17] ?? 75; 
+                            $kkmKuis5 = $kkmKelasIni[22] ?? 75; 
+
+                            $kkmPrak1 = $kkmKelasIni[8] ?? 75; 
+                            $kkmPrak2 = $kkmKelasIni[13] ?? 75; 
+                            $kkmPrak3 = $kkmKelasIni[18] ?? 75; 
+                            $kkmPrak4 = $kkmKelasIni[23] ?? 75; 
                             
-                            $kkmEvaluasi = $kkmSettings[24] ?? 75;
+                            $kkmEvaluasi = $kkmKelasIni[24] ?? 75;
                             $kkmRataRata = 75; 
                         
                             $list_modul = [
@@ -180,21 +182,17 @@
                                             $durasi = $m > 0 ? "{$m}m {$s}s" : "{$s}s";
                                         }
 
-                                        // --- PARSING JSON DETAIL JAWABAN (Dinamis) ---
                                         $raw_detail = json_decode($attempt->detail_jawaban, true) ?? [];
-                                        $jawaban_status = []; // Gunakan array kosong
+                                        $jawaban_status = []; 
 
                                         foreach ($raw_detail as $key => $data) {
                                             $nomor = (int) str_replace('q', '', $key);
-                                            
-                                            // Ambil status is_correct dari struktur JSON baru yang kita buat di Controller
                                             if (is_array($data) && isset($data['is_correct'])) {
                                                 $jawaban_status[$nomor] = $data['is_correct'];
                                             } else {
                                                 $jawaban_status[$nomor] = null;
                                             }
                                         }
-                                        // Sortir agar urutan nomor soal benar (1, 2, 3...)
                                         ksort($jawaban_status);
 
                                         $attempts_data[] = [
@@ -215,25 +213,18 @@
                                     'total_attempt' => $total_attempt,
                                     'skor_terakhir' => $skor_terakhir,
                                     'attempts'      => $attempts_data,
-                                    'kkm'           => $modul['kkm']
+                                    'kkm'           => $modul['kkm'] // KKM ini sudah akurat dengan tahun!
                                 ];
                             }
                             
-                            // =========================================================
-                            // PENYESUAIAN PENTING: RUMUS RATA-RATA DIHAPUS DI SINI
-                            // =========================================================
-
-                            // PRAKTIKUM (Dipertahankan hanya untuk memunculkan kolom P1, P2, P3, P4)
                             $praktikum = $mahasiswa->pengumpulanPraktikum;
                             $p1 = $praktikum->where('id_praktikum', $id_p_bubble)->sortByDesc('created_at')->first()->nilai ?? 0;
                             $p2 = $praktikum->where('id_praktikum', $id_p_selection)->sortByDesc('created_at')->first()->nilai ?? 0;
                             $p3 = $praktikum->where('id_praktikum', $id_p_insertion)->sortByDesc('created_at')->first()->nilai ?? 0;
                             $p4 = $praktikum->where('id_praktikum', $id_p_merge)->sortByDesc('created_at')->first()->nilai ?? 0;
 
-                            // EVALUASI (Dipertahankan hanya untuk memunculkan kolom Eval)
                             $evaluasi = $jawaban->where('id_aktivitas', $id_k_evaluasi)->sortByDesc('created_at')->first()->skor ?? 0; 
                             
-                            // NILAI AKHIR: Panggil Langsung Dari Koki (Model Mahasiswa)
                             $rataAkhir = $mahasiswa->nilai_akhir;
                         @endphp
 
@@ -271,7 +262,6 @@
 
                             <td class="text-center border-0 border-bottom border-end"><span class="fw-bold {{ $evaluasi >= $kkmEvaluasi ? 'text-success' : 'text-danger' }}">{{ $evaluasi }}</span></td>
                             
-                            <!-- KOLOM INI SEKARANG MENGGUNAKAN $rataAkhir (YANG BERSUMBER DARI MODEL) -->
                             <td class="text-center border-0 border-bottom border-end"><span class="badge {{ $rataAkhir >= $kkmRataRata ? 'bg-success' : 'bg-warning text-dark' }} fs-6 shadow-sm">{{ $rataAkhir }}</span></td>
 
                             <td class="text-center border-0 border-bottom">
@@ -352,7 +342,7 @@
         document.getElementById('mdl_kelas').innerText = btn.getAttribute('data-kelas');
         document.getElementById('mdl_inisial').innerText = nama ? nama.charAt(0).toUpperCase() : 'M';
         
-        // PERBAIKAN: Ambil KKM Evaluasi 
+        // KKM Evaluasi yang sudah akurat per tahun
         const kkmEvaluasi = parseInt(btn.getAttribute('data-kkm-evaluasi')) || 75;
 
         // UPDATE MODAL EVALUASI
@@ -372,7 +362,7 @@
         accordionContainer.innerHTML = ''; 
 
         kuisData.forEach((modul, index) => {
-            // PERBAIKAN: Menggunakan modul.kkm 
+            // Modul KKM sudah dioper dari data-kuis-detail yang akurat per tahun
             let badgeMainClass = modul.skor_terakhir >= modul.kkm ? 'success' : 'danger';
             let collapseId = `collapseKuis${index}`;
             let headingId = `headingKuis${index}`;
@@ -381,18 +371,14 @@
             let tableHeaderCols = '';
             let maxQuestions = 0;
 
-            // Cari jumlah soal terbanyak dari attempt untuk membuat header kolom
             modul.attempts.forEach(att => {
-                if (att.detail_soal.length > maxQuestions) maxQuestions = att.detail_soal.length;
+                if (att.detail_soal && Object.keys(att.detail_soal).length > maxQuestions) {
+                    maxQuestions = Object.keys(att.detail_soal).length;
+                }
             });
 
-            // Jika data berbentuk objek (karena ksort di PHP), kita sesuaikan cara hitungnya
-            // Atau lebih amannya, biarkan Javascript membuat kolom berdasarkan data yang ada
             if (modul.total_attempt > 0) {
-                // Buat Header Angka (1, 2, 3, dst) secara dinamis
-                // Kita asumsikan jumlah soal konsisten, ambil dari attempt pertama
                 let sampleAttempt = modul.attempts[0].detail_soal;
-                // Jika detail_soal adalah objek, kita hitung keys-nya
                 let questionKeys = Object.keys(sampleAttempt); 
                 
                 questionKeys.forEach(num => {
@@ -403,7 +389,6 @@
                     let attBadge = att.skor >= modul.kkm ? 'success' : 'danger';
                     let detailHtml = '';
 
-                    // Tampilkan centang/silang secara dinamis
                     Object.keys(att.detail_soal).forEach(num => {
                         let status = att.detail_soal[num];
                         if (status === true) {

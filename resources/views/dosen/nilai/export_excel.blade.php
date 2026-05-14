@@ -29,12 +29,19 @@
 
                 $jawaban = $mahasiswa->jawaban;
 
-                // AMBIL NILAI KKM DARI DATABASE 
-                $kkmKuis1 = $kkmSettings[3] ?? 75; 
-                $kkmKuis2 = $kkmSettings[7] ?? 75; 
-                $kkmKuis3 = $kkmSettings[12] ?? 75; 
-                $kkmKuis4 = $kkmSettings[17] ?? 75; 
-                $kkmKuis5 = $kkmSettings[22] ?? 75; 
+                // =========================================================
+                // PENYESUAIAN: AMBIL TAHUN KELAS MAHASISWA & KKM SESUAI TAHUN
+                // =========================================================
+                $thn_mhs = $mahasiswa->kelas->tahun_ajaran ?? date('Y');
+                // Mengambil nilai $kkmSettings yang telah dilempar dari controller RekapNilaiExport
+                $kkmKelasIni = $kkmSettingsByYear[$thn_mhs] ?? [];
+
+                // AMBIL NILAI KKM KHUSUS TAHUN TERSEBUT
+                $kkmKuis1 = $kkmKelasIni[3] ?? 75; 
+                $kkmKuis2 = $kkmKelasIni[7] ?? 75; 
+                $kkmKuis3 = $kkmKelasIni[12] ?? 75; 
+                $kkmKuis4 = $kkmKelasIni[17] ?? 75; 
+                $kkmKuis5 = $kkmKelasIni[22] ?? 75; 
 
                 $list_modul = [
                     ['id' => $id_k_pendahuluan, 'nama' => 'Q1', 'kkm' => $kkmKuis1],
@@ -44,7 +51,6 @@
                     ['id' => $id_k_merge, 'nama' => 'Q5', 'kkm' => $kkmKuis5],
                 ];
 
-                // Ini dia variabel yang dicari oleh Laravel tadi
                 $detail_kuis_array = [];
 
                 foreach ($list_modul as $modul) {
@@ -74,20 +80,17 @@
                 <td>{{ $mahasiswa->nim }}</td>
                 <td>{{ $mahasiswa->kelas->nama_kelas ?? '-' }}</td>
                 
-                <!-- Q1-Q5 (Saya tambahkan ?? 0 agar anti-error jika array kosong) -->
                 <td style="text-align: center;">{{ $detail_kuis_array[0]['skor_terakhir'] ?? 0 }}</td>
                 <td style="text-align: center;">{{ $detail_kuis_array[1]['skor_terakhir'] ?? 0 }}</td>
                 <td style="text-align: center;">{{ $detail_kuis_array[2]['skor_terakhir'] ?? 0 }}</td>
                 <td style="text-align: center;">{{ $detail_kuis_array[3]['skor_terakhir'] ?? 0 }}</td>
                 <td style="text-align: center;">{{ $detail_kuis_array[4]['skor_terakhir'] ?? 0 }}</td>
                 
-                <!-- P1-P4 -->
                 <td style="text-align: center;">{{ $p1 }}</td>
                 <td style="text-align: center;">{{ $p2 }}</td>
                 <td style="text-align: center;">{{ $p3 }}</td>
                 <td style="text-align: center;">{{ $p4 }}</td>
                 
-                <!-- Eval & Rata -->
                 <td style="text-align: center;">{{ $evaluasi }}</td>
                 <td style="text-align: center; font-weight: bold;">{{ $rataAkhir }}</td>
             </tr>

@@ -20,8 +20,12 @@ class NilaiController extends Controller
         
         $kelases = Kelas::where('id_dosen', $idDosen)->get();
 
-        // AMBIL KKM SEBAGAI ARRAY (Kunci = id_aktivitas, Value = KKM)
-        $kkmSettings = Setting::where('id_dosen', $idDosen)->pluck('kkm', 'id_aktivitas')->toArray();
+        // Ambil semua setting dan kelompokkan berdasarkan [tahun][id_aktivitas]
+        $settings = Setting::where('id_dosen', $dosen->id)->get();
+        $kkmSettings = [];
+        foreach ($settings as $s) {
+            $kkmSettings[$s->tahun][$s->id_aktivitas] = $s->kkm;
+        }
 
         $query = Mahasiswa::with(['user', 'kelas', 'jawaban', 'pengumpulanPraktikum'])
             ->whereHas('kelas', function ($q) use ($idDosen) {

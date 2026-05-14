@@ -53,9 +53,12 @@ class SettingController extends Controller
         ]);
 
         $dosen = auth()->user()->dosen;
+        $tahun_input = $request->tahun; // Tangkap tahun dari inputan
 
-        $mahasiswaIds = Mahasiswa::whereHas('kelas', function($query) use ($dosen) {
-            $query->where('id_dosen', $dosen->id);
+        // Hanya ambil mahasiswa yang tahun_ajaran kelasnya SAMA dengan tahun KKM
+        $mahasiswaIds = Mahasiswa::whereHas('kelas', function($query) use ($dosen, $tahun_input) {
+            $query->where('id_dosen', $dosen->id)
+                ->where('tahun_ajaran', $tahun_input); 
         })->pluck('id');
 
         // Looping untuk menyimpan KKM baru dan mengupdate riwayat nilai mahasiswa
@@ -66,7 +69,7 @@ class SettingController extends Controller
                 [
                     'id_dosen' => $dosen->id,
                     'id_aktivitas' => $id_aktivitas,
-                    'tahun' => $request->tahun
+                    'tahun' => $tahun_input,
                 ],
                 [
                     'kkm' => $nilai_kkm
@@ -83,6 +86,6 @@ class SettingController extends Controller
             }
         }
 
-        return back()->with('success', 'KKM tahun ajaran ' . $request->tahun . ' berhasil disimpan & diperbarui pada riwayat nilai mahasiswa.');
+        return back()->with('success', 'KKM tahun ajaran ' . $tahun_input . ' berhasil disimpan & diperbarui pada riwayat nilai mahasiswa.');
     }
 }

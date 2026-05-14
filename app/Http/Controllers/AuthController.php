@@ -90,10 +90,10 @@ class AuthController extends Controller
         ]);
 
         // 2. Cari data Kelas berdasarkan token yang diinput
-        $kelas = \App\Models\Kelas::where('token', $request->token_kelas)->first();
+        $kelas = Kelas::where('token', $request->token_kelas)->first();
 
         // 3. Buat Akun User
-        $user = \App\Models\User::create([
+        $user = User::create([
             'nama'     => $request->nama, 
             'email'    => $request->email,
             'password' => Hash::make($request->password),
@@ -102,7 +102,7 @@ class AuthController extends Controller
         ]);
 
         // 4. Buat Profil Mahasiswa & Masukkan ke Kelas tersebut
-        \App\Models\Mahasiswa::create([
+        Mahasiswa::create([
             'id_user'  => $user->id,
             'nim'      => $request->nim,
             'angkatan' => $request->angkatan,
