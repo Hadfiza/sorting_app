@@ -349,6 +349,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+MobileDragDrop.polyfill({
+    dragImageTranslateOverride:
+    MobileDragDrop.scrollBehaviourDragImageTranslateOverride
+});
+
+/* auto scroll saat drag dekat tepi layar */
+window.addEventListener('dragover', function(e) {
+
+    const y = e.clientY;
+    const height = window.innerHeight;
+
+    if (y > height - 120) {
+        window.scrollBy(0, 15);
+    }
+
+    if (y < 120) {
+        window.scrollBy(0, -15);
+    }
+
+});
+
+/* efek dragging */
+document.addEventListener('dragstart', function(e) {
+    if (e.target.classList.contains('drag-item')) {
+        e.target.classList.add('dragging');
+    }
+});
+
+document.addEventListener('dragend', function(e) {
+    if (e.target.classList.contains('drag-item')) {
+        e.target.classList.remove('dragging');
+    }
+});
+
 /* ========== ANIMASI TUKAR BUKU ========== */
 let sedangTertukar = false;
 

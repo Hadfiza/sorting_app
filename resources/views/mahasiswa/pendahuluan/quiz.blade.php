@@ -219,7 +219,7 @@ class="inline-block w-24 mx-1 bg-slate-800 text-white border-b border-white outl
                     @foreach($items as $item)
                         <div draggable="true"
                             ondragstart="drag(event)"
-                            onclick="selectItem(this)" {{--TAP--}}
+                            {{-- onclick="selectItem(this)" TAP --}}
                             id="drag{{ $item }}-{{ $s->nomor }}"
                             class="w-16 h-16 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-2xl cursor-move shadow-md">
                             {{ $item }}
@@ -232,7 +232,7 @@ class="inline-block w-24 mx-1 bg-slate-800 text-white border-b border-white outl
                         <div id="drop{{ $i }}-{{ $s->nomor }}"
                             ondrop="drop(event, {{ $s->nomor }})"
                             ondragover="allowDrop(event)"
-                            onclick="tapDrop(this, {{ $s->nomor }})" {{--TAP--}}
+                            {{-- onclick="tapDrop(this, {{ $s->nomor }})" TAP --}}
                             class="w-20 h-20 border-2 border-dashed border-blue-200 rounded-2xl flex items-center justify-center bg-slate-50 transition-all">
                         </div>
                     @endfor
@@ -309,7 +309,7 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id) }}";
     let indexSoal = 0;
     const daftarSoal = document.querySelectorAll('.soal');
     const totalSoal = daftarSoal.length;
-    let selectedItem = null; //TAP
+    // let selectedItem = null; //TAP
     let isLocked = false;
 
     const kunciJawaban = {
@@ -738,40 +738,40 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id) }}";
             });
         }
 
-function selectItem(el) {
-    if (isLocked) return;
+// function selectItem(el) {
+//     if (isLocked) return;
 
-    // reset semua
-    document.querySelectorAll('[draggable="true"]').forEach(i => {
-        i.classList.remove('ring-4','ring-yellow-400');
-    });
+//     // reset semua
+//     document.querySelectorAll('[draggable="true"]').forEach(i => {
+//         i.classList.remove('ring-4','ring-yellow-400');
+//     });
 
-    selectedItem = el;
+//     selectedItem = el;
 
-    // kasih highlight
-    el.classList.add('ring-4','ring-yellow-400');
-}
+//     // kasih highlight
+//     el.classList.add('ring-4','ring-yellow-400');
+// }
 
-function tapDrop(target, nomorSoal) {
-    if (isLocked) return;
-    if (!selectedItem) return;
+// function tapDrop(target, nomorSoal) {
+//     if (isLocked) return;
+//     if (!selectedItem) return;
 
-    if (target.children.length === 0) {
-        target.appendChild(selectedItem);
+//     if (target.children.length === 0) {
+//         target.appendChild(selectedItem);
 
-        selectedItem.classList.remove('ring-4','ring-yellow-400');
-        selectedItem = null;
+//         selectedItem.classList.remove('ring-4','ring-yellow-400');
+//         selectedItem = null;
 
-        updateAfterDrop(target, nomorSoal);
-    }
-}
+//         updateAfterDrop(target, nomorSoal);
+//     }
+// }
 
-function updateAfterDrop(target, nomorSoal) {
-    target.classList.remove('bg-slate-50');
-    target.classList.add('bg-blue-50');
+// function updateAfterDrop(target, nomorSoal) {
+//     target.classList.remove('bg-slate-50');
+//     target.classList.add('bg-blue-50');
 
-    updateDragAnswer(nomorSoal);
-}
+//     updateDragAnswer(nomorSoal);
+// }
 </script>
 </body>
 </html>

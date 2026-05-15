@@ -99,7 +99,7 @@
                 <table class="table table-rekap table-bordered align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th scope="col" class="px-4 py-3 th-header fw-bold border-0 border-bottom border-end" rowspan="2" style="min-width: 180px;">Nama Siswa</th>
+                            <th scope="col" class="px-4 py-3 th-header fw-bold border-0 border-bottom border-end" rowspan="2" style="min-width: 160px;">Nama Siswa</th>
                             <th scope="col" class="px-3 py-3 th-header fw-bold text-center border-0 border-bottom border-end" rowspan="2" style="min-width: 80px;">Kelas</th>
                             
                             <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end" colspan="5">Kuis (Modul)</th>

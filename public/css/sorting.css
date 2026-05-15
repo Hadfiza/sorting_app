@@ -1,124 +1,4 @@
 /* ========================================= */
-/* ===== DRAG LIST & ITEM (SUMBER) =====     */
-/* ========================================= */
-.drag-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.drag-item {
-    width: 100%;
-    max-width: 420px;
-    height: 240px;
-    border: 2px dashed #cbd5e1;
-    border-radius: 14px;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: grab;
-    transition: opacity 0.2s;
-}
-
-.drag-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    pointer-events: none;
-}
-
-/* Menyembunyikan item yang sudah didrop ke kotak */
-.drag-item.used {
-    display: none !important; 
-}
-
-/* ========================================= */
-/* ===== DROP ZONE (KOTAK KATEGORI) =====    */
-/* ========================================= */
-.sorting-zones {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-.drop-zone {
-    border: 2px dashed #94a3b8;
-    border-radius: 18px;
-    background: #f8fafc;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    transition: all 0.3s ease;
-    margin-bottom: 15px;
-    height: auto !important; /* Biarkan memanjang ke bawah otomatis */
-    min-height: 200px;
-}
-
-.zone-header {
-    text-align: center;
-    font-weight: 700;
-    margin-bottom: 12px;
-}
-
-/* Wadah di dalam drop zone tempat gambar bertumpuk */
-.zone-content {
-    width: 100%;
-    min-height: 150px;
-    display: flex;
-    flex-direction: column; /* Gambar akan antre ke bawah secara berurutan */
-    justify-content: flex-start;
-    align-items: center;
-    gap: 15px;
-    padding: 10px 5px;
-}
-
-/* ========================================= */
-/* ===== IMAGE HASIL DROP =====              */
-/* ========================================= */
-.dropped-image {
-    width: 100%;
-    max-width: 260px; /* Ukuran maksimal agar tidak raksasa */
-    height: auto;
-    border: 2px solid transparent;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    object-fit: contain;
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.dropped-image.correct {
-    border-color: #2ecc71 !important;
-    box-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
-}
-
-.dropped-image.wrong {
-    border-color: #e74c3c !important;
-    box-shadow: 0 0 10px rgba(231, 76, 60, 0.4);
-}
-
-/* ========================================= */
-/* ===== MODE SELESAI (KUIS BENAR) =====     */
-/* ========================================= */
-#dragActivity.completed .col-md-5 {
-    display: none !important; /* Hilangkan kolom sumber paksa */
-}
-
-#dragActivity.completed .col-md-7 {
-    /* Paksa Bootstrap untuk melebar 100% */
-    flex: 0 0 100% !important;
-    max-width: 100% !important;
-    width: 100% !important; 
-}
-
-#dragActivity.completed .drop-zone {
-    background: #ecfdf5 !important;
-    border-color: #22c55e !important;
-}
-
-
-/* ========================================= */
 /* ===== ILUSTRASI BUKU SORTING =====        */
 /* ========================================= */
 .book {
@@ -195,20 +75,228 @@
     font-weight: 700;
 }
 
+
+/* ========================================= */
+/* ===== DRAG LIST & ITEM (SUMBER) =====     */
+/* ========================================= */
+.drag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.drag-item {
+    width: 100%;
+    max-width: 420px;
+    height: 240px;
+    border: 2px dashed #cbd5e1;
+    border-radius: 14px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    transition: opacity 0.2s;
+}
+
+.drag-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+/* Menyembunyikan item yang sudah didrop ke kotak */
+.drag-item.used {
+    display: none !important; 
+}
+
+/* item sedang di drag */
+.drag-item.dragging,
+.dropped-image.dragging {
+    opacity: 0.7;
+    z-index: 9999 !important;
+    position: relative;
+}
+
+/* ========================================= */
+/* ===== DROP ZONE (KOTAK KATEGORI) =====    */
+/* ========================================= */
+.sorting-zones {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.drop-zone {
+    border: 2px dashed #94a3b8;
+    border-radius: 18px;
+    background: #f8fafc;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+    height: auto !important; /* Biarkan memanjang ke bawah otomatis */
+    min-height: 200px;
+}
+
+/* area drop aktif */
+.drop-zone.active {
+    border-color: #2563eb;
+    background: #dbeafe;
+}
+
+.zone-header {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+/* Wadah di dalam drop zone tempat gambar bertumpuk */
+.zone-content {
+    width: 100%;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column; /* Gambar akan antre ke bawah secara berurutan */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 5px;
+}
+
+/* ========================================= */
+/* ===== IMAGE HASIL DROP =====              */
+/* ========================================= */
+.dropped-image {
+    width: 100%;
+    max-width: 260px; /* Ukuran maksimal agar tidak raksasa */
+    height: auto;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    object-fit: contain;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.dropped-image.correct {
+    border-color: #2ecc71 !important;
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
+}
+
+.dropped-image.wrong {
+    border-color: #e74c3c !important;
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.4);
+}
+
+/* ========================================= */
+/* ===== MODE SELESAI (KUIS BENAR) =====     */
+/* ========================================= */
+#dragActivity.completed .col-md-5 {
+    display: none !important; /* Hilangkan kolom sumber paksa */
+}
+
+#dragActivity.completed .col-md-7 {
+    /* Paksa Bootstrap untuk melebar 100% */
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    width: 100% !important; 
+}
+
+#dragActivity.completed .drop-zone {
+    background: #ecfdf5 !important;
+    border-color: #22c55e !important;
+}
+
+
 /* =====================================
-   RESPONSIVE BOOK (MOBILE FIX)
+   RESPONSIVE MOBILE FIX
 ===================================== */
 
 @media (max-width: 768px) {
 
+    /* ===== BOOK ===== */
+
     #unsorted-books {
-        flex-wrap: wrap !important; /* 🔥 biar turun ke bawah */
+        flex-wrap: wrap !important;
         justify-content: center;
+        gap: 10px;
     }
 
     .book {
-        width: 70px;  /* 🔥 kecilkan */
+        width: 70px;
         height: auto;
     }
 
+    /* ===== LAYOUT ===== */
+
+    .row.g-4 {
+        flex-direction: column;
+    }
+
+    #kolomSumber,
+    #kolomTarget {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    /* ===== DRAG LIST ===== */
+
+    .drag-list {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .drag-item {
+        width: 100%;
+        max-width: 100%;
+        min-height: 140px;
+        height: auto;
+        padding: 10px;
+
+        touch-action: none;
+        user-select: none;
+
+        border-radius: 12px;
+    }
+
+    .drag-item img {
+        width: 100%;
+        max-height: 180px;
+        object-fit: contain;
+        pointer-events: none;
+    }
+
+    /* ===== DROP ZONE ===== */
+
+    .sorting-zones {
+        gap: 16px;
+        margin-top: 20px;
+    }
+
+    .drop-zone {
+        min-height: 180px;
+        padding: 12px;
+    }
+
+    .zone-content {
+        min-height: 120px;
+        gap: 10px;
+    }
+
+    .dropped-image {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* ===== BUTTON ===== */
+
+    #checkAnswerBtn,
+    #resetDragBtn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
 }

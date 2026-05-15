@@ -108,7 +108,7 @@
                     <thead class="table-light">
                         <tr>
                             <th scope="col" class="px-4 py-3 text-secondary fw-bold border-bottom-0">Profil Mahasiswa</th>
-                            <th scope="col" class="px-4 py-3 text-secondary fw-bold border-bottom-0 text-center" style="width: 140px;">NIM & Angkatan</th>
+                            <th scope="col" class="px-3 py-3 text-secondary fw-bold border-bottom-0 text-center" style="width: 115px; min-width: 115px;">NIM & Angkatan</th>
                             <th scope="col" class="px-4 py-3 text-secondary fw-bold border-bottom-0 text-center">Kelas</th>
                             <th scope="col" class="px-4 py-3 text-secondary fw-bold border-bottom-0" style="min-width: 200px;">Progres Belajar</th>
                             <th scope="col" class="px-4 py-3 text-secondary fw-bold border-bottom-0 text-center">Aksi</th>
@@ -117,7 +117,7 @@
                     <tbody>
                         @forelse($mahasiswas as $mahasiswa)
                         <tr>
-                            <td class="px-4 py-3">
+                            <td class="px-3 py-3">
                                 <div class="d-flex align-items-center gap-3">
                                     @if($mahasiswa->photo)
                                         <img src="{{ asset('storage/'.$mahasiswa->photo) }}" class="avatar-circle object-fit-cover shadow-sm">
@@ -133,12 +133,12 @@
                                 </div>
                             </td>
 
-                            <td class="px-4 py-3 text-center border-start">
+                            <td class="px-3 py-3 text-center border-start">
                                 <div class="fw-bold text-dark">{{ $mahasiswa->nim }}</div>
                                 <span class="badge bg-secondary bg-opacity-10 text-secondary border">Angkatan {{ $mahasiswa->angkatan }}</span>
                             </td>
 
-                            <td class="px-4 py-3 text-center border-start">
+                            <td class="px-2 py-3 text-center border-start">
                                 <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-3 py-2 fs-6 rounded-pill">
                                     {{ $mahasiswa->kelas->nama_kelas ?? 'Tanpa Kelas' }}
                                 </span>
@@ -163,7 +163,7 @@
                                 </div>
                             </td>
 
-                            <td class="px-4 py-3 text-center border-start">
+                            <td class="px-3 py-3 text-center border-start">
                                 <div class="d-flex justify-content-center gap-2">
                                     <button type="button" class="btn btn-sm btn-outline-primary rounded-3 d-flex align-items-center gap-1" 
                                         data-id="{{ $mahasiswa->id }}"
