@@ -325,7 +325,7 @@ print("Setelah sorting:", angka)
                 </p>
             </div>
 
-            <div class="refleksi-alert mt-4">
+            {{-- <div class="refleksi-alert mt-4">
                 <h5 class="fw-bold mb-3">
                     Refleksi Konseptual
                 </h5>
@@ -345,7 +345,8 @@ print("Setelah sorting:", angka)
                     </li>
                 </ul>
 
-            </div></div>
+            </div> --}}
+            </div>
 
             <div class="tab-pane fade" id="pills-dict" role="tabpanel" aria-labelledby="pills-dict-tab">
                     

@@ -9,21 +9,9 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="{{ asset('css/siswa.css') }}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/mobile-drag-drop@2.3.0-rc.2/default.css">
 
-<script src="https://cdn.jsdelivr.net/npm/mobile-drag-drop@2.3.0-rc.2/index.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mobile-drag-drop@2.3.0-rc.2/default.css">
 
-<script>
-MobileDragDrop.polyfill({
-    dragImageTranslateOverride:
-    MobileDragDrop.scrollBehaviourDragImageTranslateOverride
-});
-
-window.addEventListener('touchmove', function(){}, {
-    passive: false
-});
-</script>
 @yield('css')
 </head>
 
@@ -112,7 +100,7 @@ window.addEventListener('touchmove', function(){}, {
     $mahasiswa = $user->mahasiswa ?? null;
 
     // FITUR BYPASS: Akun ini tidak akan terkena lock sama sekali
-    $isBypass = ($user->email === 'fiz@gmail.com');
+    $isBypass = ($user->email === 'fiza@gmail.com');
 
     // 1. Ambil array ID aktivitas yang sudah SELESAI
     $progresSelesai = [];
@@ -271,6 +259,19 @@ window.addEventListener('touchmove', function(){}, {
 @yield('scripts')
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/mobile-drag-drop@2.3.0-rc.2/index.min.js"></script>
+
+<script>
+MobileDragDrop.polyfill({
+    dragImageTranslateOverride:
+    MobileDragDrop.scrollBehaviourDragImageTranslateOverride
+});
+
+window.addEventListener('touchmove', function(){}, {
+    passive: false
+});
+</script>
 
 <script>
 function toggleMenu(btn){

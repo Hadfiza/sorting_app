@@ -248,7 +248,7 @@ print("Setelah sorting:", angka)
                 </p>
             </div>
 
-            <div class="refleksi-alert mt-4">
+            {{-- <div class="refleksi-alert mt-4">
                 <h5 class="fw-bold mb-3">
                     Refleksi Konseptual
                 </h5>
@@ -268,7 +268,7 @@ print("Setelah sorting:", angka)
                         Saat elemen yang lebih besar digeser ke kanan (<code>data[j + 1] = data[j]</code>), nilai asli di indeks tersebut akan tertimpa. Menyimpan nilai tersebut di dalam variabel <code>key</code> mencegah data hilang dan memungkinkan kita untuk menyisipkannya kembali saat posisi yang tepat telah ditemukan.
                     </li>
                 </ul>
-            </div>
+            </div> --}}
 
         </div>
     </div>

@@ -277,7 +277,7 @@ print("Setelah sorting:", angka)
                 </p>
             </div>
         
-                <h5 class="fw-bold mb-3">
+                {{-- <h5 class="fw-bold mb-3">
                     Refleksi Konseptual
                 </h5>
 
@@ -295,7 +295,7 @@ print("Setelah sorting:", angka)
                         <strong>Kapan pertukaran (swap) dilakukan pada Selection Sort?</strong><br>
                         Berbeda dengan Bubble Sort yang melakukan swap terus-menerus, Selection Sort <strong>hanya melakukan satu kali swap</strong> di akhir setiap iterasi luar (setelah nilai minimum benar-benar ditemukan di seluruh sisa data).
                     </li>
-                </ul>
+                </ul> --}}
 
             </div> <div class="tab-pane fade" id="pills-dict" role="tabpanel" aria-labelledby="pills-dict-tab">
                     
