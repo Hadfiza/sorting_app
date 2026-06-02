@@ -52,6 +52,15 @@
                     </div>
                 </div>
 
+                <div id="alertKompleksitas" class="alert alert-info mt-3 {{ $isSelesai ? '' : 'd-none' }}">
+                    <b>Penjelasan Kompleksitas:</b>
+                    <ol class="mb-0 mt-2">
+                        <li>Pada simulasi ini, data awal <b>[4, 2, 5, 1, 3]</b> belum terurut sehingga Bubble Sort harus melakukan beberapa proses perbandingan dan pertukaran data hingga seluruh elemen berada pada urutan yang benar. Oleh karena itu, proses pengurutan pada simulasi ini termasuk kondisi <b>average case</b> dengan kompleksitas waktu <b>O(n²)</b>.</li>
+                        <li>Jika data sudah terurut sejak awal, misalnya <b>[1, 2, 3, 4, 5]</b>, Bubble Sort hanya perlu melakukan pengecekan tanpa melakukan pertukaran data. Kondisi ini disebut <b>best case</b> dengan kompleksitas waktu <b>O(n)</b>.</li>
+                        <li>Jika data berada dalam urutan terbalik, misalnya <b>[5, 4, 3, 2, 1]</b>, Bubble Sort harus melakukan pertukaran pada hampir setiap perbandingan hingga data menjadi terurut. Kondisi ini disebut <b>worst case</b> dengan kompleksitas waktu <b>O(n²)</b>.</li>
+                    </ol>
+                </div>
+
             </div>
         </div>
     </div>
@@ -91,6 +100,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Tangkap elemen kotak pesan selesai dan tombol selanjutnya
     const finishMessage = document.getElementById('finish-message');
     const btnNext = document.getElementById('btnNextBubbleSim');
+    const alertKompleksitas = document.getElementById('alertKompleksitas');
 
     // Buat pemantau (Observer) untuk melihat perubahan pada atribut "style"
     const observer = new MutationObserver(function(mutations) {
@@ -99,6 +109,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Cek apakah pesan selesai sudah tidak disembunyikan (display != none)
                 const displayStyle = window.getComputedStyle(finishMessage).display;
                 if (displayStyle !== 'none') {
+                    // document.getElementById('alertKompleksitas').style.display = 'block';
+                    alertKompleksitas.classList.remove('d-none');
                     simpanProgresSimulasi(); // Simpan progres
                     observer.disconnect();   // Matikan pemantau agar tidak dipanggil berkali-kali
                 }

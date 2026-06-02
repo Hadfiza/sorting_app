@@ -160,6 +160,7 @@
                                 ['id' => $id_k_selection, 'nama' => 'Q3 (Selection Sort)', 'kkm' => $kkmKuis3],
                                 ['id' => $id_k_insertion, 'nama' => 'Q4 (Insertion Sort)', 'kkm' => $kkmKuis4],
                                 ['id' => $id_k_merge, 'nama' => 'Q5  (Merge Sort)', 'kkm' => $kkmKuis5],
+                                ['id' => $id_k_evaluasi, 'nama' => 'Evaluasi Akhir', 'kkm' => $kkmEvaluasi],
                             ];
 
                             $detail_kuis_array = [];

@@ -23,14 +23,61 @@ class KategoriSoalController extends Controller
             ->orderBy('nomor')
             ->get();
 
+        $mahasiswa = auth()->user()->mahasiswa;
+        
+        // --- LOGIKA UNTUK BLOKIR EVALUASI ---
+        $can_take_quiz = true;
+        $pesan_blokir = '';
+
+        if ($aktivitas->tipe == 'evaluasi') {
+            $riwayatAttempt = JawabanMahasiswa::where('id_mahasiswa', $mahasiswa->id)
+                ->where('id_aktivitas', $aktivitas->id)
+                ->get();
+                
+            $jumlahAttempt = $riwayatAttempt->count();
+            $sudahLulus = $riwayatAttempt->where('status_lulus', 1)->count() > 0;
+            
+            // Aturan 1: Jika sudah pernah lulus, hentikan.
+            if ($sudahLulus) {
+                $can_take_quiz = false;
+                $pesan_blokir = 'Anda sudah tuntas (mencapai KKM) pada Evaluasi ini di percobaan sebelumnya. Anda tidak diizinkan untuk mengulangnya kembali.';
+            } 
+            // Aturan 2: Jika sudah mencoba 3 kali namun gagal terus, hentikan.
+            elseif ($jumlahAttempt >= 3) {
+                $can_take_quiz = false;
+                $pesan_blokir = 'Anda telah mencapai batas maksimal pengerjaan Evaluasi (Maksimal 3 kali percobaan).';
+            }
+        }
+        // -----------------------------------------
+
         return view("mahasiswa.$folder.quiz",[
             'soal' => $soal,
-            'quiz' => $aktivitas
+            'quiz' => $aktivitas,
+            'can_take_quiz' => $can_take_quiz, // Lempar status ke tampilan
+            'pesan_blokir' => $pesan_blokir
         ]);
     }
 
     public function start($id)
     {
+        $aktivitas = Aktivitas::findOrFail($id);
+        $mahasiswa = auth()->user()->mahasiswa;
+
+        // --- TAMENG KEDUA ---
+        if ($aktivitas->tipe == 'evaluasi') {
+            $riwayatAttempt = JawabanMahasiswa::where('id_mahasiswa', $mahasiswa->id)
+                ->where('id_aktivitas', $aktivitas->id)
+                ->get();
+                
+            $jumlahAttempt = $riwayatAttempt->count();
+            $sudahLulus = $riwayatAttempt->where('status_lulus', 1)->count() > 0;
+            
+            if ($sudahLulus || $jumlahAttempt >= 3) {
+                return response()->json(['status' => 'error', 'message' => 'Akses ditolak: Anda sudah tuntas atau mencapai batas percobaan (3x).']);
+            }
+        }
+        // --------------------
+
         session([
             'quiz_start_'.$id => now()
         ]);

@@ -134,20 +134,44 @@
                 </div>
 
                 <!-- Isi Petunjuk -->
-                <ol class="fs-5 text-secondary ps-4 mb-5" style="line-height: 1.8;">
+                <ol class="fs-5 text-secondary ps-4 mb-2" style="line-height: 1.5;">
                     <li class="mb-2">Latihan ini terdiri dari <b>{{ $soal->count() }} soal</b> acak tentang semua materi algoritma yang telah dipelajari.</li>
                     <li class="mb-2">Kerjakan soal secara <b>berurutan</b> menggunakan tombol <b>Lanjut</b>.</li>
                     <li class="mb-2">Pastikan semua soal telah dijawab sebelum menekan tombol <b>Selesai</b>.</li>
                 </ol>
 
                 <!-- Tombol Intro -->
-                <div class="d-flex gap-3">
-                    <a href="{{ route('mahasiswa.aktivitas.show',['merge','quiz']) }}" class="btn btn-light border fw-bold px-4 py-2 text-primary">
-                        Kembali
-                    </a>
-                    <button onclick="mulaiLatihan()" class="btn btn-primary fw-bold px-4 py-2 shadow-sm">
-                        Mulai Evaluasi
-                    </button>
+                <div class="d-flex gap-3 mb-2">
+                    @if(isset($can_take_quiz) && !$can_take_quiz)
+                        <div class="alert alert-danger mb-4 shadow-sm border-0 border-start border-danger border-5">
+                            <i class="fas fa-ban me-2 fs-5"></i>
+                            <span class="fw-bold">{{ $pesan_blokir ?? 'Akses ditutup.' }}</span>
+                        </div>
+                        <a href="{{ route('mahasiswa.dashboard') }}" class="btn btn-secondary fw-bold px-4 py-2 shadow-sm">
+                            Kembali ke Beranda
+                        </a>
+                    @else
+                    <div class="d-flex gap-3 align-items-start">
+
+                        <div class="d-flex gap-2 flex-shrink-0">
+                            <a href="{{ route('mahasiswa.dashboard') }}"
+                            class="btn btn-light border fw-bold text-primary text-nowrap">
+                                Kembali
+                            </a>
+
+                            <button onclick="mulaiLatihan()"
+                                    class="btn btn-primary fw-bold shadow-sm text-nowrap">
+                                <i class="fas fa-play me-1"></i> Mulai Evaluasi
+                            </button>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+                {{-- <br> --}}
+                <div class="alert alert-info mb-4 shadow-sm border-0 small flex-grow-1">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Evaluasi ini hanya dapat dikerjakan <strong>maksimal 3 kali</strong>.
+                        Jika sudah mencapai KKM, Anda tidak bisa mengulangnya.
                 </div>
             </div>
             
@@ -263,7 +287,7 @@
                     @endforeach
                 </div>
 
-                <div class="small fw-bold text-secondary border-top pt-4 text-uppercase">
+                <div class="small fw-bold text-secondary border-top text-uppercase">
                     <div class="d-flex align-items-center mb-2">
                         <span class="bg-success rounded-2 me-2" style="width: 1rem; height: 1rem;"></span> Sudah Dijawab
                     </div>
@@ -313,15 +337,46 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id ?? 0) }}";
 
     function mulaiLatihan() {
         totalWaktu = {{ $quiz->durasi ?? 0 }} * 60;
+        
         fetch("{{ route('mahasiswa.quiz.start', $quiz->id ?? 0) }}", {
             method: "POST",
             headers: {
-                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                "Accept": "application/json" // Memaksa server membalas dengan JSON
             }
+        })
+        .then(async response => {
+            // Cek apakah balasan server adalah JSON
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            const data = isJson ? await response.json() : null;
+
+            // Jika server error (500)
+            if (!response.ok) {
+                const errorMsg = (data && data.message) ? data.message : "Terjadi kesalahan pada Controller (Server Error 500).";
+                throw new Error(errorMsg);
+            }
+            
+            // Jika Controller sengaja menolak (Logika blokir 3x)
+            if (data && data.status === 'error') {
+                throw new Error(data.message);
+            }
+
+            // --- JIKA BERHASIL ---
+            document.getElementById('intro-area').classList.add('d-none');
+            document.getElementById('quiz-area').classList.remove('d-none');
+            startTimer();
+        })
+        .catch(error => {
+            // Tangkap semua error dan tampilkan ke layar
+            Swal.fire({ 
+                icon: 'error', 
+                title: 'Tidak Bisa Memulai', 
+                text: error.message,
+                confirmButtonText: 'Tutup',
+                buttonsStyling: false, 
+                customClass: { confirmButton: 'btn btn-danger fw-bold px-4 py-2' }
+            });
         });
-        document.getElementById('intro-area').classList.add('d-none');
-        document.getElementById('quiz-area').classList.remove('d-none');
-        startTimer();
     }
 
     function tampilkanSoal(i) {
@@ -499,90 +554,121 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id ?? 0) }}";
         }
     }
 
-    function hitungNilai() {
-        let benar = 0;
-        clearInterval(intervalTimer);
-        let semuaJawaban = {};
+function hitungNilai() {
+    let benar = 0;
+    clearInterval(intervalTimer);
+    let semuaJawaban = {};
 
-        for (const key in kunciJawaban) {
-            const radios = document.querySelectorAll(`input[name="${key}"]`);
-            const input = document.querySelector(`[name="${key}"]`);
-            let jawabanUser = "";
+    for (const key in kunciJawaban) {
+        const radios = document.querySelectorAll(`input[name="${key}"]`);
+        const input = document.querySelector(`[name="${key}"]`);
+        let jawabanUser = "";
 
-            if (radios.length > 1) {
-                const checked = document.querySelector(`input[name="${key}"]:checked`);
-                jawabanUser = checked ? checked.value : "";
-            } else if (input) {
-                jawabanUser = input.value.trim();
-            }
-            semuaJawaban[key] = jawabanUser;
-
-            if (Array.isArray(kunciJawaban[key])) {
-                let userArr = [];
-                try { userArr = JSON.parse(jawabanUser); } catch(e) {}
-                if (JSON.stringify(userArr) === JSON.stringify(kunciJawaban[key])) benar++;
-            } else {
-                if (jawabanUser.toLowerCase() === kunciJawaban[key].toLowerCase()) benar++;
-            }
+        if (radios.length > 1) {
+            const checked = document.querySelector(`input[name="${key}"]:checked`);
+            jawabanUser = checked ? checked.value : "";
+        } else if (input) {
+            jawabanUser = input.value.trim();
         }
+        semuaJawaban[key] = jawabanUser;
 
-        const skor = Math.round((benar / totalSoal) * 100);
+        if (Array.isArray(kunciJawaban[key])) {
+            let userArr = [];
+            try { userArr = JSON.parse(jawabanUser); } catch(e) {}
+            if (JSON.stringify(userArr) === JSON.stringify(kunciJawaban[key])) benar++;
+        } else {
+            if (jawabanUser.toLowerCase() === kunciJawaban[key].toLowerCase()) benar++;
+        }
+    }
 
-        Swal.fire({
-            title: 'Konfirmasi Selesai',
-            text: "Setelah menekan Selesai, Anda tidak dapat mengubah jawaban lagi.",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, Selesai',
-            cancelButtonText: 'Cek Lagi',
-            buttonsStyling: false,
-            customClass: {
-                confirmButton: 'btn btn-success fw-bold px-4 py-2 mx-2',
-                cancelButton: 'btn btn-danger fw-bold px-4 py-2 mx-2'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                kunciKuis();
-                document.getElementById("btn-next").disabled = true;
+    const skor = Math.round((benar / totalSoal) * 100);
 
-                fetch(submitQuizUrl, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    },
-                    body: JSON.stringify({ jawaban: semuaJawaban, })
-                })
-                .then(response => {
-                    if(!response.ok) throw new Error("Server Error");
-                    return response.json();
-                })
-                .then(data => {
-                    const skorServer = data.skor;
+    Swal.fire({
+        title: 'Konfirmasi Selesai',
+        text: "Setelah menekan Selesai, Anda tidak dapat mengubah jawaban lagi.",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Selesai',
+        cancelButtonText: 'Cek Lagi',
+        buttonsStyling: false,
+        customClass: {
+            confirmButton: 'btn btn-success fw-bold px-4 py-2 mx-2',
+            cancelButton: 'btn btn-danger fw-bold px-4 py-2 mx-2'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            kunciKuis();
+            document.getElementById("btn-next").disabled = true;
+
+            fetch(submitQuizUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ jawaban: semuaJawaban })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Server Error");
+                return response.json();
+            })
+            .then(data => {
+
+                if (data.error) {
                     Swal.fire({
-                        title: 'Hasil Evaluasi!',
-                        html: `
-                            <div class="p-4 bg-primary-subtle rounded-3 border border-primary shadow-sm mt-3">
-                                <p class="text-secondary fw-bold small text-uppercase mb-2 tracking-widest">Skor Akhir Anda</p>
-                                <p class="display-3 fw-bold text-primary mb-3">${skorServer}</p>
-                                <p class="small text-secondary fw-bold border-top pt-2 text-uppercase">Benar: ${Math.round(skorServer/10)} dari ${totalSoal}</p>
-                            </div>
-                        `,
-                        icon: 'success',
-                        confirmButtonText: 'Kembali',
+                        title: 'Evaluasi Ditolak',
+                        text: data.error,
+                        icon: 'error',
+                        confirmButtonText: 'Kembali ke Dashboard',
                         allowOutsideClick: false,
                         buttonsStyling: false,
-                        customClass: { confirmButton: 'btn btn-primary fw-bold px-4 py-2 mt-3' }
+                        customClass: {
+                            confirmButton: 'btn btn-primary fw-bold px-4 py-2 mt-3'
+                        }
                     }).then(() => {
-                        window.location.href = "{{ route('mahasiswa.aktivitas.show',['pendahuluan','sorting']) }}";
+                        window.location.href = "{{ route('mahasiswa.dashboard') }}";
                     });
-                })
-                .catch(error => {
-                    Swal.fire({ icon:'error', title:'Terjadi Kesalahan', text:'Jawaban tidak dapat disimpan ke server.' });
+                    return;
+                }
+
+                const skorServer = data.skor;
+
+                Swal.fire({
+                    title: 'Hasil Evaluasi!',
+                    html: `
+                        <div class="p-4 bg-primary-subtle rounded-3 border border-primary shadow-sm mt-3">
+                            <p class="text-secondary fw-bold small text-uppercase mb-2 tracking-widest">Skor Akhir Anda</p>
+                            <p class="display-3 fw-bold text-primary mb-3">${skorServer}</p>
+                            <p class="small text-secondary fw-bold border-top pt-2 text-uppercase">
+                                Benar: ${Math.round(skorServer/10)} dari ${totalSoal}
+                            </p>
+                        </div>
+                    `,
+                    icon: 'success',
+                    confirmButtonText: 'Kembali',
+                    allowOutsideClick: false,
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: 'btn btn-primary fw-bold px-4 py-2 mt-3'
+                    }
+                }).then(() => {
+                    window.location.href = "{{ route('mahasiswa.dashboard') }}";
                 });
-            }
-        });
-    }
+
+            })
+            .catch(error => {
+                console.error(error);
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Terjadi Kesalahan',
+                    text: error.message
+                });
+            });
+
+        }
+    });
+}
 
     function kunciKuis() {
         isLocked = true;

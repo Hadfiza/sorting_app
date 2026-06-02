@@ -49,6 +49,16 @@
                         <button class="btn-sim active mt-3" style="background:#27ae60;" onclick="resetSimulation()">Ulangi Simulasi</button>
                     </div>
                 </div>
+
+                <div id="alertKompleksitas" class="alert alert-info mt-3 {{ $isSelesai ? '' : 'd-none' }}">
+                    <b>Penjelasan Kompleksitas:</b>
+                    <ol class="mb-0 mt-2">
+                        <li>Pada simulasi ini, data awal <b>[8, 3, 9, 4, 6]</b> belum terurut sehingga Merge Sort akan membagi data menjadi beberapa bagian yang lebih kecil, kemudian menggabungkannya kembali dalam urutan yang benar. Kondisi ini termasuk <b>average case</b> dengan kompleksitas waktu <b>O(n log n)</b>.</li>
+                        <li>Jika data sudah atau hampir terurut sejak awal, Merge Sort tetap melakukan proses pembagian data dan penggabungan kembali untuk memastikan seluruh elemen berada pada urutan yang benar. Kondisi ini disebut <b>best case</b> dengan kompleksitas waktu <b>O(n log n)</b>.</li>
+                        <li>Jika data sangat acak atau terurut secara terbalik, Merge Sort tetap membagi data menjadi bagian-bagian kecil dan menggabungkannya kembali secara terurut. Kondisi ini disebut <b>worst case</b> dengan kompleksitas waktu <b>O(n log n)</b>.</li>
+                    </ol>
+                </div>
+
             </div>
         </div>
     </div>
@@ -88,6 +98,8 @@ document.addEventListener("DOMContentLoaded", function() {
     // Tangkap elemen kotak pesan selesai dan tombol selanjutnya
     const finishMessage = document.getElementById('finish-message');
     const btnNext = document.getElementById('btnNextMergeSim');
+    const alertKompleksitas = document.getElementById('alertKompleksitas');
+    
 
     // Buat pemantau (Observer) untuk melihat perubahan pada atribut "style"
     const observer = new MutationObserver(function(mutations) {
@@ -96,6 +108,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Cek apakah pesan selesai sudah tidak disembunyikan (display != none)
                 const displayStyle = window.getComputedStyle(finishMessage).display;
                 if (displayStyle !== 'none') {
+                    // document.getElementById('alertKompleksitas').style.display = 'block';
+                    alertKompleksitas.classList.remove('d-none');
                     simpanProgresSimulasi(); // Simpan progres
                     observer.disconnect();   // Matikan pemantau agar tidak dipanggil berkali-kali
                 }
