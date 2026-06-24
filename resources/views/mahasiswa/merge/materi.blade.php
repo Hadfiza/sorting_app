@@ -134,6 +134,41 @@
         background: #21262d;
         color: white;
     }
+
+    .materi-text p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .form-check {
+        padding: 8px 10px 8px 30px;
+        border-radius: 6px;
+        background-color: #f8f9fa;
+        transition: background 0.2s, border 0.2s;
+        border: 1px solid transparent;
+    }
+
+    .form-check:hover {
+        background-color: #e9ecef;
+    }
+
+    .form-check-input:checked + .form-check-label {
+        font-weight: 600;
+        color: #0d6efd;
+    }
+
+    .fade-in {
+        animation: fadeInOpacity 0.3s ease-in-out;
+    }
+
+    @keyframes fadeInOpacity {
+        0% { opacity: 0; transform: translateX(5px); }
+        100% { opacity: 1; transform: translateX(0); }
+    }
+
+    @media (min-width: 768px) {
+        .w-md-auto { width: auto !important; }
+    }
 </style>
 @endsection
 
@@ -180,11 +215,11 @@
                 <span class="materi-badge">Pengertian Merge Sort</span>
             </div>
             <p class="card-text text-justify">
-                Merge Sort adalah algoritma pengurutan berbasis strategi Divide and Conquer (membagi dan menaklukkan) yang dirancang untuk meningkatkan efisiensi algoritma pengurutan sederhana seperti Bubble Sort, Selection Sort, dan Insertion Sort. Algoritma ini bekerja dengan cara memecah daftar data menjadi dua bagian yang lebih kecil, kemudian mengurutkan masing-masing bagian secara rekursif, dan akhirnya menggabungkannya kembali (merge) menjadi satu daftar baru yang terurut.</br></br>
+                Merge Sort adalah algoritma pengurutan berbasis strategi Divide and Conquer (membagi dan menaklukkan), yaitu dengan membagi masalah menjadi bagian-bagian yang lebih kecil, menyelesaikannya secara terpisah, kemudian menggabungkan hasilnya kembali. Algoritma ini dikenal efisien untuk mengurutkan data berukuran besar karena memiliki performa yang konsisten pada berbagai kondisi data.</br></br>
 
-                Pada tahap awal, jika sebuah daftar kosong atau hanya memiliki satu elemen, daftar tersebut dianggap sudah berada dalam keadaan terurut. Namun, jika jumlah elemennya lebih dari satu, daftar akan dipecah menjadi dua sublist. Kedua sublist tersebut kemudian diurutkan kembali menggunakan prosedur yang sama secara rekursif. Setelah kedua sublist berada dalam kondisi terurut, dilakukan proses penggabungan, yaitu menggabungkan dua daftar terurut tersebut menjadi satu urutan baru yang terurut sepenuhnya. <br> <br>
+                Pada tahap awal, jika sebuah daftar kosong atau hanya memiliki satu elemen, daftar tersebut dianggap sudah berada dalam keadaan terurut. Namun, jika jumlah elemennya lebih dari satu, daftar akan dipecah menjadi dua sublist. Kedua sublist tersebut kemudian diurutkan kembali menggunakan prosedur yang sama secara rekursif. Setelah kedua sublist berada dalam kondisi terurut, dilakukan proses penggabungan, yaitu menggabungkan dua daftar terurut tersebut menjadi satu urutan baru yang terurut sepenuhnya.<br> <br>
 
-                Disebut Merge Sort karena operasi utamanya adalah proses penggabungan dua sublist terurut menjadi satu urutan yang juga terurut. Dengan pendekatan divide and conquer ini, Merge Sort termasuk algoritma pengurutan yang stabil, rekursif, dan sangat efisien, dengan kompleksitas waktu rata-rata dan terburuk O(n log n). Namun, algoritma ini memerlukan memori tambahan untuk menyimpan hasil penggabungan, sehingga lebih boros ruang dibandingkan algoritma in-place seperti Quick Sort.
+                Disebut Merge Sort karena operasi utamanya adalah proses penggabungan dua sublist terurut menjadi satu urutan yang juga terurut. Dengan pendekatan divide and conquer ini, Merge Sort termasuk algoritma pengurutan yang stabil, rekursif, dan sangat efisien. Kompleksitas waktu Merge Sort adalah O(n log n) pada kondisi terbaik, rata-rata, maupun terburuk karena proses pembagian dan penggabungan data dilakukan secara sistematis pada setiap tingkat rekursi. Efisiensi ini membuat Merge Sort cocok digunakan untuk mengurutkan data dalam jumlah besar. Namun, algoritma ini memiliki kompleksitas ruang O(n) karena memerlukan memori tambahan untuk menyimpan hasil penggabungan sementara selama proses pengurutan.  
             </p>
         </div>
     </div>
@@ -200,7 +235,7 @@
             </p>
             <ul class="card-text">
                 <li>Membagi (Divide): daftar data dibagi menjadi dua bagian dengan ukuran hampir sama.</li>
-                <li>Mengurutkan (Conguer): setiap bagian diurutkan kembali secara rekursif hingga hanya tersisa satu elemen di tiap sublist.</li>
+                <li>Menaklukkan (Conguer): setiap bagian diurutkan kembali secara rekursif hingga hanya tersisa satu elemen di tiap sublist.</li>
                 <li>Menggabungkan (Merge): dua sublist yang sudah terurut digabungkan menjadi satu daftar baru dengan membandingkan elemen-elemen terkecil dari masing-masing sublist, lalu menyusunnya ke dalam urutan yang benar.</li>
             </ul>
             <p class="card-text text-justify">
@@ -217,13 +252,25 @@
                 <span class="materi-badge">Ilustrasi Visualisasi (Divide & Conquer)</span>
             </div>
 
-            <p>Berikut adalah simulasi interaktif untuk membantu Anda memahami cara kerja algoritma secara langsung. Klik tombol <strong> Mulai Visualisasi </strong> untuk mengamati proses pengurutan langkah demi langkah, atau tekan tombol <strong> Acak Data </strong> untuk mencoba simulasi dengan susunan angka yang baru. Pastikan Anda memperhatikan perubahan warna pada balok sesuai dengan keterangan status di bagian bawah.</p>
+            <p class="mb-2">
+                Berikut adalah simulasi interaktif yang memperlihatkan proses kerja algoritma Merge Sort dalam mengurutkan data.
+            </p>
+
+            <div class="alert alert-info py-1 mb-1">
+                <strong>Petunjuk:</strong>
+                <ol class="mb-0 ps-3">
+                    <li>Klik <strong>Mulai Visualisasi</strong> untuk menjalankan simulasi.</li>
+                    <li>Amati proses perbandingan dan pertukaran data yang terjadi.</li>
+                    <li>Perhatikan perubahan warna balok sesuai keterangan status di bawah.</li>
+                    <li>Klik <strong>Acak Data</strong> untuk mencoba susunan data yang berbeda.</li>
+                </ol>
+            </div>
 
             <div class="sim-visual-container">
-                <div class="stats-row">
+                {{-- <div class="stats-row">
                     <span>Complexity: O(n log n)</span>
                     <span>Space Complexity: O(n)</span>
-                </div>
+                </div> --}}
 
                 <div id="tree-container" class="tree-root"></div>
 
@@ -254,149 +301,233 @@
         </div>
     </div>
 
+    <div class="card mb-1 materi-box mt-2 shadow-sm" id="quizActivity">
+        <div class="card-body materi-text p-1 p-md-3">
 
-
-    <div class="card mb-4 materi-box mt-4" id="quizActivity">
-        <div class="card-body materi-text">
-
-            <div class="materi-header mb-3">
-                <span class="materi-badge">Aktivitas 2.1: Uji Pemahaman Merge Sort</span>
+            <div class="materi-header mb-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <i class="fas fa-tasks text-primary"></i>
+                    <span class="materi-badge fs-6">Aktivitas 2.1: Uji Pemahaman Merge Sort</span>
+                </div>
+                <span class="badge bg-secondary rounded-pill" id="quizProgress">Soal 1 dari 5</span>
             </div>
 
-            @if(!$isSelesai)
-            <p class="card-text mb-4 text-danger fw-bold">
-                Jawablah pertanyaan berikut secara berurutan dengan benar untuk membuka akses ke materi selanjutnya!
-            </p>
-
-            <div class="quiz-container">
-                <div class="mb-4 fade-in" id="q1-container">
-                    <p class="fw-semibold mb-2">1. Strategi algoritma apa yang menjadi dasar dari algoritma Merge Sort?</p>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq1" id="mq1a" value="A">
-                        <label class="form-check-label" for="mq1a">A. Divide and Conquer</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq1" id="mq1b" value="B">
-                        <label class="form-check-label" for="mq1b">B. Brute Force</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq1" id="mq1c" value="C">
-                        <label class="form-check-label" for="mq1c">C. Dynamic Programming</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq1" id="mq1d" value="D">
-                        <label class="form-check-label" for="mq1d">D. Greedy</label>
-                    </div>
-                </div>
-
-                <div class="mb-4 fade-in d-none" id="q2-container">
-                    <p class="fw-semibold mb-2">2. Pada tahap pembagian (Divide), kapan sebuah sublist dianggap sudah berada dalam keadaan terurut?</p>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq2" id="mq2a" value="A">
-                        <label class="form-check-label" for="mq2a">A. Saat daftar telah dibagi menjadi dua bagian yang sama besar</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq2" id="mq2b" value="B">
-                        <label class="form-check-label" for="mq2b">B. Saat daftar kosong atau hanya memiliki satu elemen</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq2" id="mq2c" value="C">
-                        <label class="form-check-label" for="mq2c">C. Saat elemen terbesar sudah berada di akhir daftar</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq2" id="mq2d" value="D">
-                        <label class="form-check-label" for="mq2d">D. Saat seluruh elemen telah dibandingkan satu per satu</label>
-                    </div>
-                </div>
-
-                <div class="mb-4 fade-in d-none" id="q3-container">
-                    <p class="fw-semibold mb-2">3. Berdasarkan materi, mengapa Merge Sort dinilai lebih boros ruang dibandingkan algoritma in-place seperti Quick Sort?</p>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq3" id="mq3a" value="A">
-                        <label class="form-check-label" for="mq3a">A. Karena memiliki kompleksitas waktu rata-rata O(n log n)</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq3" id="mq3b" value="B">
-                        <label class="form-check-label" for="mq3b">B. Karena selalu membagi daftar menjadi dua sublist</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq3" id="mq3c" value="C">
-                        <label class="form-check-label" for="mq3c">C. Karena memerlukan memori tambahan untuk menyimpan hasil penggabungan</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq3" id="mq3d" value="D">
-                        <label class="form-check-label" for="mq3d">D. Karena menggunakan proses perulangan bersarang</label>
-                    </div>
-                </div>
-                <!-- SOAL 4 -->
-                <div class="mb-4 fade-in d-none" id="q4-container">
-                    <p class="fw-semibold mb-2">
-                        4. Apa yang dilakukan algoritma pada tahap "Combine/Merge" dalam proses Merge Sort?
-                    </p>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq4" id="mq4a" value="A">
-                        <label class="form-check-label" for="mq4a">
-                            A. Dua sublist yang sudah terurut dan menyatukannya kembali menjadi satu daftar terurut dengan membandingkan elemen terkecil dari masing-masing sublist
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq4" id="mq4b" value="B">
-                        <label class="form-check-label" for="mq4b">
-                            B. Membagi array menjadi dua bagian yang terus mengecil secara acak
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq4" id="mq4c" value="C">
-                        <label class="form-check-label" for="mq4c">
-                            C. Menghapus elemen-elemen yang memiliki nilai ganda (duplikat) dalam daftar
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq4" id="mq4d" value="D">
-                        <label class="form-check-label" for="mq4d">
-                            D. Mencari nilai pivot untuk menentukan pembagian data selanjutnya
-                        </label>
-                    </div>
-                </div>
-
-
-                <!-- SOAL 5 -->
-                <div class="mb-4 fade-in d-none" id="q5-container">
-                    <p class="fw-semibold mb-2">
-                        5. Jika sebuah array memiliki 8 elemen, berapa kali proses pembagian (Divide) akan dilakukan hingga setiap elemen berdiri sendiri sebagai satu sublist?
-                    </p>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq5" id="mq5a" value="A">
-                        <label class="form-check-label" for="mq5a">A. 3 kali</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq5" id="mq5b" value="B">
-                        <label class="form-check-label" for="mq5b">B. 1 kali</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq5" id="mq5c" value="C">
-                        <label class="form-check-label" for="mq5c">C. 8 kali</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mq5" id="mq5d" value="D">
-                        <label class="form-check-label" for="mq5d">D. 7 kali</label>
-                    </div>
-                </div>
-
-            </div>
-
-            <div id="mergeQuizFeedback" class="alert d-none mt-3"></div>
-            <div class="text-start mt-3">
-                <button id="btnCheckMergeQuiz" class="btn btn-primary d-none">
-                    Periksa Jawaban
+            <div class="mb-2">
+                <button class="btn btn-sm btn-outline-primary"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#instruksiPilganMerge">
+                    <i class="fa-solid fa-circle-info me-1"></i>
+                    Instruksi Pengerjaan
                 </button>
             </div>
-            @else
-                <div class="alert alert-success mt-2 mb-0">
-                    <i class="bi bi-check-circle-fill me-2"></i> 
-                    <strong>Selesai!</strong> Anda sudah menyelesaikan uji pemahaman ini. Tombol navigasi di bawah telah terbuka.
+
+            <div class="collapse" id="instruksiPilganMerge">
+                <div class="alert alert-light border small py-2 px-3">
+                    • Terdapat 5 soal pilihan ganda.<br>
+                    • Pilih satu jawaban yang paling tepat pada setiap soal.<br>
+                    • Semua soal harus dijawab dengan benar untuk membuka materi selanjutnya.
                 </div>
-            @endif           
+            </div>
+
+            <hr>
+
+            <div class="quiz-container">
+
+                <div class="quiz-slide fade-in" id="slide-0">
+                    <p><strong>Soal :</strong></p>
+                    <p class="fw-semibold mb-2 text-dark">
+                        1. Strategi algoritma apa yang menjadi dasar dari algoritma Merge Sort?
+                    </p>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq1" id="mq1a" value="A">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq1a">
+                            a. Divide and Conquer
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq1" id="mq1b" value="B">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq1b">
+                            b. Brute Force
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq1" id="mq1c" value="C">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq1c">
+                            c. Dynamic Programming
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq1" id="mq1d" value="D">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq1d">
+                            d. Greedy
+                        </label>
+                    </div>
+                </div>
+
+                <div class="quiz-slide d-none fade-in" id="slide-1">
+                    <p class="fw-semibold mb-2 text-dark">
+                        2. Pada tahap pembagian atau <em>Divide</em>, kapan sebuah sublist dianggap sudah berada dalam keadaan terurut?
+                    </p>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq2" id="mq2a" value="A">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq2a">
+                            a. Saat daftar telah dibagi menjadi dua bagian yang sama besar
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq2" id="mq2b" value="B">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq2b">
+                            b. Saat daftar kosong atau hanya memiliki satu elemen
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq2" id="mq2c" value="C">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq2c">
+                            c. Saat elemen terbesar sudah berada di akhir daftar
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq2" id="mq2d" value="D">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq2d">
+                            d. Saat seluruh elemen telah dibandingkan satu per satu
+                        </label>
+                    </div>
+                </div>
+
+                <div class="quiz-slide d-none fade-in" id="slide-2">
+                    <p class="fw-semibold mb-2 text-dark">
+                        3. Berdasarkan materi, mengapa Merge Sort dinilai lebih boros ruang dibandingkan algoritma <em>in-place</em> seperti Quick Sort?
+                    </p>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq3" id="mq3a" value="A">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq3a">
+                            a. Karena memiliki kompleksitas waktu rata-rata O(n log n)
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq3" id="mq3b" value="B">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq3b">
+                            b. Karena selalu membagi daftar menjadi dua sublist
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq3" id="mq3c" value="C">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq3c">
+                            c. Karena memerlukan memori tambahan untuk menyimpan hasil penggabungan
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq3" id="mq3d" value="D">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq3d">
+                            d. Karena menggunakan proses perulangan bersarang
+                        </label>
+                    </div>
+                </div>
+
+                <div class="quiz-slide d-none fade-in" id="slide-3">
+                    <p class="fw-semibold mb-2 text-dark">
+                        4. Apa yang dilakukan algoritma pada tahap <em>Combine/Merge</em> dalam proses Merge Sort?
+                    </p>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq4" id="mq4a" value="A">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq4a">
+                            a. Menggabungkan dua sublist yang sudah terurut menjadi satu daftar terurut dengan membandingkan elemen terkecil dari masing-masing sublist
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq4" id="mq4b" value="B">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq4b">
+                            b. Membagi array menjadi dua bagian yang terus mengecil secara acak
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq4" id="mq4c" value="C">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq4c">
+                            c. Menghapus elemen-elemen yang memiliki nilai ganda dalam daftar
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq4" id="mq4d" value="D">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq4d">
+                            d. Mencari nilai pivot untuk menentukan pembagian data selanjutnya
+                        </label>
+                    </div>
+                </div>
+
+                <div class="quiz-slide d-none fade-in" id="slide-4">
+                    <p class="fw-semibold mb-2 text-dark">
+                        5. Jika sebuah array memiliki 8 elemen, berapa kali proses pembagian atau <em>Divide</em> akan dilakukan hingga setiap elemen berdiri sendiri sebagai satu sublist?
+                    </p>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq5" id="mq5a" value="A">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq5a">
+                            a. 7 kali
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq5" id="mq5b" value="B">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq5b">
+                            b. 1 kali
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq5" id="mq5c" value="C">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq5c">
+                            c. 8 kali
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="mq5" id="mq5d" value="D">
+                        <label class="form-check-label w-100" style="cursor:pointer;" for="mq5d">
+                            d. 3 kali
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                <button type="button" id="btnPrevQuiz" class="btn btn-sm btn-secondary px-3 d-none">
+                    <i class="fa-solid fa-chevron-left"></i> Kembali
+                </button>
+
+                <div class="flex-grow-1 text-center px-2">
+                    <button id="btnCheckQuiz" class="btn btn-sm btn-primary px-3 fw-bold d-none shadow-sm w-100 w-md-auto">
+                        <i class="fa-solid fa-check-double me-1"></i> Periksa
+                    </button>
+
+                    <button id="btnResetQuiz" class="btn btn-sm btn-warning px-3 fw-bold d-none shadow-sm text-dark w-100 w-md-auto">
+                        <i class="fa-solid fa-rotate-right me-1"></i> Ulangi Kuis
+                    </button>
+                </div>
+
+                <button type="button" id="btnNextQuiz" class="btn btn-sm btn-primary px-3">
+                    Lanjut <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div id="quizFeedback" class="alert d-none mt-3 shadow-sm text-center py-2 mb-0 small"></div>
 
         </div>
     </div>
@@ -406,9 +537,10 @@
     <a href="#" class="btn btn-outline-secondary">Sebelumnya</a>
 
     <a href="{{ route('mahasiswa.aktivitas.show',['merge','simulasi']) }}" 
-       id="btnNextMerge" 
-       class="btn btn-success {{ $isSelesai ? '' : 'disabled' }}" 
-       {!! $isSelesai ? '' : 'tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;"' !!}>
+    id="btnNextMerge"
+    class="btn btn-success {{ $isSelesai ? '' : 'disabled' }}"
+    {!! $isSelesai ? '' : 'tabindex="-1" aria-disabled="true" style="pointer-events: none; opacity: 0.5;"' !!}>
+        <i class="fa-solid {{ $isSelesai ? 'fa-unlock' : 'fa-lock' }} me-1" id="lockIcon"></i>
         Selanjutnya
     </a>
     </div>
@@ -476,7 +608,7 @@
         node.classList.remove("splitting");
         node.classList.add("merging");
 
-        await sleepM(800);
+        await sleepM(800); // jeda 0,8 detik saat proses penggabungan data dimulai
         node.innerHTML = "";
 
         merged.forEach(val => {
@@ -488,7 +620,7 @@
 
         node.classList.remove("merging");
         node.classList.add("is-sorted");
-        await sleepM(600);
+        await sleepM(600); // jeda 0,6 detik setelah data hasil gabungan ditandai terurut
     }
 
     async function divide(level, start, end, nodeId) {
@@ -499,16 +631,16 @@
 
             const parent = document.getElementById(nodeId);
             parent.classList.add("splitting");
-            await sleepM(600);
+            await sleepM(600); // jeda 0,6 detik saat data mulai dibagi menjadi dua bagian
 
             let leftId = "node-" + level + "-" + start;
             let rightId = "node-" + level + "-" + end;
 
             createNode(leftArr, level + 1, leftId);
-            await sleepM(600);
+            await sleepM(600); // jeda 0,6 detik setelah bagian kiri ditampilkan
 
             createNode(rightArr, level + 1, rightId);
-            await sleepM(800);
+            await sleepM(800); // jeda 0,8 detik setelah bagian kanan ditampilkan
 
             await divide(level + 1, start, mid, leftId);
             await divide(level + 1, mid + 1, end, rightId);
@@ -517,7 +649,7 @@
         } else {
             const node = document.getElementById(nodeId);
             node.classList.add("is-sorted");
-            await sleepM(400);
+            await sleepM(400); // jeda 0,4 detik saat data tunggal ditandai sebagai bagian terurut
         }
     }
 
@@ -545,84 +677,154 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const q1Inputs = document.querySelectorAll('input[name="mq1"]');
-    const q2Inputs = document.querySelectorAll('input[name="mq2"]');
-    const q3Inputs = document.querySelectorAll('input[name="mq3"]');
-    const q4Inputs = document.querySelectorAll('input[name="mq4"]');
-    const q5Inputs = document.querySelectorAll('input[name="mq5"]');
+    const isSelesai = @json($isSelesai);
 
+    const slides = document.querySelectorAll('.quiz-slide');
+    if (slides.length === 0) return;
 
-    const q2Container = document.getElementById('q2-container');
-    const q3Container = document.getElementById('q3-container');
-    const q4Container = document.getElementById('q4-container');
-    const q5Container = document.getElementById('q5-container');
-    const btnCheck = document.getElementById('btnCheckMergeQuiz');
-    
-    const feedback = document.getElementById('mergeQuizFeedback');
-    const btnNext = document.getElementById('btnNextMerge');
+    const btnPrev = document.getElementById('btnPrevQuiz');
+    const btnNext = document.getElementById('btnNextQuiz');
+    const progressText = document.getElementById('quizProgress');
 
-    // Memunculkan soal 2 saat soal 1 dipilih
-    q1Inputs.forEach(input => {
-        input.addEventListener('change', () => {
-            q2Container.classList.remove('d-none');
+    const btnCheck = document.getElementById('btnCheckQuiz');
+    const btnReset = document.getElementById('btnResetQuiz');
+    const feedback = document.getElementById('quizFeedback');
+
+    const btnNextMateri = document.getElementById('btnNextMerge');
+    const lockIcon = document.getElementById('lockIcon');
+
+    const totalQuestions = slides.length;
+    let currentSlide = 0;
+
+    const kunciJawaban = {
+        mq1: 'A',
+        mq2: 'B',
+        mq3: 'C',
+        mq4: 'A',
+        mq5: 'D'
+    };
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.toggle('d-none', i !== index);
         });
-    });
 
-    // Memunculkan soal 3 saat soal 2 dipilih
-    q2Inputs.forEach(input => {
-        input.addEventListener('change', () => {
-            q3Container.classList.remove('d-none');
-        });
-    });
+        progressText.innerText = `Soal ${index + 1} dari ${totalQuestions}`;
 
-    q3Inputs.forEach(input => {
-        input.addEventListener('change', () => {
-            q4Container.classList.remove('d-none');
-        });
-    });
-
-    q4Inputs.forEach(input => {
-        input.addEventListener('change', () => {
-            q5Container.classList.remove('d-none');
-        });
-    });
-
-    // Memunculkan tombol periksa saat soal 3 dipilih
-    q5Inputs.forEach(input => {
-        input.addEventListener('change', () => {
-            btnCheck.classList.remove('d-none');
-        });
-    });
-
-
-    // Pengecekan Jawaban Akhir
-    btnCheck.addEventListener('click', function() {
-        const q1 = document.querySelector('input[name="mq1"]:checked');
-        const q2 = document.querySelector('input[name="mq2"]:checked');
-        const q3 = document.querySelector('input[name="mq3"]:checked');
-        const q4 = document.querySelector('input[name="mq4"]:checked');
-        const q5 = document.querySelector('input[name="mq5"]:checked');
-
-        if (!q1 || !q2 || !q3 || !q4 || !q5) {
-            feedback.className = 'alert alert-warning mt-3';
-            feedback.innerHTML = 'Harap pilih jawaban untuk semua soal terlebih dahulu!';
-            feedback.classList.remove('d-none');
-            return;
+        if (index === 0) {
+            btnPrev.classList.add('d-none');
+            btnPrev.style.visibility = 'hidden';
+        } else {
+            btnPrev.classList.remove('d-none');
+            btnPrev.style.visibility = 'visible';
         }
 
-        let correctCount = 0;
-        if (q1.value === 'A') correctCount++; // Jawaban: Divide and Conquer
-        if (q2.value === 'B') correctCount++; // Jawaban: Saat daftar kosong atau hanya memiliki satu elemen
-        if (q3.value === 'C') correctCount++; // Jawaban: Karena memerlukan memori tambahan
-        if (q4.value === 'A') correctCount++;
-        if (q5.value === 'D') correctCount++;
+        if (index === totalQuestions - 1) {
+            btnNext.classList.add('d-none');
+        } else {
+            btnNext.classList.remove('d-none');
+        }
+    }
 
-        if (correctCount === 5) {
-            feedback.className = 'alert alert-success mt-3';
-            feedback.innerHTML = 'Luar Biasa! Pemahaman Anda tentang Merge Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
+    function tampilkanJawabanBenar() {
+        Object.keys(kunciJawaban).forEach(function(name) {
+            const radio = document.querySelector(
+                `input[name="${name}"][value="${kunciJawaban[name]}"]`
+            );
+
+            if (radio) {
+                radio.checked = true;
+            }
+        });
+
+        document.querySelectorAll('#quizActivity input[type="radio"]').forEach(function(radio) {
+            radio.disabled = true;
+        });
+
+        if (btnCheck) btnCheck.classList.add('d-none');
+        if (btnReset) btnReset.classList.add('d-none');
+
+        feedback.className = 'alert alert-success mt-3 shadow-sm text-center py-2 mb-0 small fade-in';
+        feedback.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i> <strong>Selesai!</strong> Jawaban benar telah ditampilkan.`;
+        feedback.classList.remove('d-none');
+
+        btnNextMateri.classList.remove('disabled');
+        btnNextMateri.removeAttribute('tabindex');
+        btnNextMateri.removeAttribute('aria-disabled');
+        btnNextMateri.style.pointerEvents = 'auto';
+        btnNextMateri.style.opacity = '1';
+
+        if (lockIcon) {
+            lockIcon.className = 'fa-solid fa-unlock me-1';
+        }
+    }
+
+    btnNext.addEventListener('click', function() {
+        if (currentSlide < totalQuestions - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    });
+
+    btnPrev.addEventListener('click', function() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    });
+
+    function checkAllAnswered() {
+        if (isSelesai) return;
+
+        const q1Val = document.querySelector('input[name="mq1"]:checked');
+        const q2Val = document.querySelector('input[name="mq2"]:checked');
+        const q3Val = document.querySelector('input[name="mq3"]:checked');
+        const q4Val = document.querySelector('input[name="mq4"]:checked');
+        const q5Val = document.querySelector('input[name="mq5"]:checked');
+
+        if (q1Val && q2Val && q3Val && q4Val && q5Val && btnReset.classList.contains('d-none')) {
+            btnCheck.classList.remove('d-none');
+        }
+    }
+
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', checkAllAnswered);
+    });
+
+    btnCheck.addEventListener('click', function() {
+        if (isSelesai) return;
+
+        const q1Val = document.querySelector('input[name="mq1"]:checked');
+        const q2Val = document.querySelector('input[name="mq2"]:checked');
+        const q3Val = document.querySelector('input[name="mq3"]:checked');
+        const q4Val = document.querySelector('input[name="mq4"]:checked');
+        const q5Val = document.querySelector('input[name="mq5"]:checked');
+
+        let correctCount = 0;
+
+        if (q1Val.value === 'A') correctCount++;
+        if (q2Val.value === 'B') correctCount++;
+        if (q3Val.value === 'C') correctCount++;
+        if (q4Val.value === 'A') correctCount++;
+        if (q5Val.value === 'D') correctCount++;
+
+        if (correctCount === totalQuestions) {
+            feedback.className = 'alert alert-success mt-3 shadow-sm text-center py-2 mb-0 small fade-in';
+            feedback.innerHTML = `<i class="fa-solid fa-unlock-keyhole me-1"></i> <strong>Luar Biasa!</strong> (${correctCount}/${totalQuestions}) Benar.`;
             feedback.classList.remove('d-none');
-            
-            // Tembak data ke database tanpa reload halaman (AJAX)
+
+            btnCheck.classList.add('d-none');
+
+            btnNextMateri.classList.remove('disabled');
+            btnNextMateri.removeAttribute('tabindex');
+            btnNextMateri.removeAttribute('aria-disabled');
+            btnNextMateri.style.pointerEvents = 'auto';
+            btnNextMateri.style.opacity = '1';
+
+            if (lockIcon) {
+                lockIcon.className = 'fa-solid fa-unlock me-1';
+            }
+
             fetch("{{ route('mahasiswa.aktivitas.tandai_selesai') }}", {
                 method: "POST",
                 headers: {
@@ -631,33 +833,39 @@ document.addEventListener('DOMContentLoaded', function() {
                     "Accept": "application/json"
                 },
                 body: JSON.stringify({
-                    id_aktivitas: {{ $item->id }} // Mengirim ID aktivitas saat ini
+                    id_aktivitas: {{ $item->id }}
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.success) {
-                    feedback.innerHTML = '<strong>Luar Biasa!</strong> Pemahaman Anda tentang Bubble Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
-                    
-                    // Buka kunci tombol Selanjutnya
-                    btnNext.classList.remove('disabled');
-                    btnNext.removeAttribute('tabindex');
-                    btnNext.removeAttribute('aria-disabled');
-                    btnNext.style.pointerEvents = 'auto'; 
-                    btnNext.style.opacity = '1';          
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                feedback.innerHTML = 'Gagal menyimpan progres, silakan periksa koneksi Anda.';
-            });
+            }).catch(err => console.error(err));
 
         } else {
-            feedback.className = 'alert alert-danger mt-3';
-            feedback.innerHTML = 'Kurang Tepat! Ada jawaban yang masih salah. Coba baca kembali materi di atas.';
+            feedback.className = 'alert alert-danger mt-3 shadow-sm text-center py-2 mb-0 small fade-in';
+            feedback.innerHTML = `<i class="fa-solid fa-triangle-exclamation me-1"></i> Anda menjawab ${correctCount} dari ${totalQuestions} soal dengan benar. Silakan ulangi!`;
             feedback.classList.remove('d-none');
+
+            btnCheck.classList.add('d-none');
+            btnReset.classList.remove('d-none');
         }
     });
+
+    btnReset.addEventListener('click', function() {
+        if (isSelesai) return;
+
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.checked = false;
+        });
+
+        btnReset.classList.add('d-none');
+        feedback.classList.add('d-none');
+
+        currentSlide = 0;
+        showSlide(currentSlide);
+    });
+
+    showSlide(0);
+
+    if (isSelesai) {
+        tampilkanJawabanBenar();
+    }
 });
 </script>
 @endsection

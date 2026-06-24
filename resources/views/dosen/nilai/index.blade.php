@@ -102,18 +102,18 @@
                             <th scope="col" class="px-4 py-3 th-header fw-bold border-0 border-bottom border-end" rowspan="2" style="min-width: 160px;">Nama Siswa</th>
                             <th scope="col" class="px-3 py-3 th-header fw-bold text-center border-0 border-bottom border-end" rowspan="2" style="min-width: 80px;">Kelas</th>
                             
-                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end" colspan="5">Kuis (Modul)</th>
-                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end" colspan="4">Praktikum</th>
+                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end" colspan="5">Kuis (K)</th>
+                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end" colspan="4">Praktikum (P)</th>
                             <th scope="col" class="px-3 py-3 th-header fw-bold text-center border-0 border-bottom border-end" rowspan="2">Eval</th>
                             <th scope="col" class="px-3 py-3 th-header fw-bold text-center border-0 border-bottom border-end" rowspan="2">Rata</th>
                             <th scope="col" class="px-4 py-3 th-header fw-bold text-center border-0 border-bottom" rowspan="2">Aksi</th>
                         </tr>
                         <tr>
-                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end col-score" title="Pendahuluan">Q1</th>
-                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end col-score" title="Bubble Sort">Q2</th>
-                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end col-score" title="Selection Sort">Q3</th>
-                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end col-score" title="Insertion Sort">Q4</th>
-                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end col-score" title="Merge Sort">Q5</th>
+                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end col-score" title="Pendahuluan">K1</th>
+                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end col-score" title="Bubble Sort">K2</th>
+                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end col-score" title="Selection Sort">K3</th>
+                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end col-score" title="Insertion Sort">K4</th>
+                            <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end col-score" title="Merge Sort">K5</th>
                             
                             <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end col-score text-primary" title="Bubble Praktikum">P1</th>
                             <th scope="col" class="py-2 th-header fw-bold text-center border-0 border-bottom border-end col-score text-primary" title="Selection Praktikum">P2</th>

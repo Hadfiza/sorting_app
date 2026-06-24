@@ -80,15 +80,15 @@
 /* ===== DRAG LIST & ITEM (SUMBER) =====     */
 /* ========================================= */
 .drag-list {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
 }
 
 .drag-item {
     width: 100%;
-    max-width: 420px;
-    height: 240px;
+    max-width: none;
+    height: 220px;
     border: 2px dashed #cbd5e1;
     border-radius: 14px;
     background: #fff;
@@ -123,9 +123,10 @@
 /* ===== DROP ZONE (KOTAK KATEGORI) =====    */
 /* ========================================= */
 .sorting-zones {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
 }
 
 .drop-zone {
@@ -139,7 +140,7 @@
     transition: all 0.3s ease;
     margin-bottom: 15px;
     height: auto !important; /* Biarkan memanjang ke bawah otomatis */
-    min-height: 200px;
+    min-height: 250px;
 }
 
 /* area drop aktif */

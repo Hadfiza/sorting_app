@@ -13,6 +13,20 @@
         </a>
     </div>
 
+    <div class="alert alert-info border-0 shadow-sm mb-4">
+        <h6 class="fw-bold mb-2">
+            <i class="fa-solid fa-circle-info me-2"></i>Petunjuk Penggunaan
+        </h6>
+        <ol class="mb-0 ps-3">
+            <li>Masukkan judul praktikum yang akan ditampilkan kepada mahasiswa.</li>
+            <li>Isi deskripsi singkat sebagai informasi atau instruksi awal praktikum.</li>
+            <li>Unggah file soal praktikum dalam format PDF (maksimal 5 MB).</li>
+            <li>Jika sudah terdapat file PDF tersimpan, dosen dapat mengunggah file baru untuk menggantinya.</li>
+            <li>Klik tombol <b>Simpan Modul Ini</b> untuk menyimpan perubahan pada modul yang dipilih.</li>
+            <li>Mahasiswa dapat mengakses soal praktikum yang telah disimpan melalui halaman praktikum.</li>
+        </ol>
+    </div>
+
     @if(session('success'))
         <div class="alert alert-success shadow-sm border-0"><i class="fa-solid fa-check-circle me-2"></i>{{ session('success') }}</div>
     @endif

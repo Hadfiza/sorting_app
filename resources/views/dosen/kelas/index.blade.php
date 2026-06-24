@@ -79,7 +79,7 @@
                         <div class="card h-100 shadow-sm kelas-card bg-white position-relative">
                             <div class="card-body p-4">
                                 
-                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
                                     <h5 class="card-title fw-bold text-dark mb-0 pe-3">{{ $kelas->nama_kelas }}</h5>
                                     
                                     <div class="dropdown">
@@ -108,8 +108,11 @@
                                         </ul>
                                     </div>
                                 </div>
+                                <span class="badge bg-light text-secondary border mt-0">
+                                    <i class="bi bi-calander3"></i> Tahun Ajaran: {{$kelas->tahun_ajaran}}
+                                </span>
                                 
-                                <div class="token-box d-flex justify-content-between align-items-center mt-4">
+                                <div class="token-box d-flex justify-content-between align-items-center mt-2">
                                     <span class="text-secondary small fw-medium">Token Kelas:</span>
                                     <span class="text-primary fw-bold font-monospace fs-5 tracking-wide">{{ $kelas->token }}</span>
                                 </div>
@@ -151,7 +154,7 @@
                     </div>
                     {{-- tahun ajaran --}}
                     <div class="mb-3">
-                        <label for="tahun_ajaran" class="form-label font-bold text-slate-700">Tahun Ajaran</label>
+                        <label for="tahun_ajaran" class="form-label fw-medium">Tahun Ajaran <span class="text-danger">*</label>
                         <input type="number" class="form-control rounded-xl" id="tahun_ajaran" name="tahun_ajaran" placeholder="Contoh: 2026" min="2020" max="2099" required>
                     </div>
                     {{-- token --}}

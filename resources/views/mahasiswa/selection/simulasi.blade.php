@@ -157,6 +157,29 @@
                 <i class="fa-sharp-duotone fa-solid fa-play-circle"></i>
                 <span class="materi-badge">Simulasi SelectionSort</span>
             </div>
+
+            <div class="mb-3">
+                <button class="btn btn-outline-primary btn-sm"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#instruksiSimulasi">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Instruksi Simulasi
+                </button>
+
+                <div class="collapse mt-2" id="instruksiSimulasi">
+                    <div class="card card-body bg-light">
+                        <ol class="mb-0">
+                            <li>Bacalah studi kasus yang disajikan untuk memahami permasalahan pengurutan data.</li>
+                            <li>Perhatikan posisi data yang sedang diproses pada setiap iterasi.</li>
+                            <li>Amati proses perbandingan data yang dilakukan selama simulasi.</li>
+                            <li>Analisis hasil perbandingan untuk menentukan data yang seharusnya dipilih pada iterasi tersebut.</li>
+                            <li>Amati proses pertukaran data ke posisi yang sesuai setelah proses pemilihan selesai.</li>
+                            <li>Pilih jawaban yang sesuai berdasarkan hasil analisis Anda hingga seluruh data tersusun sesuai urutan yang ditentukan.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
             
             <div class="simulation-wrapper">
                 <div class="sub-title"><strong>Studi kasus : </strong>Di sebuah gudang penyimpanan, terdapat beberapa kaleng makanan dengan tanggal kedaluwarsa (EXP) yang berbeda-beda. Kaleng-kaleng tersebut masih tersusun secara acak sehingga berisiko menyebabkan kaleng dengan tanggal kedaluwarsa lebih dekat terlewat saat distribusi. Oleh karena itu, diperlukan proses pengurutan kaleng makanan berdasarkan tanggal EXP paling awal hingga paling akhir. Untuk menyelesaikan permasalahan ini, digunakan algoritma Selection Sort, yang bekerja dengan cara memilih data dengan nilai terkecil pada setiap iterasi lalu menempatkannya di posisi yang sesuai.</div>

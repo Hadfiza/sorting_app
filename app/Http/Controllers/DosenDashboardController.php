@@ -61,6 +61,8 @@ class DosenDashboardController extends Controller
 
         // Menyisipkan persentase progress DAN mencari Nilai Tertinggi
         $nilaiTertinggi = 0; // Siapkan penampung nilai awal
+        $nilaiTerendah = null;
+
 
         // Menyisipkan persentase progress ke dalam masing-masing object mahasiswa
         foreach ($mahasiswas as $mhs) {
@@ -71,13 +73,19 @@ class DosenDashboardController extends Controller
             if ($mhs->nilai_akhir > $nilaiTertinggi) {
                 $nilaiTertinggi = $mhs->nilai_akhir;
             }
+
+            if ($nilaiTerendah === null || $mhs->nilai_akhir < $nilaiTerendah) {
+                $nilaiTerendah = $mhs->nilai_akhir;
+            }
         }
 
+        $nilaiTerendah = $nilaiTerendah ?? 0;
         return view('dosen.dashboard', compact(
             'jumlahKelas', 
             'jumlahMahasiswa', 
             'nilaiTertinggi', 
             'progresTertinggi',
+            'nilaiTerendah',
             'kelases',
             'mahasiswas'
         ));

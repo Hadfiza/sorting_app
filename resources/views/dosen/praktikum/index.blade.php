@@ -176,7 +176,7 @@
                                             <div class="mb-3">
                                                 <label class="form-label fw-semibold">Nilai Praktikum (0-100)</label>
                                                 <input type="number" name="nilai" class="form-control form-control-lg" 
-                                                       value="{{ $item->nilai }}" min="0" max="100" required>
+                                                       value="{{ $item->nilai }}" min="0" max="100" required oninput="if(this.value > 100) this.value = 100; if(this.value < 0) this.value = 0;">
                                             </div>
                                             <div class="mb-0">
                                                 <label class="form-label fw-semibold">Feedback / Catatan Dosen</label>

@@ -4,11 +4,11 @@
             <th style="font-weight: bold; text-align: center;">Nama Siswa</th>
             <th style="font-weight: bold; text-align: center;">NIM</th>
             <th style="font-weight: bold; text-align: center;">Kelas</th>
-            <th style="font-weight: bold; text-align: center;">Q1 (Pendahuluan)</th>
-            <th style="font-weight: bold; text-align: center;">Q2 (Bubble)</th>
-            <th style="font-weight: bold; text-align: center;">Q3 (Selection)</th>
-            <th style="font-weight: bold; text-align: center;">Q4 (Insertion)</th>
-            <th style="font-weight: bold; text-align: center;">Q5 (Merge)</th>
+            <th style="font-weight: bold; text-align: center;">K1 (Pendahuluan)</th>
+            <th style="font-weight: bold; text-align: center;">K2 (Bubble)</th>
+            <th style="font-weight: bold; text-align: center;">K3 (Selection)</th>
+            <th style="font-weight: bold; text-align: center;">K4 (Insertion)</th>
+            <th style="font-weight: bold; text-align: center;">K5 (Merge)</th>
             <th style="font-weight: bold; text-align: center;">P1 (Bubble)</th>
             <th style="font-weight: bold; text-align: center;">P2 (Selection)</th>
             <th style="font-weight: bold; text-align: center;">P3 (Insertion)</th>

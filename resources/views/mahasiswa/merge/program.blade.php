@@ -204,228 +204,490 @@
 
                     <div class="code-container">
 <pre class="code-box">
-def merge_sort(data):
-    if len(data) > 1:
-        tengah = len(data) // 2
-        bagian_kiri = data[:tengah]
-        bagian_kanan = data[tengah:]
-
-        # Rekursi
-        merge_sort(bagian_kiri)
-        merge_sort(bagian_kanan)
-
-        i = j = k = 0
-
-        # Proses Penggabungan (Merge)
-        while i < len(bagian_kiri) and j < len(bagian_kanan):
-            if bagian_kiri[i] < bagian_kanan[j]:
-                data[k] = bagian_kiri[i]
-                i += 1
-            else:
-                data[k] = bagian_kanan[j]
-                j += 1
-            k += 1
-
-        # Memasukkan sisa elemen kiri
-        while i < len(bagian_kiri):
-            data[k] = bagian_kiri[i]
-            i += 1
-            k += 1
-
-        # Memasukkan sisa elemen kanan
-        while j < len(bagian_kanan):
-            data[k] = bagian_kanan[j]
-            j += 1
-            k += 1
-        
-        print(f"Hasil sementara: {data}")
-
-angka = [38, 27, 43, 3, 9, 82, 10]
-print("Sebelum sorting:", angka)
-merge_sort(angka)
-print("Setelah sorting:", angka)
+ 1  def merge_sort(data):
+ 2      if len(data) > 1:
+ 3          tengah = len(data) // 2
+ 4          bagian_kiri = data[:tengah]
+ 5          bagian_kanan = data[tengah:]
+ 6
+ 7          # Rekursi
+ 8          merge_sort(bagian_kiri)
+ 9          merge_sort(bagian_kanan)
+10
+11          i = j = k = 0
+12
+13          # Proses Penggabungan (Merge)
+14          while i < len(bagian_kiri) and j < len(bagian_kanan):
+15              if bagian_kiri[i] < bagian_kanan[j]:
+16                  data[k] = bagian_kiri[i]
+17                  i += 1
+18              else:
+19                  data[k] = bagian_kanan[j]
+20                  j += 1
+21              k += 1
+22
+23          # Memasukkan sisa elemen kiri
+24          while i < len(bagian_kiri):
+25              data[k] = bagian_kiri[i]
+26              i += 1
+27              k += 1
+28
+29          # Memasukkan sisa elemen kanan
+30          while j < len(bagian_kanan):
+31              data[k] = bagian_kanan[j]
+32              j += 1
+33              k += 1
+34
+35          print(f"Hasil sementara: {data}")
+36
+37  angka = [38, 27, 43, 3, 9, 82, 10]
+38  print("Sebelum sorting:", angka)
+39  merge_sort(angka)
+40  print("Setelah sorting:", angka)
 </pre>
                 </div>
             </div>
             
-            <hr class="my-4">
+<h5 class="fw-bold mt-4">Penjelasan Kode</h5>
 
-            <h5 class="fw-bold">Penjelasan Per Blok</h5>
+<div class="accordion" id="accordionPenjelasanMerge">
 
-            <div class="mb-4">
-                <h6 class="fw-semibold">1. Basis Rekursi (Kondisi Berhenti)</h6>
-                <div class="code-container mt-2">
-<pre class="code-box"><code>
-<span>def merge_sort(data):</span>
-<span>    if len(data) > 1:</span>
-</code></pre>
-                </div>
-                <p class="mt-2">
-                    Baris ini mengecek apakah panjang <code>data</code> lebih dari satu elemen. Dalam konsep rekursi, ini disebut <em>base case</em>. Jika <code>data</code> hanya berisi 1 elemen (atau kosong), maka dianggap sudah terurut dan algoritma tidak akan melakukan pemecahan lagi.
-                </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergePenjelasan1">
+                1) Deklarasi Fungsi
+            </button>
+        </h2>
+        <div id="mergePenjelasan1" class="accordion-collapse collapse show"
+            data-bs-parent="#accordionPenjelasanMerge">
+            <div class="accordion-body">
+                Pada baris 1, fungsi merge_sort() didefinisikan dengan parameter data. Parameter ini berisi kumpulan data yang akan diurutkan menggunakan algoritma Merge Sort.
             </div>
+        </div>
+    </div>
 
-            <div class="mb-4">
-                <h6 class="fw-semibold">2. Fase Divide (Membelah Data)</h6>
-                <div class="code-container mt-2">
-<pre class="code-box"><code>
-<span>tengah = len(data) // 2</span>
-<span>bagian_kiri = data[:tengah]</span>
-<span>bagian_kanan = data[tengah:]</span>
-</code></pre>
-                </div>
-                <p class="mt-2">
-                    Jika elemen lebih dari satu, sistem akan mencari titik tengah dari array menggunakan pembagian bulat (<code>// 2</code>). Kemudian, array asli dibelah menjadi dua sub-array: <code>bagian_kiri</code> (dari indeks 0 hingga sebelum titik tengah) dan <code>bagian_kanan</code> (dari titik tengah hingga akhir).
-                </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergePenjelasan2">
+                2) Kondisi Rekursi dan Pembagian Data
+            </button>
+        </h2>
+        <div id="mergePenjelasan2" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMerge">
+            <div class="accordion-body">
+                Pada baris 2–5, dilakukan pengecekan apakah jumlah elemen dalam list lebih dari satu. Jika kondisi terpenuhi, data akan dibagi menjadi dua bagian, yaitu bagian_kiri dan bagian_kanan. Proses pembagian ini merupakan tahap divide pada algoritma Merge Sort.
             </div>
+        </div>
+    </div>
 
-            <div class="mb-4">
-                <h6 class="fw-semibold">3. Pemanggilan Rekursif</h6>
-                <div class="code-container mt-2">
-<pre class="code-box"><code>
-<span>merge_sort(bagian_kiri)</span>
-<span>merge_sort(bagian_kanan)</span>
-</code></pre>
-                </div>
-                <p class="mt-2">
-                    Fungsi <code>merge_sort</code> kemudian memanggil dirinya sendiri secara terus-menerus untuk masing-masing bagian (kiri dan kanan). Proses pembelahan ini akan terus terjadi hingga array terpecah menjadi kepingan terkecil (1 elemen).
-                </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergePenjelasan3">
+                3) Proses Rekursi
+            </button>
+        </h2>
+        <div id="mergePenjelasan3" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMerge">
+            <div class="accordion-body">
+                Pada baris 7–9, fungsi merge_sort() dipanggil kembali untuk mengurutkan bagian_kiri dan bagian_kanan. Proses ini dilakukan secara rekursif hingga setiap bagian hanya berisi satu elemen.
             </div>
+        </div>
+    </div>
 
-            <div class="mb-4">
-                <h6 class="fw-semibold">4. Fase Conquer & Merge (Menggabungkan)</h6>
-                <div class="code-container mt-2">
-<pre class="code-box"><code>
-<span>i = j = k = 0</span>
-<span>while i < len(bagian_kiri) and j < len(bagian_kanan):</span>
-<span>    if bagian_kiri[i] < bagian_kanan[j]:</span>
-<span>        data[k] = bagian_kiri[i]</span>
-<span>        i += 1</span>
-<span>    else:</span>
-<span>        data[k] = bagian_kanan[j]</span>
-<span>        j += 1</span>
-<span>    k += 1</span>
-</code></pre>
-                </div>
-                <p class="mt-2">
-                    Setelah terpecah, kepingan data tersebut digabungkan kembali sambil diurutkan. Variabel <code>i</code> digunakan untuk melacak indeks <code>bagian_kiri</code>, <code>j</code> untuk <code>bagian_kanan</code>, dan <code>k</code> untuk menulis ke dalam array asli (<code>data</code>). Jika elemen di bagian kiri lebih kecil, masukkan ke array hasil dan geser maju nilai <code>i</code>. Sebaliknya, masukkan elemen bagian kanan.
-                </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergePenjelasan4">
+                4) Inisialisasi Variabel Indeks
+            </button>
+        </h2>
+        <div id="mergePenjelasan4" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMerge">
+            <div class="accordion-body">
+                Pada baris 11, variabel i, j, dan k diinisialisasi dengan nilai 0. Variabel i digunakan untuk menelusuri bagian_kiri, variabel j untuk menelusuri bagian_kanan, dan variabel k untuk menentukan posisi penyimpanan hasil penggabungan pada list utama.
             </div>
+        </div>
+    </div>
 
-            <div class="mb-4">
-                <h6 class="fw-semibold">5. Memasukkan Sisa Elemen</h6>
-                <div class="code-container mt-2">
-<pre class="code-box"><code>
-<span>while i < len(bagian_kiri): ... </span>
-<span>while j < len(bagian_kanan): ... </span>
-</code></pre>
-                </div>
-                <p class="mt-2">
-                    Terkadang salah satu bagian (kiri atau kanan) sudah habis dimasukkan ke dalam array hasil penggabungan, sementara bagian lainnya masih memiliki sisa. Kedua blok perulangan <code>while</code> di bagian akhir ini berfungsi untuk "menyapu bersih" dan memasukkan seluruh sisa elemen (jika ada) ke dalam array utama.
-                </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergePenjelasan5">
+                5) Proses Penggabungan (Merge)
+            </button>
+        </h2>
+        <div id="mergePenjelasan5" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMerge">
+            <div class="accordion-body">
+                Pada baris 13–21, dilakukan proses penggabungan dua bagian data yang telah terurut. Elemen pada bagian_kiri dan bagian_kanan dibandingkan satu per satu, kemudian nilai yang lebih kecil ditempatkan ke dalam list utama. Setelah elemen dipindahkan, indeks yang sesuai akan bertambah untuk melanjutkan proses perbandingan.
             </div>
+        </div>
+    </div>
 
-            {{-- <div class="refleksi-alert mt-4">
-                <h5 class="fw-bold mb-3">
-                    Refleksi Konseptual
-                </h5>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergePenjelasan6">
+                6) Memasukkan Sisa Elemen Bagian Kiri
+            </button>
+        </h2>
+        <div id="mergePenjelasan6" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMerge">
+            <div class="accordion-body">
+                Pada baris 23–27, apabila masih terdapat elemen yang tersisa pada bagian_kiri setelah proses penggabungan selesai, seluruh elemen tersebut akan dipindahkan ke dalam list utama.
+            </div>
+        </div>
+    </div>
 
-                <p class="mb-3">
-                    Sebelum melanjutkan ke bagian aktivitas, pastikan Anda memahami hal berikut:
-                </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergePenjelasan7">
+                7) Memasukkan Sisa Elemen Bagian Kanan
+            </button>
+        </h2>
+        <div id="mergePenjelasan7" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMerge">
+            <div class="accordion-body">
+                Pada baris 29–33, apabila masih terdapat elemen yang tersisa pada bagian_kanan, seluruh elemen tersebut akan dipindahkan ke dalam list utama sehingga seluruh data berhasil digabungkan.
+            </div>
+        </div>
+    </div>
 
-                <ul class="mb-0">
-                    <li class="mb-3">
-                        <strong>Mengapa Merge Sort disebut algoritma rekursif?</strong><br>
-                        Karena fungsi <code>merge_sort</code> memanggil dirinya sendiri di dalam badannya sendiri untuk menyelesaikan sub-masalah (potongan array) yang lebih kecil.
-                    </li>
-                    <li class="mb-3">
-                        <strong>Apa peran pembagian bulat <code>// 2</code>?</strong><br>
-                        Pembagian bulat menghasilkan bilangan bulat utuh tanpa koma (desimal), yang mana sangat diperlukan karena indeks array tidak boleh menggunakan bilangan pecahan.
-                    </li>
-                </ul>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergePenjelasan8">
+                8) Menampilkan Hasil Sementara
+            </button>
+        </h2>
+        <div id="mergePenjelasan8" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMerge">
+            <div class="accordion-body">
+                Pada baris 35, kondisi data ditampilkan setelah proses penggabungan selesai dilakukan. Hal ini bertujuan untuk memperlihatkan perkembangan hasil pengurutan pada setiap tahap Merge Sort.
+            </div>
+        </div>
+    </div>
 
-            </div> --}}
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergePenjelasan9">
+                9) Menyiapkan Data yang Akan Diurutkan
+            </button>
+        </h2>
+        <div id="mergePenjelasan9" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMerge">
+            <div class="accordion-body">
+                Pada baris 37, didefinisikan sebuah list bernama angka yang berisi data [38, 27, 43, 3, 9, 82, 10]. Data ini digunakan sebagai contoh dalam proses pengurutan.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergePenjelasan10">
+                10) Menampilkan Data Sebelum Pengurutan
+            </button>
+        </h2>
+        <div id="mergePenjelasan10" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMerge">
+            <div class="accordion-body">
+                Pada baris 38, data ditampilkan sebelum proses pengurutan dilakukan sehingga urutan awal elemen dapat diketahui.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergePenjelasan11">
+                11) Memanggil Fungsi Merge Sort
+            </button>
+        </h2>
+        <div id="mergePenjelasan11" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMerge">
+            <div class="accordion-body">
+                Pada baris 39, fungsi merge_sort(angka) dipanggil untuk menjalankan proses pengurutan menggunakan algoritma Merge Sort.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergePenjelasan12">
+                12) Menampilkan Hasil Pengurutan
+            </button>
+        </h2>
+        <div id="mergePenjelasan12" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMerge">
+            <div class="accordion-body">
+                Pada baris 40, data ditampilkan kembali setelah proses pengurutan selesai sehingga hasil akhir pengurutan dapat dilihat.
+            </div>
+        </div>
+    </div>
+
+</div>
+
             </div>
 
             <div class="tab-pane fade" id="pills-dict" role="tabpanel" aria-labelledby="pills-dict-tab">
                     
-                    <div class="my-4 text-start">
+                    {{-- <div class="my-4 text-start">
                         <div class="alert alert-info mb-3">
                             <strong>Perhatian:</strong> Di dunia nyata, data seringkali berbentuk kumpulan kamus (Dictionary). Perhatikan bagaimana algoritma dimodifikasi agar bisa mengurutkan data berdasarkan kunci (key) tertentu.
-                    </div>
+                    </div> --}}
 
                     <div class="code-container">
 <pre class="code-box">
-def merge_sort_dict(arr, key="value"):
-    if len(arr) > 1:
-        mid = len(arr) // 2
-        left_half = arr[:mid]
-        right_half = arr[mid:]
-
-        # Rekursif sorting
-        merge_sort_dict(left_half, key)
-        merge_sort_dict(right_half, key)
-
-        i = j = k = 0
-
-        # Merge proses
-        while i < len(left_half) and j < len(right_half):
-            if left_half[i][key] < right_half[j][key]:
-                arr[k] = left_half[i]
-                i += 1
-            else:
-                arr[k] = right_half[j]
-                j += 1
-            k += 1
-
-        # Sisa elemen dari left half
-        while i < len(left_half):
-            arr[k] = left_half[i]
-            i += 1
-            k += 1
-
-        # Sisa elemen di kanan
-        while j < len(right_half):
-            arr[k] = right_half[j]
-            j += 1
-            k += 1
-
-# Contoh data
-data = [
-    {"value": 6},
-    {"value": 5},
-    {"value": 12},
-    {"value": 10},
-    {"value": 9},
-    {"value": 1}
-]
-
-print("Sebelum diurutkan:", data)
-merge_sort_dict(data)
-print("Setelah diurutkan:", data)
+ 1  def merge_sort_dict(arr, key="value"):
+ 2      if len(arr) > 1:
+ 3          mid = len(arr) // 2
+ 4          left_half = arr[:mid]
+ 5          right_half = arr[mid:]
+ 6
+ 7          # Rekursif sorting
+ 8          merge_sort_dict(left_half, key)
+ 9          merge_sort_dict(right_half, key)
+10
+11          i = j = k = 0
+12
+13          # Merge proses
+14          while i < len(left_half) and j < len(right_half):
+15              if left_half[i][key] < right_half[j][key]:
+16                  arr[k] = left_half[i]
+17                  i += 1
+18              else:
+19                  arr[k] = right_half[j]
+20                  j += 1
+21              k += 1
+22
+23          # Sisa elemen dari left half
+24          while i < len(left_half):
+25              arr[k] = left_half[i]
+26              i += 1
+27              k += 1
+28
+29          # Sisa elemen di kanan
+30          while j < len(right_half):
+31              arr[k] = right_half[j]
+32              j += 1
+33              k += 1
+34
+35  # Contoh data
+36  data = [
+37      {"value": 6},
+38      {"value": 5},
+39      {"value": 12},
+40      {"value": 10},
+41      {"value": 9},
+42      {"value": 1}
+43  ]
+44
+45  print("Sebelum diurutkan:", data)
+46  merge_sort_dict(data)
+47  print("Setelah diurutkan:", data)
 </pre>
                     </div>
 
-                    <h5 class="fw-bold mt-4">Penjelasan: Pemrosesan List of Dictionary pada Merge Sort</h5>
-                    <p>Pada algoritma Merge Sort ini, kita tetap menerapkan prinsip dasar <em>Divide and Conquer</em> (membagi dan menaklukkan), namun kali ini diterapkan pada struktur data <strong>List of Dictionary</strong>. Berikut adalah poin-poin penting perbedaannya:</p>
+<h5 class="fw-bold mt-4">Penjelasan Kode</h5>
 
-                    <ul>
-                        <li class="mb-2">
-                            <strong>Penggunaan Parameter Opsional (<em>Default Parameter</em>):</strong><br>
-                            Perhatikan baris deklarasi <code>def merge_sort_dict(arr, key="value"):</code>. Fungsi ini dirancang agar lebih dinamis. Secara bawaan (<em>default</em>), program akan mengurutkan data berdasarkan kunci (<em>key</em>) bernama <code>"value"</code>. Namun, Anda dapat dengan mudah menyesuaikannya saat pemanggilan fungsi jika data Anda memiliki atribut lain, misalnya <code>merge_sort_dict(data, "harga")</code>.
-                        </li>
-                        
-                        <li class="mb-2">
-                            <strong>Perbandingan Spesifik pada Proses Penggabungan (<em>Merge</em>):</strong><br>
-                            Tahap paling krusial terjadi saat program menggabungkan kembali (<em>merge</em>) bagian kiri dan kanan yang telah dipecah. Pada baris <code>if left_half[i][key] &lt; right_half[j][key]:</code>, kita secara eksplisit menginstruksikan program untuk membandingkan nilai atribut tertentu yang ada di dalam <em>dictionary</em>, bukan membandingkan <em>dictionary</em> itu sendiri secara utuh.
-                        </li>
+<div class="accordion" id="accordionPenjelasanMergeDict">
 
-                        <li>
-                            <strong>Penempatan Kembali Kesatuan Data:</strong><br>
-                            Meskipun pembandingan dilakukan hanya pada nilai atribut spesifik, saat program menyusun ulang data (contohnya pada baris <code>arr[k] = left_half[i]</code>), program memindahkan <strong>seluruh isi <em>dictionary</em></strong> ke posisi yang baru. Hal ini sangat penting agar seluruh kelengkapan informasi di dalam kamus data tersebut tidak terpisah atau saling tertukar.
-                        </li>
-                    </ul>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergeDictPenjelasan1">
+                1) Deklarasi Fungsi
+            </button>
+        </h2>
+        <div id="mergeDictPenjelasan1" class="accordion-collapse collapse show"
+            data-bs-parent="#accordionPenjelasanMergeDict">
+            <div class="accordion-body">
+                Pada baris 1, fungsi merge_sort_dict() didefinisikan dengan parameter arr dan key. Parameter arr berisi kumpulan data dalam bentuk List of Dictionary, sedangkan parameter key digunakan untuk menentukan atribut yang menjadi dasar pengurutan.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergeDictPenjelasan2">
+                2) Kondisi Rekursi dan Pembagian Data
+            </button>
+        </h2>
+        <div id="mergeDictPenjelasan2" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMergeDict">
+            <div class="accordion-body">
+                Pada baris 2–5, dilakukan pengecekan apakah jumlah elemen dalam arr lebih dari satu. Jika kondisi terpenuhi, data dibagi menjadi dua bagian, yaitu left_half dan right_half.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergeDictPenjelasan3">
+                3) Proses Rekursi
+            </button>
+        </h2>
+        <div id="mergeDictPenjelasan3" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMergeDict">
+            <div class="accordion-body">
+                Pada baris 8–9, fungsi merge_sort_dict() dipanggil kembali untuk mengurutkan left_half dan right_half. Proses ini dilakukan secara rekursif hingga setiap bagian data menjadi lebih kecil dan mudah digabungkan kembali.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergeDictPenjelasan4">
+                4) Inisialisasi Variabel Indeks
+            </button>
+        </h2>
+        <div id="mergeDictPenjelasan4" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMergeDict">
+            <div class="accordion-body">
+                Pada baris 11, variabel i, j, dan k diinisialisasi dengan nilai 0. Variabel i digunakan untuk menelusuri left_half, j untuk menelusuri right_half, dan k untuk menentukan posisi data pada list utama arr.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergeDictPenjelasan5">
+                5) Proses Penggabungan Berdasarkan Key
+            </button>
+        </h2>
+        <div id="mergeDictPenjelasan5" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMergeDict">
+            <div class="accordion-body">
+                Pada baris 14–21, dilakukan proses penggabungan dua bagian data yang telah diurutkan. Nilai pada left_half[i][key] dibandingkan dengan right_half[j][key]. Data dengan nilai lebih kecil akan dimasukkan terlebih dahulu ke dalam arr.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergeDictPenjelasan6">
+                6) Memasukkan Sisa Elemen dari Bagian Kiri
+            </button>
+        </h2>
+        <div id="mergeDictPenjelasan6" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMergeDict">
+            <div class="accordion-body">
+                Pada baris 24–27, apabila masih terdapat elemen yang tersisa pada left_half, elemen tersebut akan dimasukkan ke dalam arr.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergeDictPenjelasan7">
+                7) Memasukkan Sisa Elemen dari Bagian Kanan
+            </button>
+        </h2>
+        <div id="mergeDictPenjelasan7" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMergeDict">
+            <div class="accordion-body">
+                Pada baris 30–33, apabila masih terdapat elemen yang tersisa pada right_half, elemen tersebut akan dimasukkan ke dalam arr.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergeDictPenjelasan8">
+                8) Menyiapkan Data
+            </button>
+        </h2>
+        <div id="mergeDictPenjelasan8" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMergeDict">
+            <div class="accordion-body">
+                Pada baris 35–43, didefinisikan data dalam bentuk List of Dictionary. Setiap dictionary memiliki atribut "value" yang digunakan sebagai dasar pengurutan.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergeDictPenjelasan9">
+                9) Menampilkan Data Sebelum Pengurutan
+            </button>
+        </h2>
+        <div id="mergeDictPenjelasan9" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMergeDict">
+            <div class="accordion-body">
+                Pada baris 45, data ditampilkan sebelum proses pengurutan dilakukan sehingga urutan awal data dapat diketahui.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergeDictPenjelasan10">
+                10) Memanggil Fungsi Merge Sort
+            </button>
+        </h2>
+        <div id="mergeDictPenjelasan10" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMergeDict">
+            <div class="accordion-body">
+                Pada baris 46, fungsi merge_sort_dict(data) dipanggil untuk menjalankan proses pengurutan. Karena parameter key memiliki nilai default "value", maka pengurutan dilakukan berdasarkan atribut tersebut.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mergeDictPenjelasan11">
+                11) Menampilkan Hasil Pengurutan
+            </button>
+        </h2>
+        <div id="mergeDictPenjelasan11" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanMergeDict">
+            <div class="accordion-body">
+                Pada baris 47, data ditampilkan kembali setelah proses pengurutan selesai sehingga hasil akhir pengurutan dapat dilihat.
+            </div>
+        </div>
+    </div>
+
+</div>
 
                     </div>
                     </div>
@@ -440,14 +702,33 @@ print("Setelah diurutkan:", data)
                 <span class="materi-badge">Aktivitas 3.1: Melengkapi Kode Program</span>
             </div>
             
-            <p class="card-text mb-4 text-danger fw-bold">
-                <i class="fa-solid fa-lock me-1"></i> Sebelum lanjut, lengkapi bagian kode rekursi Merge Sort di bawah ini dengan benar untuk membuka akses ke Quiz!
-            </p>
+            <div class="mb-3">
+                <button class="btn btn-outline-primary btn-sm"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#instruksiKode"
+                        aria-expanded="false">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Instruksi Pengerjaan
+                </button>
+
+                <div class="collapse mt-2" id="instruksiKode">
+                    <div class="alert alert-primary mb-0">
+                        <ol class="mb-0 ps-3">
+                            <li>Lengkapi seluruh bagian kode yang masih kosong.</li>
+                            <li>Perhatikan kembali materi Bubble Sort pada bagian atas halaman.</li>
+                            <li>Klik tombol <strong>Periksa Kode</strong> untuk memeriksa jawaban.</li>
+                            <li>Jika ingin mengulang, klik tombol <strong>Reset</strong>.</li>
+                            <li>Semua bagian harus benar untuk membuka akses selanjutnya.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
 
             <div class="code-container" style="background: #1e1e1e; padding: 20px; border-radius: 8px; color: #d4d4d4; font-family: 'Courier New', monospace; font-size: 14px; line-height: 2;">
                 <span style="color: #569cd6;">def</span> <span style="color: #dcdcaa;">merge_sort</span>(data):<br>
                 &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">if</span> <span style="color: #dcdcaa;">len</span>(data) > <span style="color: #b5cea8;">1</span>:<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tengah = <span style="color: #dcdcaa;">len</span>(data) <input type="text" id="m_blank1" class="code-input" placeholder="..." style="width: 40px; text-align: center;"> <span style="color: #b5cea8;">2</span> <span style="color: #6a9955;"># Pembagian bulat untuk mencari tengah</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tengah = <span style="color: #dcdcaa;">len</span>(data) <input type="text" id="m_blank1" class="code-input" placeholder="..." style="width: 40px; text-align: center;" class="code-input {{ $isSelesai ? 'correct' : '' }}" value="{{ $isSelesai ? '//' : '' }}" {{ $isSelesai ? 'readonly' : '' }}> <span style="color: #b5cea8;">2</span> <span style="color: #6a9955;"># Pembagian bulat untuk mencari tengah</span><br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bagian_kiri = data[:tengah]<br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bagian_kanan = data[tengah:]<br>
                 <br>
@@ -457,8 +738,8 @@ print("Setelah diurutkan:", data)
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = j = k = <span style="color: #b5cea8;">0</span><br>
                 <br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">while</span> i < <span style="color: #dcdcaa;">len</span>(bagian_kiri) <span style="color: #c586c0;">and</span> j < <span style="color: #dcdcaa;">len</span>(bagian_kanan):<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">if</span> bagian_kiri[i] <input type="text" id="m_blank2" class="code-input" placeholder="..." style="width: 40px; text-align: center;"> bagian_kanan[j]: <span style="color: #6a9955;"># Bandingkan elemen (Ascending)</span><br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[k] = <input type="text" id="m_blank3" class="code-input" placeholder="..." style="width: 120px;"> <span style="color: #6a9955;"># Masukkan dari bagian kiri</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">if</span> bagian_kiri[i] <input type="text" id="m_blank2" class="code-input" placeholder="..." style="width: 40px; text-align: center;" class="code-input {{ $isSelesai ? 'correct' : '' }}" value="{{ $isSelesai ? '<' : '' }}" {{ $isSelesai ? 'readonly' : '' }}> bagian_kanan[j]: <span style="color: #6a9955;"># Bandingkan elemen (Ascending)</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[k] = <input type="text" id="m_blank3" class="code-input" placeholder="..." style="width: 120px;" class="code-input {{ $isSelesai ? 'correct' : '' }}" value="{{ $isSelesai ? 'bagian_kiri[i]' : '' }}" {{ $isSelesai ? 'readonly' : '' }}> <span style="color: #6a9955;"># Masukkan dari bagian kiri</span><br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i += <span style="color: #b5cea8;">1</span><br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">else</span>:<br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[k] = bagian_kanan[j]<br>
@@ -468,16 +749,23 @@ print("Setelah diurutkan:", data)
 
             <div id="fillCodeFeedback" class="alert {{ $isSelesai ? 'alert-success' : 'd-none' }} mt-3">
                 @if($isSelesai)
-                    <i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Logika Anda sangat tepat. Tombol Lanjut Quiz telah dibuka. Silakan coba kode ini pada Live Editor di bawah!
+                    <i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Logika Anda sangat tepat. Aktivitas selanjutnya telah dibuka. Silakan coba kode ini pada Live Editor di bawah!
                 @endif
             </div>
             
-            <div class="text-start mt-3">
-                <button id="btnCheckCode" class="btn btn-primary" {{ $isSelesai ? 'disabled' : '' }}>
+            <div class="text-center mt-3">
+                <button id="btnCheckCode"
+                        class="btn btn-primary"
+                        {{ $isSelesai ? 'disabled' : '' }}>
                     {{ $isSelesai ? 'Kode Sudah Benar' : 'Periksa Kode' }}
                 </button>
-            </div>
 
+                <button id="btnResetCode"
+                        class="btn btn-outline-secondary ms-2"
+                        {{ $isSelesai ? 'disabled' : '' }}>
+                    Reset
+                </button>
+            </div>
 
         </div>
     </div>
@@ -532,7 +820,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnCheckCode = document.getElementById('btnCheckCode');
     const feedbackCode = document.getElementById('fillCodeFeedback');
     const btnNext = document.getElementById('btnNextMerge');
-    const lockIcon = document.getElementById('lockIconMerge');
+    // const lockIcon = document.getElementById('lockIconMerge');
 
     btnCheckCode.addEventListener('click', function() {
         // Ambil nilai input
@@ -569,7 +857,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Output Feedback
         if (correctCount === 3) {
             feedbackCode.className = 'alert alert-success mt-3';
-            feedbackCode.innerHTML = '<i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Logika rekursif dan penggabungan Anda tepat. Tombol Lanjut Quiz telah dibuka. Silakan jalankan kode utuhnya pada Live Editor!';
+            feedbackCode.innerHTML = '<i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Logika rekursif dan penggabungan Anda tepat. Aktivitas selanjutnya telah dibuka. Silakan jalankan kode utuhnya pada Live Editor!';
             feedbackCode.classList.remove('d-none');
             
             // Buka gembok tombol Selanjutnya
@@ -579,10 +867,13 @@ document.addEventListener('DOMContentLoaded', function() {
             btnNext.style.pointerEvents = 'auto';
             btnNext.style.opacity = '1';          
 
-                // Kunci input dan tombol setelah berhasil
-                document.getElementById('blank1').readOnly = true;
-                document.getElementById('blank2').readOnly = true;
-                document.getElementById('blank3').readOnly = true;
+                document.getElementById('m_blank1').value = '//';
+                document.getElementById('m_blank2').value = '<';
+                document.getElementById('m_blank3').value = 'bagian_kiri[i]';
+
+                document.getElementById('m_blank1').readOnly = true;
+                document.getElementById('m_blank2').readOnly = true;
+                document.getElementById('m_blank3').readOnly = true;
                 btnCheckCode.disabled = true;
                 btnCheckCode.innerText = 'Kode Sudah Benar';
 
@@ -601,7 +892,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if(data.success) {
-                        feedbackCode.innerHTML = '<strong>Luar Biasa!</strong> Pemahaman Anda tentang Bubble Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
+                        feedbackCode.innerHTML = '<strong>Luar Biasa!</strong> Pemahaman Anda tentang Merge Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
                         feedbackCode.className = 'alert alert-success mt-3';
                         feedbackCode.classList.remove('d-none');
                         
@@ -630,6 +921,22 @@ document.addEventListener('DOMContentLoaded', function() {
             feedbackCode.classList.remove('d-none');
         }
     });
+});
+</script>
+<script>
+const btnResetCode = document.getElementById('btnResetCode');
+
+btnResetCode.addEventListener('click', function () {
+
+    ['m_blank1','m_blank2','m_blank3'].forEach(id => {
+        const input = document.getElementById(id);
+
+        input.value = '';
+        input.className = 'code-input';
+    });
+
+    feedbackCode.classList.add('d-none');
+    feedbackCode.innerHTML = '';
 });
 </script>
 <script>

@@ -124,19 +124,19 @@
         </a>
     </div>
 
-    <!-- Data Nilai -->
-    <div class="menu-item {{ request()->routeIs('dosen.nilai.*') ? 'active' : '' }}">
-        <a href="{{ route('dosen.nilai.index') }}" class="menu-btn">
-            <i class="fa-solid fa-chart-simple me-2"></i>
-            Data Nilai
-        </a>
-    </div>
-
     <!-- Data Mahasiswa -->
     <div class="menu-item {{ request()->routeIs('dosen.datamahasiswa.*') ? 'active' : '' }}">
         <a href="{{ route('dosen.datamahasiswa.index') }}" class="menu-btn">
             <i class="fa-solid fa-users me-2"></i>
             Data Mahasiswa
+        </a>
+    </div>
+
+    <!-- Data Nilai -->
+    <div class="menu-item {{ request()->routeIs('dosen.nilai.*') ? 'active' : '' }}">
+        <a href="{{ route('dosen.nilai.index') }}" class="menu-btn">
+            <i class="fa-solid fa-chart-simple me-2"></i>
+            Data Nilai
         </a>
     </div>
 

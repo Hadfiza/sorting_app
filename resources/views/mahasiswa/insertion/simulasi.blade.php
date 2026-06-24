@@ -158,6 +158,29 @@
                 <i class="fa-solid fa-play"></i>
                 <span class="materi-badge">Simulasi Insertion Sort</span>
             </div>
+
+            <div class="mb-3">
+                <button class="btn btn-outline-primary btn-sm"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#instruksiSimulasi">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Instruksi Simulasi
+                </button>
+
+                <div class="collapse mt-2" id="instruksiSimulasi">
+                    <div class="card card-body bg-light">
+                        <ol class="mb-0">
+                            <li>Bacalah studi kasus yang disajikan untuk memahami permasalahan pengurutan data.</li>
+                            <li>Perhatikan data yang sedang diproses pada setiap iterasi.</li>
+                            <li>Amati proses perbandingan antara data yang diproses dengan data pada bagian yang telah terurut.</li>
+                            <li>Analisis hasil perbandingan untuk menentukan posisi yang sesuai bagi data tersebut.</li>
+                            <li>Perhatikan proses pergeseran dan penyisipan data yang terjadi selama simulasi.</li>
+                            <li>Pilih jawaban yang sesuai berdasarkan hasil analisis Anda hingga seluruh data tersusun sesuai urutan yang ditentukan.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
             
             <div class="simulation-wrapper">
                 <div class="sub-title"><strong>Studi kasus : </strong>Di sebuah kantor administrasi, seorang staf ingin merapikan kartu nama klien yang masih tersusun acak di atas meja agar mudah dicari berdasarkan urutan abjad. Ia tidak mengurutkannya sekaligus, melainkan mengambil satu kartu, membandingkannya dengan kartu di sebelah kiri, menggeser kartu yang lebih besar, lalu menyisipkannya ke posisi yang tepat hingga kartu-kartu tersusun rapi. Pada simulasi ini, kamu akan melihat proses tersebut berlangsung langkah demi langkah sampai semua kartu tersusun sesuai abjad menggunakan metode Insertion Sort.</div>

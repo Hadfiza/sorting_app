@@ -56,23 +56,32 @@
             <div class="materi-header">
                 <i class="fa-sharp-duotone fa-solid fa-play-circle"></i>
                 <span class="materi-badge">Contoh Sederhana</span>
+
+                <i class="fas fa-circle-info text-secondary ms-2"
+                data-bs-toggle="tooltip"
+                data-bs-placement="right"
+                title="Bacalah materi dan amati ilustrasi berikut. Perhatikan urutan buku yang belum sesuai, lalu klik Tukar Buku untuk mengamati proses pertukaran elemen pada sorting.">
+                </i>
             </div>
+
             <p class="card-text">
                 Dalam kehidupan sehari-hari, konsep sorting dapat dianalogikan seperti menyusun tumpukan buku dari edisi paling lama hingga edisi terbaru. Setiap buku mewakili satu elemen data yang harus ditempatkan pada posisi yang tepat agar susunan menjadi rapi dan teratur. Analogi ini menggambarkan bagaimana komputer mengubah data yang awalnya acak menjadi urutan yang terstruktur dan mudah digunakan. Dengan memahami konsep dasar sorting, mahasiswa diharapkan mampu memahami pentingnya pengurutan data sebagai fondasi dalam berbagai proses komputasi dan algoritma pemrograman. 
                 <br>
                 Untuk memperjelas pemahaman mengenai proses pengurutan data tersebut, selanjutnya disajikan simulasi sederhana yang memperlihatkan tahapan perbandingan dan pertukaran elemen hingga data tersusun sesuai dengan urutan yang diinginkan.
             </p>
 
-            <div class="text-center my-4">
+            <div class="text-center">
                 <img 
                     src="{{ asset('images/buku/tumpukan-buku.png') }}" 
                     alt="Ilustrasi tumpukan buku"
                     class="img-fluid"
-                    style="max-width: 200px;"
-                >
+                    style="max-width: 200px;"><br>
+                    <span style="font-size: 0.85rem; color: #6c757d;">
+                        Gambar 1.1 Tumpukan Buku
+                    </span>
             </div>
 
-            <div class="d-flex flex-wrap justify-content-center gap-2 mb-3" id="unsorted-books">
+            <div class="d-flex flex-wrap justify-content-center gap-2 mt-2 mb-3" id="unsorted-books">
                 <img src="{{ asset('images/buku/edisi1.png') }}" class="book" data-edisi="1">
                 <img src="{{ asset('images/buku/edisi2.png') }}" class="book" data-edisi="2">
 
@@ -83,6 +92,16 @@
                     class="book swap-target" data-edisi="3">
 
                 <img src="{{ asset('images/buku/edisi5.png') }}" class="book" data-edisi="5">
+            </div>
+
+            {{-- <span style="font-size: 0.85rem; color: #6c757d; text-align:center;">
+                Gambar 1.2 Kumpulan buka yang diurtukan
+            </span> --}}
+
+            <div class="text-center mb-2">
+                <small class="text-primary">
+                Klik <strong>Tukar Buku</strong> untuk melihat proses sorting
+                </small>
             </div>
 
             <div class="text-center mb-3">
@@ -99,26 +118,28 @@
         </div>
     </div>
 
-    <div class="card mb-4 materi-box mt-5" id="dragActivity">
+    <div class="card mb-3 materi-box mt-1" id="dragActivity">
         <div class="card-body materi-text">
 
-            <div class="materi-header mb-3">
+            <div class="materi-header mb-1">
                 <i class="fas fa-hand-pointer"></i>
                 <span class="materi-badge">Aktivitas 1.1</span>
             </div>
 
-            <p class="card-text mb-4">
-                <strong>Instruksi:</strong> Tarik setiap skenario di bawah ini ke kotak kategori pengurutan yang tepat
+            <p class="card-text mb-1 text-dark fw-bold">
+                <i class="fa-solid fa-lock me-1"></i> Selesaikan aktivitas berikut dengan benar semua untuk membuka akses ke materi selanjutnya!
+            </p>
+
+            <p class="card-text mb-1">
+                <strong>Instruksi:</strong> Analisis setiap gambar skenario, kemudian tarik dan lepaskan gambar tersebut ke kategori yang tepat
                 (<em>Ascending</em> atau <em>Descending</em>).
             </p>
             
-            <p class="card-text mb-4 text-danger fw-bold">
-                <i class="fa-solid fa-lock me-1"></i> Selesaikan aktivitas klasifikasi berikut dengan benar untuk membuka akses ke materi selanjutnya!
-            </p>
+            <div class="row g-2">
 
-            <div class="row g-4">
-                <div class="col-md-5" id="kolomSumber">
-                    <h6 class="fw-semibold mb-3">Skenario</h6>
+                <!-- SUMBER GAMBAR -->
+                <div class="col-12" id="kolomSumber">
+                    <h6 class="fw-semibold mb-2">Skenario</h6>
 
                     <div class="drag-list" id="dragSource">
                         <div class="drag-item image-only" draggable="true" data-answer="ascending">
@@ -135,18 +156,26 @@
                     </div>
                 </div>
 
-                <div class="col-md-7 sorting-zones" id="kolomTarget">
-                    <div class="drop-zone" data-zone="ascending">
-                        <div class="zone-header">Ascending</div>
-                        <div class="zone-content drop-target"></div>
-                    </div>
+                <!-- TARGET -->
+                <div class="col-12" id="kolomTarget">
 
-                    <div class="drop-zone" data-zone="descending">
-                        <div class="zone-header">Descending</div>
-                        <div class="zone-content drop-target"></div>
+                    <div class="sorting-zones">
+
+                        <div class="drop-zone" data-zone="ascending">
+                            <div class="zone-header">Ascending</div>
+                            <div class="zone-content drop-target"></div>
+                        </div>
+
+                        <div class="drop-zone" data-zone="descending">
+                            <div class="zone-header">Descending</div>
+                            <div class="zone-content drop-target"></div>
+                        </div>
+
                     </div>
+                
                 </div>
-            </div>
+
+        </div>
 
             <div id="dragFeedback" class="mt-4 text-center d-none"></div>
             <div class="text-center mt-3">
@@ -177,6 +206,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     let draggedItem = null;
+    const isSelesai = @json($isSelesai);
 
     const dragItems  = document.querySelectorAll('.drag-item');
     const dropZones  = document.querySelectorAll('.drop-zone');
@@ -191,6 +221,58 @@ document.addEventListener('DOMContentLoaded', () => {
     const kolomSumber = document.getElementById('kolomSumber');
     const kolomTarget = document.getElementById('kolomTarget');
     const totalItems = dragItems.length; 
+
+    function bukaTombolNext() {
+        btnNext.classList.remove('disabled');
+        btnNext.removeAttribute('tabindex');
+        btnNext.removeAttribute('aria-disabled');
+        btnNext.style.pointerEvents = 'auto';
+        btnNext.style.opacity = '1';
+        lockIcon.className = 'fa-solid fa-unlock me-1';
+    }
+
+    function tampilkanJawabanBenar() {
+        document.querySelectorAll('.dropped-image').forEach(img => img.remove());
+
+        dragItems.forEach(item => {
+            const targetZone = document.querySelector(
+                `.drop-zone[data-zone="${item.dataset.answer}"] .drop-target`
+            );
+
+            if (!targetZone) return;
+
+            const img = item.querySelector('img').cloneNode(true);
+            img.classList.add('dropped-image', 'correct');
+            img.dataset.answer = item.dataset.answer;
+            img.style.pointerEvents = 'none';
+
+            targetZone.appendChild(img);
+
+            item.style.display = 'none';
+            item.draggable = false;
+            item.dataset.used = 'true';
+        });
+
+        kolomSumber.classList.add('d-none');
+    }
+
+    /* ========== CEK PROGRESS DARI DATABASE ========== */
+    if (isSelesai) {
+
+        activityBox.classList.add('completed');
+        bukaTombolNext();
+        tampilkanJawabanBenar();
+
+        feedbackEl.className = 'alert alert-success py-3 mb-0 mt-3';
+        feedbackEl.innerHTML = `
+            <i class="fa-solid fa-unlock-keyhole"></i>
+            <strong>Aktivitas telah diselesaikan sebelumnya.</strong>
+            Jawaban benar ditampilkan kembali.
+        `;
+        feedbackEl.classList.remove('d-none');
+
+        checkBtn.disabled = true;
+    }
 
     /* ========== DRAG ========== */
     dragItems.forEach(item => {
@@ -245,8 +327,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // --- LOGIKA BARU: LEBARKAN SAAT SEMUA SUDAH DIDROP ---
             if (droppedCount === totalItems) {
                 kolomSumber.classList.add('d-none'); // Sembunyikan sumber
-                kolomTarget.classList.remove('col-md-7'); 
-                kolomTarget.classList.add('col-md-12'); // Jadikan full 100%
+                // kolomTarget.classList.remove('col-md-7'); 
+                // kolomTarget.classList.add('col-md-12'); // Jadikan full 100%
             }
         });
     });
@@ -285,12 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
             activityBox.classList.add('completed');
 
             // Buka tombol next
-            btnNext.classList.remove('disabled');
-            btnNext.removeAttribute('tabindex');
-            btnNext.removeAttribute('aria-disabled');
-            btnNext.style.pointerEvents = 'auto';
-            btnNext.style.opacity = '1';
-            lockIcon.className = 'fa-solid fa-unlock me-1';
+            bukaTombolNext();
 
             // SIMPAN PROGRESS
             fetch("{{ route('mahasiswa.aktivitas.tandai_selesai') }}", {
@@ -309,6 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("Progress tersimpan:", data);
             })
             .catch(error => console.error("Error:", error));
+
         } else {
             feedbackEl.className = 'alert alert-danger py-3 mb-0 mt-3';
             feedbackEl.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <strong>Kurang Tepat!</strong> Ada klasifikasi yang salah (Benar: ${correct}/${totalItems}). Silakan klik Reset dan coba lagi.`;
@@ -336,16 +414,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // --- KEMBALIKAN UKURAN KOLOM SEPERTI SEMULA ---
         kolomSumber.classList.remove('d-none'); 
-        kolomTarget.classList.remove('col-md-12'); 
-        kolomTarget.classList.add('col-md-7'); 
+        // kolomTarget.classList.remove('col-md-12'); 
+        // kolomTarget.classList.add('col-md-7'); 
 
-        // Kunci Kembali Tombol Lanjut
-        btnNext.classList.add('disabled');
-        btnNext.setAttribute('tabindex', '-1');
-        btnNext.setAttribute('aria-disabled', 'true');
-        btnNext.style.pointerEvents = 'none';
-        btnNext.style.opacity = '0.5';
-        lockIcon.className = 'fa-solid fa-lock me-1';
+        // Jangan kunci lagi jika aktivitas sudah pernah selesai
+        if (!isSelesai) {
+            btnNext.classList.add('disabled');
+            btnNext.setAttribute('tabindex', '-1');
+            btnNext.setAttribute('aria-disabled', 'true');
+            btnNext.style.pointerEvents = 'none';
+            btnNext.style.opacity = '0.5';
+
+            lockIcon.className = 'fa-solid fa-lock me-1';
+        } else {
+            activityBox.classList.add('completed');
+            bukaTombolNext();
+            tampilkanJawabanBenar();
+
+            feedbackEl.className = 'alert alert-success py-3 mb-0 mt-3';
+            feedbackEl.innerHTML = `
+                <i class="fa-solid fa-unlock-keyhole"></i>
+                <strong>Aktivitas telah diselesaikan sebelumnya.</strong>
+                Jawaban benar ditampilkan kembali.
+            `;
+            feedbackEl.classList.remove('d-none');
+        }
+    });
+
+    //Tooltip
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    [...tooltipTriggerList].forEach(el => {
+        new bootstrap.Tooltip(el);
     });
 });
 

@@ -242,7 +242,7 @@
                     <span>Sudah memiliki akun?</span> 
                     <a href="{{ route('login') }}">Login di sini</a>
                     <br>
-                    <span class="text-muted small">Daftar sebagai Dosen? <a href="{{ route('register.dosen') }}">Daftar di sini</a></span>
+                    {{-- <span class="text-muted small">Daftar sebagai Dosen? <a href="{{ route('register.dosen') }}">Daftar di sini</a></span> --}}
                 </div>
             </form>
         </div>

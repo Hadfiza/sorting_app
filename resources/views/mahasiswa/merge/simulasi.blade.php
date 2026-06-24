@@ -36,6 +36,29 @@
                 <i class="fa-solid fa-code-branch"></i>
                 <span class="materi-badge">Simulasi Merge Sort</span>
             </div>
+
+            <div class="mb-3">
+                <button class="btn btn-outline-primary btn-sm"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#instruksiSimulasi">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Instruksi Simulasi
+                </button>
+
+                <div class="collapse mt-2" id="instruksiSimulasi">
+                    <div class="card card-body bg-light">
+                        <ol class="mb-0">
+                            <li>Bacalah studi kasus yang disajikan untuk memahami permasalahan pengurutan data.</li>
+                            <li>Perhatikan proses pembagian data menjadi beberapa bagian yang lebih kecil.</li>
+                            <li>Amati data yang sedang dibandingkan pada saat proses penggabungan berlangsung.</li>
+                            <li>Analisis hasil perbandingan untuk menentukan urutan data yang benar.</li>
+                            <li>Perhatikan proses penggabungan kembali data hingga membentuk urutan yang lebih teratur.</li>
+                            <li>Pilih jawaban yang sesuai berdasarkan hasil analisis Anda hingga seluruh data tersusun sesuai urutan yang ditentukan.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
             
             <div class="simulation-wrapper">
                 <div class="sub-title"><strong>Studi kasus : </strong>Di sebuah gudang logistik, terdapat 5 karung beras dengan berat yang berbeda-beda, yaitu 8 kg, 3 kg, 9 kg, 4 kg, dan 6 kg. Karung-karung tersebut masih tersusun secara acak sehingga menyulitkan proses penyimpanan dan distribusi. Agar proses pengelolaan menjadi lebih efisien, karung beras perlu diurutkan dari berat terkecil hingga terbesar menggunakan algoritma Merge Sort.</div>

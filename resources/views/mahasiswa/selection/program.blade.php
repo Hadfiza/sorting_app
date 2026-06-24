@@ -201,167 +201,460 @@
 
                 <div class="code-container">
 <pre class="code-box">
-def selection_sort(data):
-    n = len(data)
-    for i in range(n-1):
-        min_index = i
-        for j in range(i+1, n):
-            if data[j] < data[min_index]:
-                min_index = j
-        
-        data[i], data[min_index] = data[min_index], data[i]
-        print(f"Hasil setelah siklus ke-{i+1}: {data}")
-
-angka = [64, 25, 12, 22, 11]
-print("Sebelum sorting:", angka)
-selection_sort(angka)
-print("Setelah sorting:", angka)
+ 1  def selection_sort(data):
+ 2      n = len(data)
+ 3      for i in range(n-1):
+ 4          min_index = i
+ 5          for j in range(i+1, n):
+ 6              if data[j] < data[min_index]:
+ 7                  min_index = j
+ 8
+ 9          data[i], data[min_index] = data[min_index], data[i]
+10          print(f"Hasil setelah siklus ke-{i+1}: {data}")
+11
+12  angka = [64, 25, 12, 22, 11]
+13  print("Sebelum sorting:", angka)
+14  selection_sort(angka)
+15  print("Setelah sorting:", angka)
 </pre>
                 </div>
             </div>
             
-            <hr class="my-4">
+<h5 class="fw-bold mt-4">Penjelasan Kode</h5>
 
-            <h5 class="fw-bold">Penjelasan Per Blok</h5>
+<div class="accordion" id="accordionPenjelasanSelection">
 
-            <div class="mb-4">
-                <h6 class="fw-semibold">1. Deklarasi Fungsi dan Menghitung Panjang Data</h6>
-                <div class="code-container mt-2">
-<pre class="code-box"><code>
-<span>def selection_sort(data):</span>
-<span>    n = len(data)</span>
-</code></pre>
-                </div>
-                <p class="mt-2">
-                    Baris ini mendefinisikan fungsi bernama <code>selection_sort</code> yang menerima satu parameter berupa <code>data</code> (list angka yang akan diurutkan). Variabel <code>n</code> digunakan untuk menghitung dan menyimpan total panjang atau jumlah elemen dari data tersebut agar mempermudah penentuan batas iterasi.
-                </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionPenjelasan1">
+                1) Deklarasi Fungsi
+            </button>
+        </h2>
+        <div id="selectionPenjelasan1" class="accordion-collapse collapse show"
+            data-bs-parent="#accordionPenjelasanSelection">
+            <div class="accordion-body">
+                Pada baris 1, fungsi selection_sort() didefinisikan dengan parameter data. Parameter ini berisi kumpulan data yang akan diurutkan menggunakan algoritma Selection Sort.
             </div>
+        </div>
+    </div>
 
-            <div class="mb-4">
-                <h6 class="fw-semibold">2. Perulangan Utama (Outer Loop) dan Asumsi Minimum</h6>
-                <div class="code-container mt-2">
-<pre class="code-box"><code>
-<span>for i in range(n-1):</span>
-<span>    min_index = i</span>
-</code></pre>
-                </div>
-                <p class="mt-2">
-                    Perulangan luar berjalan sebanyak <code>n-1</code> kali. Kita tidak perlu memeriksa elemen paling akhir karena secara otomatis elemen tersebut akan menjadi yang terbesar (atau tersisa) di akhir proses. Pada awal setiap iterasi, elemen di indeks <code>i</code> diasumsikan sementara sebagai elemen dengan nilai paling kecil (<code>min_index</code>).
-                </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionPenjelasan2">
+                2) Menentukan Panjang Data
+            </button>
+        </h2>
+        <div id="selectionPenjelasan2" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelection">
+            <div class="accordion-body">
+                Pada baris 2, fungsi len(data) digunakan untuk menghitung jumlah elemen dalam list dan menyimpannya ke dalam variabel n. Nilai ini digunakan sebagai batas perulangan.
             </div>
+        </div>
+    </div>
 
-            <div class="mb-4">
-                <h6 class="fw-semibold">3. Perulangan Dalam (Inner Loop) untuk Pencarian Minimum</h6>
-                <div class="code-container mt-2">
-<pre class="code-box"><code>
-<span>for j in range(i+1, n):</span>
-<span>    if data[j] < data[min_index]:</span>
-<span>        min_index = j</span>
-</code></pre>
-                </div>
-                <p class="mt-2">
-                    Perulangan dalam bertugas menelusuri seluruh sisa data di sebelah kanan, mulai dari indeks <code>i+1</code> hingga selesai. Jika program menemukan elemen <code>data[j]</code> yang nilainya ternyata lebih kecil dari nilai minimum saat ini (<code>data[min_index]</code>), maka posisi <code>min_index</code> akan diperbarui ke indeks <code>j</code> tersebut.
-                </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionPenjelasan3">
+                3) Perulangan Luar (Outer Loop)
+            </button>
+        </h2>
+        <div id="selectionPenjelasan3" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelection">
+            <div class="accordion-body">
+                Pada baris 3, perulangan luar digunakan untuk menentukan posisi penempatan nilai terkecil pada setiap iterasi pengurutan. Setiap iterasi akan menempatkan satu elemen pada posisi yang benar.
             </div>
+        </div>
+    </div>
 
-            <div class="mb-4">
-                <h6 class="fw-semibold">4. Proses Pertukaran (Swap)</h6>
-                <div class="code-container mt-2">
-<pre class="code-box"><code>
-<span>data[i], data[min_index] = data[min_index], data[i]</span>
-<span>print(f"Hasil setelah siklus ke-{i+1}: {data}")</span>
-</code></pre>
-                </div>
-                <p class="mt-2">
-                    Setelah perulangan dalam selesai memeriksa seluruh sisa elemen, <code>min_index</code> kini pasti menyimpan indeks dari elemen terkecil yang sebenarnya. Elemen terkecil tersebut kemudian ditukar posisinya dengan elemen di indeks <code>i</code>. Dengan cara ini (hanya 1 kali swap per siklus), satu elemen terkecil akan selalu dikunci di bagian kiri list.
-                </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionPenjelasan4">
+                4) Menentukan Nilai Terkecil Sementara
+            </button>
+        </h2>
+        <div id="selectionPenjelasan4" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelection">
+            <div class="accordion-body">
+                Pada baris 4, variabel min_index diinisialisasi dengan nilai i. Artinya, elemen pada posisi saat ini dianggap sebagai nilai terkecil sementara sebelum dilakukan proses pencarian.
             </div>
-        
-                {{-- <h5 class="fw-bold mb-3">
-                    Refleksi Konseptual
-                </h5>
+        </div>
+    </div>
 
-                <p class="mb-3">
-                    Sebelum melanjutkan ke bagian aktivitas, pastikan Anda memahami hal berikut:
-                </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionPenjelasan5">
+                5) Perulangan Dalam (Inner Loop)
+            </button>
+        </h2>
+        <div id="selectionPenjelasan5" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelection">
+            <div class="accordion-body">
+                Pada baris 5, perulangan dalam digunakan untuk mencari nilai terkecil pada bagian data yang belum terurut. Pencarian dilakukan mulai dari indeks setelah i hingga elemen terakhir.
+            </div>
+        </div>
+    </div>
 
-                <ul class="mb-0">
-                    <li class="mb-3">
-                        <strong>Mengapa <code>min_index</code> di-reset menjadi <code>i</code> setiap iterasi luar?</strong><br>
-                        Karena elemen di posisi 0 hingga <code>i-1</code> sudah dipastikan terurut. Oleh karena itu, kita hanya perlu mencari nilai minimum pada "sisa" data yang belum terurut, yang dimulai dari posisi <code>i</code>.
-                    </li>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionPenjelasan6">
+                6) Mencari Nilai Terkecil
+            </button>
+        </h2>
+        <div id="selectionPenjelasan6" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelection">
+            <div class="accordion-body">
+                Pada baris 6–7, dilakukan perbandingan antara elemen saat ini dengan elemen yang dianggap memiliki nilai terkecil. Jika ditemukan nilai yang lebih kecil, maka min_index diperbarui untuk menyimpan posisi elemen tersebut.
+            </div>
+        </div>
+    </div>
 
-                    <li class="mb-3">
-                        <strong>Kapan pertukaran (swap) dilakukan pada Selection Sort?</strong><br>
-                        Berbeda dengan Bubble Sort yang melakukan swap terus-menerus, Selection Sort <strong>hanya melakukan satu kali swap</strong> di akhir setiap iterasi luar (setelah nilai minimum benar-benar ditemukan di seluruh sisa data).
-                    </li>
-                </ul> --}}
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionPenjelasan7">
+                7) Proses Pertukaran (Swap)
+            </button>
+        </h2>
+        <div id="selectionPenjelasan7" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelection">
+            <div class="accordion-body">
+                Pada baris 9, elemen pada posisi i ditukar dengan elemen yang berada pada min_index. Setelah pertukaran dilakukan, nilai terkecil akan berada pada posisi yang sesuai.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionPenjelasan8">
+                8) Menampilkan Hasil Setiap Iterasi
+            </button>
+        </h2>
+        <div id="selectionPenjelasan8" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelection">
+            <div class="accordion-body">
+                Pada baris 10, data ditampilkan setelah setiap iterasi perulangan luar selesai dilakukan. Tampilan ini membantu memperlihatkan perubahan urutan data selama proses pengurutan berlangsung.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionPenjelasan9">
+                9) Deklarasi Data
+            </button>
+        </h2>
+        <div id="selectionPenjelasan9" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelection">
+            <div class="accordion-body">
+                Pada baris 13, didefinisikan sebuah list bernama angka yang berisi data yang akan diurutkan menggunakan algoritma Selection Sort.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionPenjelasan10">
+                10) Menampilkan Data Sebelum Pengurutan
+            </button>
+        </h2>
+        <div id="selectionPenjelasan10" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelection">
+            <div class="accordion-body">
+                Pada baris 13, data ditampilkan sebelum proses pengurutan dilakukan sehingga urutan awal data dapat diketahui.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionPenjelasan11">
+                11) Memanggil Fungsi Selection Sort
+            </button>
+        </h2>
+        <div id="selectionPenjelasan11" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelection">
+            <div class="accordion-body">
+                Pada baris 14, fungsi selection_sort(angka) dipanggil untuk menjalankan proses pengurutan pada data yang terdapat dalam list angka.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionPenjelasan12">
+                12) Menampilkan Hasil Pengurutan
+            </button>
+        </h2>
+        <div id="selectionPenjelasan12" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelection">
+            <div class="accordion-body">
+                Pada baris 15, data ditampilkan kembali setelah seluruh proses pengurutan selesai sehingga hasil akhir pengurutan dapat dilihat.
+            </div>
+        </div>
+    </div>
+
+</div>
 
             </div> <div class="tab-pane fade" id="pills-dict" role="tabpanel" aria-labelledby="pills-dict-tab">
                     
                     <div class="my-4 text-start">
-                        <div class="alert alert-info mb-3">
+                        {{-- <div class="alert alert-info mb-3">
                             <strong>Perhatian:</strong> Di dunia nyata, data seringkali berbentuk kumpulan kamus (Dictionary). Perhatikan bagaimana algoritma dimodifikasi agar bisa mengurutkan data berdasarkan kunci (key) tertentu.
-                        </div>
+                        </div> --}}
 
                             <div class="code-container">
 <pre class="code-box">
-def selectionLoD(data):
-    n = len(data)
-    for i in range(n - 1):
-        print("Langkah ke-", i + 1, ":", data)
-        indeks_terkecil = i
-        for j in range(i + 1, n):
-            if data[j]['harga'] < data[indeks_terkecil]['harga']:
-                indeks_terkecil = j
-        data[i], data[indeks_terkecil] = data[indeks_terkecil], data[i]
-
-
-data_produk = [
-    {'produk': 'Pensil', 'harga': 2500},
-    {'produk': 'Pulpen', 'harga': 3000},
-    {'produk': 'Penghapus', 'harga': 1500},
-    {'produk': 'Penggaris', 'harga': 2000}
-]
-
-print("Sebelum disortir:")
-for m in data_produk:
-    print(m)
-
-selectionLoD(data_produk)
-
-print("\nSetelah disortir:")
-for m in data_produk:
-    print(m)
+ 1  def selectionLoD(data):
+ 2      n = len(data)
+ 3      for i in range(n - 1):
+ 4          print("Langkah ke-", i + 1, ":", data)
+ 5          indeks_terkecil = i
+ 6          for j in range(i + 1, n):
+ 7              if data[j]['harga'] < data[indeks_terkecil]['harga']:
+ 8                  indeks_terkecil = j
+ 9          data[i], data[indeks_terkecil] = data[indeks_terkecil], data[i]
+10
+11
+12  data_produk = [
+13      {'produk': 'Pensil', 'harga': 2500},
+14      {'produk': 'Pulpen', 'harga': 3000},
+15      {'produk': 'Penghapus', 'harga': 1500},
+16      {'produk': 'Penggaris', 'harga': 2000}
+17  ]
+18
+19  print("Sebelum disortir:")
+20  for m in data_produk:
+21      print(m)
+22
+23  selectionLoD(data_produk)
+24
+25  print("\nSetelah disortir:")
+26  for m in data_produk:
+27      print(m)
 </pre>
                             </div>
                     </div>
 
-                    <h5 class="fw-bold mt-4">Penjelasan: Apa yang Berbeda pada Metode List of Dictionary?</h5>
-                    <p>Pada variasi ini, kita mengurutkan struktur data yang sangat menyerupai format data di dunia nyata (seperti data dari <em>database</em> atau <em>API</em>), yaitu <strong>List of Dictionary</strong> (sebuah <em>list</em> yang berisi sekumpulan kamus data). Berikut adalah rincian perbedaannya:</p>
+<h5 class="fw-bold mt-4">Penjelasan Kode</h5>
 
-                    <ul>
-                        <li class="mb-2">
-                            <strong>Mengakses Nilai Menggunakan Kata Kunci (<em>Key</em>):</strong><br>
-                            Perhatikan baris <code>if data[j]['harga'] &lt; data[indeks_terkecil]['harga']:</code>. <br>
-                            Karena setiap elemen di dalam <em>list</em> merupakan sebuah <em>dictionary</em>, kita tidak bisa membandingkan elemennya secara langsung. Kita wajib menyebutkan dengan spesifik atribut apa yang ingin dibandingkan. Dalam kasus ini, kita membandingkan nilai yang ada di dalam kunci <code>['harga']</code>.
-                        </li>
-                        
-                        <li class="mb-2">
-                            <strong>Melacak Posisi Harga Termurah:</strong><br>
-                            Sama halnya dengan algoritma Selection Sort pada umumnya, program bertugas menelusuri data untuk mencari elemen dengan nilai terkecil. Di sini, variabel <code>indeks_terkecil</code> berfungsi untuk mengingat posisi (indeks) dari barang yang memiliki harga paling murah pada setiap iterasi.
-                        </li>
+<div class="accordion" id="accordionPenjelasanSelectionLoD">
 
-                        <li>
-                            <strong>Proses Pertukaran Satu Kesatuan (<em>Swap</em>):</strong><br>
-                            Pada baris pertukaran <code>data[i], data[indeks_terkecil] = data[indeks_terkecil], data[i]</code>, kita menukar <strong>seluruh <em>dictionary</em></strong> secara utuh. Hal ini sangat penting untuk menjamin bahwa data "Pensil" akan selalu berpasangan dengan harga 2500, dan tidak akan tertukar dengan harga milik produk lain saat posisinya dipindahkan.
-                        </li>
-                    </ul>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoDPenjelasan1">
+                1) Deklarasi Fungsi
+            </button>
+        </h2>
+        <div id="selectionLoDPenjelasan1" class="accordion-collapse collapse show"
+            data-bs-parent="#accordionPenjelasanSelectionLoD">
+            <div class="accordion-body">
+                Pada baris 1, fungsi selectionLoD() didefinisikan dengan parameter data. Parameter ini berisi kumpulan data dalam bentuk List of Dictionary yang akan diurutkan menggunakan algoritma Selection Sort.
+            </div>
+        </div>
+    </div>
 
-                    <div class="alert alert-success mt-3">
-                        <i class="bi bi-lightbulb-fill text-warning me-2"></i>
-                        <strong>Tips Eksperimen:</strong> Cobalah ubah tanda lebih kecil (<code>&lt;</code>) menjadi tanda lebih besar (<code>&gt;</code>) pada baris logika <code>if</code> di fitur <em>Live Editor</em> dan amatilah perbedaannya. 
-                    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoDPenjelasan2">
+                2) Menentukan Panjang Data
+            </button>
+        </h2>
+        <div id="selectionLoDPenjelasan2" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoD">
+            <div class="accordion-body">
+                Pada baris 2, fungsi len(data) digunakan untuk menghitung jumlah elemen dalam list dan menyimpannya ke dalam variabel n. Nilai ini digunakan sebagai batas perulangan.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoDPenjelasan3">
+                3) Perulangan Luar (Outer Loop)
+            </button>
+        </h2>
+        <div id="selectionLoDPenjelasan3" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoD">
+            <div class="accordion-body">
+                Pada baris 3, perulangan luar digunakan untuk menentukan posisi penempatan nilai terkecil pada setiap iterasi pengurutan. Setiap iterasi akan menempatkan satu elemen pada posisi yang benar.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoDPenjelasan4">
+                4) Menampilkan Data Setiap Iterasi
+            </button>
+        </h2>
+        <div id="selectionLoDPenjelasan4" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoD">
+            <div class="accordion-body">
+                Pada baris 4, data ditampilkan pada awal setiap iterasi sehingga perubahan urutan data selama proses Selection Sort dapat diamati.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoDPenjelasan5">
+                5) Menentukan Nilai Terkecil Sementara
+            </button>
+        </h2>
+        <div id="selectionLoDPenjelasan5" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoD">
+            <div class="accordion-body">
+                Pada baris 5, variabel indeks_terkecil diinisialisasi dengan nilai i. Artinya, elemen pada posisi saat ini dianggap sebagai data dengan nilai terkecil sementara sebelum dilakukan pencarian.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoDPenjelasan6">
+                6) Perulangan Dalam (Inner Loop)
+            </button>
+        </h2>
+        <div id="selectionLoDPenjelasan6" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoD">
+            <div class="accordion-body">
+                Pada baris 6, perulangan dalam digunakan untuk mencari nilai terkecil pada bagian data yang belum terurut. Pencarian dilakukan mulai dari indeks setelah i hingga elemen terakhir.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoDPenjelasan7">
+                7) Mencari Nilai Terkecil Berdasarkan Key
+            </button>
+        </h2>
+        <div id="selectionLoDPenjelasan7" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoD">
+            <div class="accordion-body">
+                Pada baris 7–8, dilakukan perbandingan nilai atribut 'harga' pada setiap dictionary. Jika ditemukan harga yang lebih kecil dari harga pada indeks_terkecil, maka nilai indeks_terkecil diperbarui sesuai posisi data tersebut.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoDPenjelasan8">
+                8) Proses Pertukaran (Swap)
+            </button>
+        </h2>
+        <div id="selectionLoDPenjelasan8" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoD">
+            <div class="accordion-body">
+                Pada baris 9, data pada posisi i ditukar dengan data pada indeks_terkecil. Yang ditukar adalah seluruh dictionary sehingga informasi produk dan harga tetap tersimpan sebagai satu kesatuan.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoDPenjelasan9">
+                9) Deklarasi Data Produk
+            </button>
+        </h2>
+        <div id="selectionLoDPenjelasan9" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoD">
+            <div class="accordion-body">
+                Pada baris 12–17, didefinisikan data produk dalam bentuk List of Dictionary. Setiap dictionary menyimpan informasi produk berupa atribut produk dan harga.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoDPenjelasan10">
+                10) Menampilkan Data Sebelum Pengurutan
+            </button>
+        </h2>
+        <div id="selectionLoDPenjelasan10" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoD">
+            <div class="accordion-body">
+                Pada baris 20–21, seluruh data produk ditampilkan sebelum proses pengurutan dilakukan sehingga urutan awal data dapat diketahui.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoDPenjelasan11">
+                11) Memanggil Fungsi Selection Sort
+            </button>
+        </h2>
+        <div id="selectionLoDPenjelasan11" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoD">
+            <div class="accordion-body">
+                Pada baris 23, fungsi selectionLoD(data_produk) dipanggil untuk menjalankan proses pengurutan berdasarkan atribut harga.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoDPenjelasan12">
+                12) Menampilkan Hasil Pengurutan
+            </button>
+        </h2>
+        <div id="selectionLoDPenjelasan12" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoD">
+            <div class="accordion-body">
+                Pada baris 25–27, data produk ditampilkan kembali setelah proses pengurutan selesai sehingga hasil akhir pengurutan dapat dilihat.
+            </div>
+        </div>
+    </div>
+
+</div>
             
             </div><div class="tab-pane fade" id="pills-oflist" role="tabpanel" aria-labelledby="pills-oflist-tab">
                     
@@ -375,55 +668,235 @@ for m in data_produk:
 
                         <div class="code-container">
 <pre class="code-box">
-def selectionLoL(data):
-    n = len(data)
-    for i in range(n - 1):
-        print("Langkah ke-", i + 1, ":", data)
-        indeks_terkecil = i
-        for j in range(i + 1, n):
-            if data[j][1] < data[indeks_terkecil][1]:
-                indeks_terkecil = j
-        data[i], data[indeks_terkecil] = data[indeks_terkecil], data[i]
-
-
-data_produk = [
-    ['Pensil', 2500],
-    ['Pulpen', 3000],
-    ['Penghapus', 1500],
-    ['Penggaris', 2000]
-]
-
-print("Sebelum disortir:")
-for m in data_produk:
-    print(m)
-
-selectionLoL(data_produk)
-
-print("\nSetelah disortir:")
-for m in data_produk:
-    print(m)
+ 1  def selectionLoL(data):
+ 2      n = len(data)
+ 3      for i in range(n - 1):
+ 4          print("Langkah ke-", i + 1, ":", data)
+ 5          indeks_terkecil = i
+ 6          for j in range(i + 1, n):
+ 7              if data[j][1] < data[indeks_terkecil][1]:
+ 8                  indeks_terkecil = j
+ 9          data[i], data[indeks_terkecil] = data[indeks_terkecil], data[i]
+10
+11
+12  data_produk = [
+13      ['Pensil', 2500],
+14      ['Pulpen', 3000],
+15      ['Penghapus', 1500],
+16      ['Penggaris', 2000]
+17  ]
+18
+19  print("Sebelum disortir:")
+20  for m in data_produk:
+21      print(m)
+22
+23  selectionLoL(data_produk)
+24
+25  print("\nSetelah disortir:")
+26  for m in data_produk:
+27      print(m)
 </pre>
                     </div>
 
-                    <h5 class="fw-bold mt-4">Penjelasan: Apa yang Berbeda pada Metode List of List?</h5>
-                    <p>Pada contoh ini, kita menggunakan struktur data <strong>List of List</strong> (List dua dimensi). Berbeda dengan <em>Dictionary</em> yang menggunakan kata kunci pengenal (<em>key</em>), <em>List</em> murni menggunakan urutan angka (indeks). Berikut adalah rincian penjelasannya:</p>
+<h5 class="fw-bold mt-4">Penjelasan Kode</h5>
 
-                    <ul>
-                        <li class="mb-2">
-                            <strong>Mengakses Elemen Berdasarkan Indeks Angka:</strong><br>
-                            Struktur data yang kita gunakan memiliki format <code>['Nama Barang', Harga]</code>. Hal ini berarti indeks ke-<code>[0]</code> berisi teks nama barang, dan indeks ke-<code>[1]</code> berisi angka harga barang. <br>
-                            Oleh karena itu, pada baris <code>if data[j][1] &lt; data[indeks_terkecil][1]:</code>, kita secara spesifik memerintahkan program untuk hanya membandingkan nilai pada indeks ke-1 (yakni harganya).
-                        </li>
-                        
-                        <li class="mb-2">
-                            <strong>Pencarian Nilai Minimum:</strong><br>
-                            Sama seperti konsep dasar algoritma Selection Sort, program akan menelusuri sisa data yang belum terurut untuk mencari barang dengan harga paling murah. Posisi (indeks utama) dari barang termurah tersebut akan disimpan di dalam variabel <code>indeks_terkecil</code>.
-                        </li>
+<div class="accordion" id="accordionPenjelasanSelectionLoL">
 
-                        <li>
-                            <strong>Proses Pertukaran Satu Kesatuan (Swap):</strong><br>
-                            Meskipun elemen yang kita bandingkan hanyalah harganya (indeks ke-1), saat menukar posisi pada baris <code>data[i], data[indeks_terkecil] = data[indeks_terkecil], data[i]</code>, kita memindahkan <strong>seluruh isi list bagian dalam</strong> (nama dan harga sekaligus). Hal ini dilakukan agar data nama barang dan harganya tetap berpasangan dengan benar dan tidak tumpang tindih.
-                        </li>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoLPenjelasan1">
+                1) Deklarasi Fungsi
+            </button>
+        </h2>
+        <div id="selectionLoLPenjelasan1" class="accordion-collapse collapse show"
+            data-bs-parent="#accordionPenjelasanSelectionLoL">
+            <div class="accordion-body">
+                Pada baris 1, fungsi selectionLoL() didefinisikan dengan parameter data. Parameter ini berisi kumpulan data dalam bentuk List of List yang akan diurutkan menggunakan algoritma Selection Sort.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoLPenjelasan2">
+                2) Menentukan Panjang Data
+            </button>
+        </h2>
+        <div id="selectionLoLPenjelasan2" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoL">
+            <div class="accordion-body">
+                Pada baris 2, fungsi len(data) digunakan untuk menghitung jumlah elemen dalam list dan menyimpannya ke dalam variabel n. Nilai ini digunakan sebagai batas perulangan.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoLPenjelasan3">
+                3) Perulangan Luar (Outer Loop)
+            </button>
+        </h2>
+        <div id="selectionLoLPenjelasan3" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoL">
+            <div class="accordion-body">
+                Pada baris 3, perulangan luar digunakan untuk menentukan posisi penempatan nilai terkecil pada setiap iterasi pengurutan. Setiap iterasi akan menempatkan satu elemen pada posisi yang benar.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoLPenjelasan4">
+                4) Menampilkan Data Setiap Iterasi
+            </button>
+        </h2>
+        <div id="selectionLoLPenjelasan4" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoL">
+            <div class="accordion-body">
+                Pada baris 4, data ditampilkan pada awal setiap iterasi sehingga perubahan urutan data selama proses Selection Sort dapat diamati.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoLPenjelasan5">
+                5) Menentukan Nilai Terkecil Sementara
+            </button>
+        </h2>
+        <div id="selectionLoLPenjelasan5" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoL">
+            <div class="accordion-body">
+                Pada baris 5, variabel indeks_terkecil diinisialisasi dengan nilai i. Artinya, elemen pada posisi saat ini dianggap sebagai data dengan nilai terkecil sementara sebelum dilakukan pencarian.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoLPenjelasan6">
+                6) Perulangan Dalam (Inner Loop)
+            </button>
+        </h2>
+        <div id="selectionLoLPenjelasan6" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoL">
+            <div class="accordion-body">
+                Pada baris 6, perulangan dalam digunakan untuk mencari nilai terkecil pada bagian data yang belum terurut. Pencarian dilakukan mulai dari indeks setelah i hingga elemen terakhir.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoLPenjelasan7">
+                7) Mencari Nilai Terkecil Berdasarkan Elemen Kedua
+            </button>
+        </h2>
+        <div id="selectionLoLPenjelasan7" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoL">
+            <div class="accordion-body">
+                Pada baris 7–8, dilakukan perbandingan nilai pada indeks ke-1 dari setiap list. Pada contoh ini, indeks ke-1 berisi harga produk. Jika ditemukan harga yang lebih kecil, maka nilai indeks_terkecil diperbarui sesuai posisi data tersebut.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoLPenjelasan8">
+                8) Proses Pertukaran (Swap)
+            </button>
+        </h2>
+        <div id="selectionLoLPenjelasan8" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoL">
+            <div class="accordion-body">
+                Pada baris 9, data pada posisi i ditukar dengan data pada indeks_terkecil. Yang ditukar adalah seluruh list sehingga nama produk dan harga tetap tersimpan sebagai satu kesatuan.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoLPenjelasan9">
+                9) Deklarasi Data Produk
+            </button>
+        </h2>
+        <div id="selectionLoLPenjelasan9" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoL">
+            <div class="accordion-body">
+                Pada baris 12–17, didefinisikan data produk dalam bentuk List of List. Setiap elemen terdiri dari nama produk pada indeks ke-0 dan harga produk pada indeks ke-1.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoLPenjelasan10">
+                10) Menampilkan Data Sebelum Pengurutan
+            </button>
+        </h2>
+        <div id="selectionLoLPenjelasan10" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoL">
+            <div class="accordion-body">
+                Pada baris 19–21, seluruh data produk ditampilkan sebelum proses pengurutan dilakukan sehingga urutan awal data dapat diketahui.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoLPenjelasan11">
+                11) Memanggil Fungsi Selection Sort
+            </button>
+        </h2>
+        <div id="selectionLoLPenjelasan11" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoL">
+            <div class="accordion-body">
+                Pada baris 23, fungsi selectionLoL(data_produk) dipanggil untuk menjalankan proses pengurutan berdasarkan harga produk.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#selectionLoLPenjelasan12">
+                12) Menampilkan Hasil Pengurutan
+            </button>
+        </h2>
+        <div id="selectionLoLPenjelasan12" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanSelectionLoL">
+            <div class="accordion-body">
+                Pada baris 25–27, data produk ditampilkan kembali setelah proses pengurutan selesai sehingga hasil akhir pengurutan dapat dilihat.
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
                     </ul>
                 </div>
 
@@ -442,34 +915,79 @@ for m in data_produk:
                 <span class="materi-badge">Aktivitas 3.1: Melengkapi Kode Program</span>
             </div>
             
-            <p class="card-text mb-4 text-danger fw-bold">
-                <i class="fa-solid fa-lock me-1"></i> Sebelum lanjut, lengkapi bagian kode yang kosong di bawah ini dengan benar untuk membuka akses ke Quiz!
-            </p>
+            <div class="mb-3">
+                <button class="btn btn-outline-primary btn-sm"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#instruksiKode"
+                        aria-expanded="false">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Instruksi Pengerjaan
+                </button>
+
+                <div class="collapse mt-2" id="instruksiKode">
+                    <div class="alert alert-primary mb-0">
+                        <ol class="mb-0 ps-3">
+                            <li>Lengkapi seluruh bagian kode yang masih kosong.</li>
+                            <li>Perhatikan kembali materi Bubble Sort pada bagian atas halaman.</li>
+                            <li>Klik tombol <strong>Periksa Kode</strong> untuk memeriksa jawaban.</li>
+                            <li>Jika ingin mengulang, klik tombol <strong>Reset</strong>.</li>
+                            <li>Semua bagian harus benar untuk membuka akses selanjutnya.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
 
             <div class="code-container" style="background: #1e1e1e; padding: 20px; border-radius: 8px; color: #d4d4d4; font-family: 'Courier New', monospace; font-size: 14px; line-height: 2;">
                 <span style="color: #569cd6;">def</span> <span style="color: #dcdcaa;">selection_sort</span>(data):<br>
                 &nbsp;&nbsp;&nbsp;&nbsp;n = <span style="color: #dcdcaa;">len</span>(data)<br>
                 &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">for</span> i <span style="color: #c586c0;">in</span> <span style="color: #dcdcaa;">range</span>(n - <span style="color: #b5cea8;">1</span>):<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min_idx = <input type="text" id="s_blank1" class="code-input" placeholder="..." style="width: 40px; text-align: center;"> <span style="color: #6a9955;"># Asumsikan elemen pertama di sisa data adalah minimum</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min_idx = <input type="text"
+                id="s_blank1"
+                class="code-input {{ $isSelesai ? 'correct' : '' }}"
+                placeholder="..."
+                value="{{ $isSelesai ? 'i' : '' }}"
+                {{ $isSelesai ? 'readonly' : '' }}
+                style="width: 40px; text-align: center;"><span style="color: #6a9955;"># Asumsikan elemen pertama di sisa data adalah minimum</span><br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">for</span> j <span style="color: #c586c0;">in</span> <span style="color: #dcdcaa;">range</span>(i + <span style="color: #b5cea8;">1</span>, n):<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">if</span> data[j] <input type="text" id="s_blank2" class="code-input" placeholder="..." style="width: 40px; text-align: center;"> data[min_idx]: <span style="color: #6a9955;"># Cek elemen untuk Ascending</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">if</span> data[j] <input type="text"
+                id="s_blank2"
+                class="code-input {{ $isSelesai ? 'correct' : '' }}"
+                placeholder="..."
+                value="{{ $isSelesai ? '<' : '' }}"
+                {{ $isSelesai ? 'readonly' : '' }}
+                style="width: 40px; text-align: center;"> data[min_idx]: <span style="color: #6a9955;"># Cek elemen untuk Ascending</span><br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min_idx = j<br>
                 <br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #6a9955;"># Proses Pertukaran</span><br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp = data[i]<br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[i] = data[min_idx]<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[min_idx] = <input type="text" id="s_blank3" class="code-input" placeholder="..." style="width: 80px;"> <span style="color: #6a9955;"># Selesaikan logika swap</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[min_idx] = <input type="text"
+                id="s_blank3"
+                class="code-input {{ $isSelesai ? 'correct' : '' }}"
+                placeholder="..."
+                value="{{ $isSelesai ? 'temp' : '' }}"
+                {{ $isSelesai ? 'readonly' : '' }}
+                style="width: 80px;"> <span style="color: #6a9955;"># Selesaikan logika swap</span><br>
             </div>
 
             <div id="fillCodeFeedback" class="alert {{ $isSelesai ? 'alert-success' : 'd-none' }} mt-3">
                 @if($isSelesai)
-                    <i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Logika Anda sangat tepat. Tombol Lanjut Quiz telah dibuka. Silakan coba kode ini pada Live Editor di bawah!
+                    <i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Logika Anda sangat tepat. Aktivitas selanjutnya telah dibuka. Silakan coba kode ini pada Live Editor di bawah!
                 @endif
             </div>
             
-            <div class="text-start mt-3">
-                <button id="btnCheckCode" class="btn btn-primary" {{ $isSelesai ? 'disabled' : '' }}>
+            <div class="text-center mt-3">
+                <button id="btnCheckCode"
+                        class="btn btn-primary"
+                        {{ $isSelesai ? 'disabled' : '' }}>
                     {{ $isSelesai ? 'Kode Sudah Benar' : 'Periksa Kode' }}
+                </button>
+
+                <button id="btnResetCode"
+                        class="btn btn-outline-secondary ms-2"
+                        {{ $isSelesai ? 'disabled' : '' }}>
+                    Reset
                 </button>
             </div>
 
@@ -528,14 +1046,14 @@ for m in data_produk:
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const btnCheckCode = document.getElementById('btnCheckCode');
+    const btnResetCode = document.getElementById('btnResetCode');
     const feedbackCode = document.getElementById('fillCodeFeedback');
     const btnNext = document.getElementById('btnNextSelection');
-    const lockIcon = document.getElementById('lockIconSelection');
 
     btnCheckCode.addEventListener('click', function() {
-        const b1 = document.getElementById('s_blank1').value.trim(); // Jawaban: i
-        const b2 = document.getElementById('s_blank2').value.trim(); // Jawaban: <
-        const b3 = document.getElementById('s_blank3').value.trim(); // Jawaban: temp
+        const b1 = document.getElementById('s_blank1').value.trim();
+        const b2 = document.getElementById('s_blank2').value.trim();
+        const b3 = document.getElementById('s_blank3').value.trim();
 
         let correctCount = 0;
 
@@ -561,21 +1079,51 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (correctCount === 3) {
+            document.getElementById('s_blank1').value = 'i';
+            document.getElementById('s_blank2').value = '<';
+            document.getElementById('s_blank3').value = 'temp';
+
+            document.getElementById('s_blank1').readOnly = true;
+            document.getElementById('s_blank2').readOnly = true;
+            document.getElementById('s_blank3').readOnly = true;
+
+            btnCheckCode.disabled = true;
+            btnCheckCode.innerText = 'Kode Sudah Benar';
+            btnResetCode.disabled = true;
+
             feedbackCode.className = 'alert alert-success mt-3';
-            feedbackCode.innerHTML = '<i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Logika Selection Sort Anda sudah tepat. Tombol Lanjut Quiz telah dibuka. Silakan coba kode tersebut pada Live Editor!';
+            feedbackCode.innerHTML = '<strong>Luar Biasa!</strong> Pemahaman Anda tentang Selection Sort sangat tepat. Akses ke aktivitas selanjutnya telah dibuka.';
             feedbackCode.classList.remove('d-none');
-            
+
             btnNext.classList.remove('disabled');
             btnNext.removeAttribute('tabindex');
             btnNext.removeAttribute('aria-disabled');
             btnNext.style.pointerEvents = 'auto';
-            btnNext.style.opacity = '1';          
-            lockIcon.className = 'fa-solid fa-unlock me-1';
-        } else {
-            feedbackCode.className = 'alert alert-danger mt-3';
-            feedbackCode.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> <strong>Kurang Tepat!</strong> Ada bagian kode yang salah (kotak merah). Ingat, kita perlu mencari nilai terkecil (Ascending).';
-            feedbackCode.classList.remove('d-none');
+            btnNext.style.opacity = '1';
+
+            fetch("{{ route('mahasiswa.aktivitas.tandai_selesai') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json" // Header vital yang hilang sebelumnya
+                },
+                body: JSON.stringify({
+                    id_aktivitas: {{ $item->id }} // Mengirim ID aktivitas saat ini
+                })
+            })
         }
+    });
+
+    btnResetCode.addEventListener('click', function () {
+        ['s_blank1','s_blank2','s_blank3'].forEach(id => {
+            const input = document.getElementById(id);
+            input.value = '';
+            input.className = 'code-input';
+        });
+
+        feedbackCode.classList.add('d-none');
+        feedbackCode.innerHTML = '';
     });
 });
 </script>

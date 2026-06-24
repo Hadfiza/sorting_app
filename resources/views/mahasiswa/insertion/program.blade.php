@@ -169,106 +169,192 @@
 
                 <div class="code-container">
 <pre class="code-box">
-def insertion_sort(data):
-    n = len(data)
-    for i in range(1, n):
-        key = data[i]
-        j = i - 1
-        
-        while j >= 0 and data[j] > key:
-            data[j + 1] = data[j]
-            j -= 1
-            
-        data[j + 1] = key
-        print(f"Hasil setelah langkah ke-{i}: {data}")
-
-angka = [4, 2, 5, 1, 3]
-print("Sebelum sorting:", angka)
-insertion_sort(angka)
-print("Setelah sorting:", angka)
+ 1  def insertion_sort(data):
+ 2      n = len(data)
+ 3      for i in range(1, n):
+ 4          key = data[i]
+ 5          j = i - 1
+ 6
+ 7          while j >= 0 and data[j] > key:
+ 8              data[j + 1] = data[j]
+ 9              j -= 1
+10
+11          data[j + 1] = key
+12          print(f"Hasil setelah langkah ke-{i}: {data}")
+13
+14  angka = [4, 2, 5, 1, 3]
+15  print("Sebelum sorting:", angka)
+16  insertion_sort(angka)
+17  print("Setelah sorting:", angka)
 </pre>
                 </div>
             </div>
             
-            <hr class="my-4">
+<h5 class="fw-bold mt-4">Penjelasan Kode</h5>
 
-            <h5 class="fw-bold">Penjelasan Per Blok</h5>
+<div class="accordion" id="accordionPenjelasanInsertion">
 
-            <div class="mb-4">
-                <h6 class="fw-semibold">1. Deklarasi Fungsi dan Panjang Data</h6>
-                <div class="code-container mt-2">
-<pre class="code-box"><code>
-<span>def insertion_sort(data):</span>
-<span>    n = len(data)</span>
-</code></pre>
-                </div>
-                <p class="mt-2">
-                    Baris ini mendefinisikan sebuah fungsi bernama <code>insertion_sort</code> yang menerima satu parameter berupa <code>data</code>. Variabel <code>n</code> digunakan untuk menghitung dan menyimpan total panjang atau jumlah elemen dari list tersebut agar dapat digunakan sebagai batas dalam proses perulangan.
-                </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#insertionPenjelasan1">
+                1) Deklarasi Fungsi
+            </button>
+        </h2>
+        <div id="insertionPenjelasan1" class="accordion-collapse collapse show"
+            data-bs-parent="#accordionPenjelasanInsertion">
+            <div class="accordion-body">
+                Pada baris 1, fungsi insertion_sort() didefinisikan dengan parameter data. Parameter ini berisi kumpulan data yang akan diurutkan menggunakan algoritma Insertion Sort.
             </div>
+        </div>
+    </div>
 
-            <div class="mb-4">
-                <h6 class="fw-semibold">2. Perulangan Utama dan Penentuan Key</h6>
-                <div class="code-container mt-2">
-<pre class="code-box"><code>
-<span>for i in range(1, n):</span>
-<span>    key = data[i]</span>
-<span>    j = i - 1</span>
-</code></pre>
-                </div>
-                <p class="mt-2">
-                    Perulangan dimulai dari indeks <code>1</code> (elemen kedua), karena elemen di indeks <code>0</code> dianggap sudah berada di bagian yang terurut. Pada setiap iterasi, elemen ke-<code>i</code> disimpan ke dalam variabel <code>key</code>. Variabel <code>j</code> diatur menunjuk pada indeks tepat di sebelah kiri <code>key</code> untuk memulai proses perbandingan bergerak mundur.
-                </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#insertionPenjelasan2">
+                2) Menentukan Panjang Data
+            </button>
+        </h2>
+        <div id="insertionPenjelasan2" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanInsertion">
+            <div class="accordion-body">
+                Pada baris 2, fungsi len(data) digunakan untuk menghitung jumlah elemen dalam list dan menyimpannya ke dalam variabel n. Nilai ini digunakan sebagai batas perulangan.
             </div>
+        </div>
+    </div>
 
-            <div class="mb-4">
-                <h6 class="fw-semibold">3. Perulangan Dalam (Proses Pergeseran)</h6>
-                <div class="code-container mt-2">
-<pre class="code-box"><code>
-<span>while j >= 0 and data[j] > key:</span>
-<span>    data[j + 1] = data[j]</span>
-<span>    j -= 1</span>
-</code></pre>
-                </div>
-                <p class="mt-2">
-                    Perulangan <code>while</code> akan terus berjalan selama <code>j</code> belum melewati batas kiri array (>= 0) <strong>dan</strong> elemen di kiri (<code>data[j]</code>) masih lebih besar dari nilai <code>key</code>. Jika kondisi ini terpenuhi, maka elemen yang lebih besar tersebut akan <strong>digeser satu posisi ke kanan</strong> (<code>data[j + 1] = data[j]</code>). Setelah itu, indeks <code>j</code> dikurangi 1 untuk membandingkan dengan elemen sebelumnya lagi.
-                </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#insertionPenjelasan3">
+                3) Perulangan Utama dan Menentukan Data yang Akan Disisipkan
+            </button>
+        </h2>
+        <div id="insertionPenjelasan3" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanInsertion">
+            <div class="accordion-body">
+                Pada baris 3–5, perulangan digunakan untuk mengambil elemen mulai dari indeks ke-1 hingga elemen terakhir. Nilai pada indeks i disimpan ke dalam variabel key, sedangkan variabel j diisi dengan nilai i - 1 untuk menunjukkan posisi elemen di sebelah kiri key yang akan digunakan dalam proses perbandingan.
             </div>
+        </div>
+    </div>
 
-            <div class="mb-4">
-                <h6 class="fw-semibold">4. Penyisipan Key (Insert)</h6>
-                <div class="code-container mt-2">
-<pre class="code-box"><code>
-<span>data[j + 1] = key</span>
-<span>print(f"Hasil setelah langkah ke-{i}: {data}")</span>
-</code></pre>
-                </div>
-                <p class="mt-2">
-                    Setelah proses pergeseran dihentikan (artinya kita sudah menemukan elemen yang lebih kecil dari <code>key</code> atau sudah mencapai ujung paling kiri), kita <strong>menyisipkan</strong> nilai <code>key</code> ke posisi kosong yang telah disiapkan (<code>data[j + 1] = key</code>). Kemudian, sistem mencetak kondisi array untuk memantau perubahan secara bertahap.
-                </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#insertionPenjelasan4">
+                4) Proses Perbandingan dan Pergeseran Data
+            </button>
+        </h2>
+        <div id="insertionPenjelasan4" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanInsertion">
+            <div class="accordion-body">
+                Pada baris 7–9, dilakukan proses perbandingan menggunakan perulangan while. Selama nilai j masih berada dalam batas list dan elemen pada indeks j lebih besar daripada key, elemen tersebut akan digeser satu posisi ke kanan. Setelah proses pergeseran dilakukan, nilai j dikurangi satu untuk melanjutkan pemeriksaan pada elemen sebelumnya.
             </div>
+        </div>
+    </div>
 
-            {{-- <div class="refleksi-alert mt-4">
-                <h5 class="fw-bold mb-3">
-                    Refleksi Konseptual
-                </h5>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#insertionPenjelasan5">
+                5) Menempatkan Elemen pada Posisi yang Tepat
+            </button>
+        </h2>
+        <div id="insertionPenjelasan5" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanInsertion">
+            <div class="accordion-body">
+                Pada baris 11, nilai key ditempatkan pada indeks j + 1. Posisi tersebut merupakan lokasi yang tepat setelah seluruh elemen yang lebih besar berhasil digeser ke kanan.
+            </div>
+        </div>
+    </div>
 
-                <p class="mb-3">
-                    Sebelum melanjutkan, pastikan Anda memahami hal berikut:
-                </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#insertionPenjelasan6">
+                6) Menampilkan Hasil Setiap Langkah
+            </button>
+        </h2>
+        <div id="insertionPenjelasan6" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanInsertion">
+            <div class="accordion-body">
+                Pada baris 12, data ditampilkan setelah satu proses penyisipan selesai dilakukan sehingga perubahan urutan data dapat diamati pada setiap langkah algoritma.
+            </div>
+        </div>
+    </div>
 
-                <ul class="mb-0">
-                    <li class="mb-3">
-                        <strong>Mengapa perulangan utama dimulai dari indeks 1, bukan 0?</strong><br>
-                        Karena prinsip dasar Insertion Sort adalah menganggap bahwa elemen pertama (indeks 0) sudah berada di kelompok yang terurut. Oleh karena itu, kita mulai mengambil elemen kedua (indeks 1) untuk disisipkan ke kelompok tersebut.
-                    </li>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#insertionPenjelasan7">
+                7) Menyiapkan Data yang Akan Diurutkan
+            </button>
+        </h2>
+        <div id="insertionPenjelasan7" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanInsertion">
+            <div class="accordion-body">
+                Pada baris 14, didefinisikan sebuah list bernama angka yang berisi data [4, 2, 5, 1, 3]. Data ini digunakan sebagai contoh dalam proses pengurutan.
+            </div>
+        </div>
+    </div>
 
-                    <li class="mb-3">
-                        <strong>Apa peran penting dari variabel <code>key</code>?</strong><br>
-                        Saat elemen yang lebih besar digeser ke kanan (<code>data[j + 1] = data[j]</code>), nilai asli di indeks tersebut akan tertimpa. Menyimpan nilai tersebut di dalam variabel <code>key</code> mencegah data hilang dan memungkinkan kita untuk menyisipkannya kembali saat posisi yang tepat telah ditemukan.
-                    </li>
-                </ul>
-            </div> --}}
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#insertionPenjelasan8">
+                8) Menampilkan Data Sebelum Pengurutan
+            </button>
+        </h2>
+        <div id="insertionPenjelasan8" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanInsertion">
+            <div class="accordion-body">
+                Pada baris 15, data ditampilkan sebelum proses pengurutan dilakukan sehingga urutan awal elemen dapat diketahui.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#insertionPenjelasan9">
+                9) Memanggil Fungsi Insertion Sort
+            </button>
+        </h2>
+        <div id="insertionPenjelasan9" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanInsertion">
+            <div class="accordion-body">
+                Pada baris 16, fungsi insertion_sort(angka) dipanggil untuk menjalankan proses pengurutan menggunakan algoritma Insertion Sort.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#insertionPenjelasan10">
+                10) Menampilkan Hasil Pengurutan
+            </button>
+        </h2>
+        <div id="insertionPenjelasan10" class="accordion-collapse collapse"
+            data-bs-parent="#accordionPenjelasanInsertion">
+            <div class="accordion-body">
+                Pada baris 17, data ditampilkan kembali setelah proses pengurutan selesai sehingga hasil akhir pengurutan dapat dilihat.
+            </div>
+        </div>
+    </div>
+
+</div>
 
         </div>
     </div>
@@ -281,36 +367,68 @@ print("Setelah sorting:", angka)
                 <span class="materi-badge">Aktivitas 4.2: Melengkapi Kode Program</span>
             </div>
             
-            <p class="card-text mb-4 text-danger fw-bold">
-                <i class="fa-solid fa-lock me-1"></i> Sebelum lanjut, lengkapi bagian kode yang kosong di bawah ini dengan benar untuk membuka akses ke Quiz!
-            </p>
+            <div class="mb-3">
+                <button class="btn btn-outline-primary btn-sm"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#instruksiKode"
+                        aria-expanded="false">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Instruksi Pengerjaan
+                </button>
+
+                <div class="collapse mt-2" id="instruksiKode">
+                    <div class="alert alert-primary mb-0">
+                        <ol class="mb-0 ps-3">
+                            <li>Lengkapi seluruh bagian kode yang masih kosong.</li>
+                            <li>Perhatikan kembali materi Bubble Sort pada bagian atas halaman.</li>
+                            <li>Klik tombol <strong>Periksa Kode</strong> untuk memeriksa jawaban.</li>
+                            <li>Jika ingin mengulang, klik tombol <strong>Reset</strong>.</li>
+                            <li>Semua bagian harus benar untuk membuka akses selanjutnya.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
 
             <div class="code-container" style="background: #1e1e1e; padding: 20px; border-radius: 8px; color: #d4d4d4; font-family: 'Courier New', monospace; font-size: 14px; line-height: 2;">
                 <span style="color: #569cd6;">def</span> <span style="color: #dcdcaa;">insertion_sort</span>(data):<br>
                 &nbsp;&nbsp;&nbsp;&nbsp;n = <span style="color: #dcdcaa;">len</span>(data)<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">for</span> i <span style="color: #c586c0;">in</span> <span style="color: #dcdcaa;">range</span>(<input type="text" id="i_blank1" class="code-input" placeholder="..." style="width: 40px; text-align: center;">, n): <span style="color: #6a9955;"># Mulai dari elemen kedua</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">for</span> i <span style="color: #c586c0;">in</span> <span style="color: #dcdcaa;">range</span>(<input type="text"
+                id="i_blank1"
+                class="code-input {{ $isSelesai ? 'correct' : '' }}"
+                placeholder="..."
+                value="{{ $isSelesai ? '1' : '' }}"
+                {{ $isSelesai ? 'readonly' : '' }}
+                style="width: 40px; text-align: center;">, n): <span style="color: #6a9955;"># Mulai dari elemen kedua</span><br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key = data[i]<br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j = i - <span style="color: #b5cea8;">1</span><br>
                 <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">while</span> j >= <span style="color: #b5cea8;">0</span> <span style="color: #c586c0;">and</span> data[j] <input type="text" id="i_blank2" class="code-input" placeholder="..." style="width: 40px; text-align: center;"> key: <span style="color: #6a9955;"># Cek apakah elemen kiri lebih besar</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c586c0;">while</span> j >= <span style="color: #b5cea8;">0</span> <span style="color: #c586c0;">and</span> data[j] <input type="text" id="i_blank2" class="code-input" placeholder="..." style="width: 40px; text-align: center; " value="{{ $isSelesai ? '>' : '' }}"{{ $isSelesai ? 'readonly' : '' }} class="code-input {{ $isSelesai ? 'correct' : '' }}"> key: <span style="color: #6a9955;"># Cek apakah elemen kiri lebih besar</span><br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[j + <span style="color: #b5cea8;">1</span>] = data[j]<br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j -= <span style="color: #b5cea8;">1</span><br>
                 <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[j + <span style="color: #b5cea8;">1</span>] = <input type="text" id="i_blank3" class="code-input" placeholder="..." style="width: 60px; text-align: center;"> <span style="color: #6a9955;"># Sisipkan elemen ke posisi yang tepat</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[j + <span style="color: #b5cea8;">1</span>] = <input type="text" id="i_blank3" class="code-input" placeholder="..." style="width: 60px; text-align: center;" value="{{ $isSelesai ? 'key' : '' }}"{{ $isSelesai ? 'readonly' : '' }} class="code-input {{ $isSelesai ? 'correct' : '' }}"> <span style="color: #6a9955;"># Sisipkan elemen ke posisi yang tepat</span><br>
             </div>
 
             <div id="fillCodeFeedback" class="alert {{ $isSelesai ? 'alert-success' : 'd-none' }} mt-3">
                 @if($isSelesai)
-                    <i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Logika Anda sangat tepat. Tombol Lanjut Quiz telah dibuka. Silakan coba kode ini pada Live Editor di bawah!
+                    <i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Logika Anda sangat tepat. Aktivitas selanjutnya telah dibuka. Silakan coba kode ini pada Live Editor di bawah!
                 @endif
             </div>
             
-            <div class="text-start mt-3">
-                <button id="btnCheckCode" class="btn btn-primary" {{ $isSelesai ? 'disabled' : '' }}>
+            <div class="text-center mt-3">
+                <button id="btnCheckCode"
+                        class="btn btn-primary"
+                        {{ $isSelesai ? 'disabled' : '' }}>
                     {{ $isSelesai ? 'Kode Sudah Benar' : 'Periksa Kode' }}
                 </button>
-            </div>
 
+                <button id="btnResetCode"
+                        class="btn btn-outline-secondary ms-2"
+                        {{ $isSelesai ? 'disabled' : '' }}>
+                    Reset
+                </button>
+            </div>
 
         </div>
     </div>
@@ -368,7 +486,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnCheckCode = document.getElementById('btnCheckCode');
     const feedbackCode = document.getElementById('fillCodeFeedback');
     const btnNext = document.getElementById('btnNextInsertion');
-    const lockIcon = document.getElementById('lockIconInsertion');
+    // const lockIcon = document.getElementById('lockIconInsertion');
 
     btnCheckCode.addEventListener('click', function() {
         // Ambil nilai input
@@ -405,7 +523,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Output Feedback
         if (correctCount === 3) {
             feedbackCode.className = 'alert alert-success mt-3';
-            feedbackCode.innerHTML = '<i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Logika Insertion Sort Anda sudah tepat. Tombol Lanjut Quiz telah dibuka. Silakan coba kode tersebut pada Live Editor!';
+            feedbackCode.innerHTML = '<i class="fa-solid fa-unlock-keyhole"></i> <strong>Luar Biasa!</strong> Logika Insertion Sort Anda sudah tepat. Aktivitas selanjutnya telah dibuka. Silakan coba kode tersebut pada Live Editor!';
             // feedbackCode.classList.remove('d-none');
             
             // Buka gembok tombol Selanjutnya
@@ -414,16 +532,19 @@ document.addEventListener('DOMContentLoaded', function() {
             btnNext.removeAttribute('aria-disabled');
             btnNext.style.pointerEvents = 'auto';
             btnNext.style.opacity = '1';          
-            lockIcon.className = 'fa-solid fa-unlock me-1';
+            // lockIcon.className = 'fa-solid fa-unlock me-1';
+
+                document.getElementById('i_blank1').value = '1';
+                document.getElementById('i_blank2').value = '>';
+                document.getElementById('i_blank3').value = 'key';
 
                 // Kunci input dan tombol setelah berhasil
-                document.getElementById('blank1').readOnly = true;
-                document.getElementById('blank2').readOnly = true;
-                document.getElementById('blank3').readOnly = true;
+                document.getElementById('i_blank1').readOnly = true;
+                document.getElementById('i_blank2').readOnly = true;
+                document.getElementById('i_blank3').readOnly = true;
                 btnCheckCode.disabled = true;
                 btnCheckCode.innerText = 'Kode Sudah Benar';
 
-                // Tembak data ke database tanpa reload halaman (AJAX yang sukses)
                 fetch("{{ route('mahasiswa.aktivitas.tandai_selesai') }}", {
                     method: "POST",
                     headers: {
@@ -438,7 +559,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if(data.success) {
-                        feedbackCode.innerHTML = '<strong>Luar Biasa!</strong> Pemahaman Anda tentang Bubble Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
+                        feedbackCode.innerHTML = '<strong>Luar Biasa!</strong> Pemahaman Anda tentang Insertion Sort sangat tepat. Akses ke halaman selanjutnya telah dibuka.';
                         feedbackCode.className = 'alert alert-success mt-3';
                         feedbackCode.classList.remove('d-none');
                         
@@ -467,6 +588,24 @@ document.addEventListener('DOMContentLoaded', function() {
             feedbackCode.classList.remove('d-none');
         }
     });
+});
+
+</script>
+<script>
+const btnResetCode = document.getElementById('btnResetCode');
+
+btnResetCode.addEventListener('click', function () {
+
+    ['i_blank1','i_blank2','i_blank3'].forEach(id => {
+        const input = document.getElementById(id);
+
+        input.value = '';
+        input.className = 'code-input';
+    });
+
+    const feedbackCode = document.getElementById('fillCodeFeedback');
+    feedbackCode.className = 'alert d-none';
+    feedbackCode.innerHTML = '';
 });
 </script>
 <script>

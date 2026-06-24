@@ -38,6 +38,28 @@
                 <i class="fa-solid fa-cube"></i>
                 <span class="materi-badge">Simulasi BubbleSort</span>
             </div>
+
+            <div class="mb-3">
+                <button class="btn btn-outline-primary btn-sm"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#instruksiSimulasi">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Instruksi Simulasi
+                </button>
+
+                <div class="collapse mt-2" id="instruksiSimulasi">
+                    <div class="card card-body bg-light">
+                        <ol class="mb-0">
+                            <li>Bacalah studi kasus yang disajikan untuk memahami permasalahan pengurutan data.</li>
+                            <li>Perhatikan dua buku yang sedang dibandingkan pada setiap langkah simulasi.</li>
+                            <li>Analisis berdasarkan prinsip Bubble Sort apakah kedua buku perlu ditukar.</li>
+                            <li>Pilih jawaban yang sesuai pada tombol yang tersedia.</li>
+                            <li>Selesaikan simulasi hingga seluruh buku tersusun secara ascending (menaik).</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
             
             <div class="simulation-wrapper">
                 <div class="sub-title"><strong>Studi Kasus:</strong> Di sebuah perpustakaan sekolah, buku-buku pelajaran disusun berdasarkan nomor edisi agar siswa dapat menemukan referensi yang dibutuhkan dengan cepat dan tepat. Namun, pada suatu rak, urutan nomor edisi buku masih belum tersusun dengan benar, sehingga pencarian buku menjadi kurang efisien. Oleh karena itu, diperlukan sebuah metode pengurutan yang sederhana dan sistematis untuk menyusun kembali buku-buku tersebut dari edisi terkecil hingga terbesar. Untuk memahami bagaimana proses pengurutan tersebut dilakukan, perhatikan simulasi interaktif yang disajikan di bawah ini agar setiap tahapan dapat diamati dan dipahami dengan lebih jelas.</div>

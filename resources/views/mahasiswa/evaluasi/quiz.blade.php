@@ -101,6 +101,16 @@
     .active-soal { transform: scale(1.07); z-index: 10; box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.1); }
     .quiz-locked { opacity: 0.7; pointer-events: none; filter: grayscale(20%); }
 
+#quiz-area {
+    height: calc(100vh - 40px);
+}
+
+#soal-container {
+    height: calc(100% - 180px);
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
     /* Responsiveness Tambahan */
     @media (max-width: 768px) {
         #nav-bottom-container { gap: 6px; }
@@ -117,16 +127,16 @@
     $soal = $soal->shuffle()->values();
 @endphp
 
-<body class="py-4 py-md-5">
+<body class="py-1 py-md-4">
 
 <div class="container">
-    <div class="row g-4 align-items-start">
+    <div class="row g-3 align-items-start">
 
         <!-- KONTEN UTAMA (KIRI) -->
-        <div class="col-12 col-lg-9">
+        <div id="quiz-column" class="col-12 col-lg-12">
             
             <!-- INTRO AREA -->
-            <div id="intro-area" class="card border-primary-subtle shadow-sm rounded-4 border p-4 p-md-5 intro-card">
+            <div id="intro-area" class="card border-primary-subtle shadow-sm rounded-4 border p-2 p-md-3 intro-card">
                 <!-- Header Petunjuk -->
                 <div class="bg-light rounded-3 px-4 py-3 mb-4 d-flex align-items-center gap-3">
                     <span class="fs-4 text-secondary"><i class="fa-solid fa-folder"></i></span>
@@ -147,9 +157,10 @@
                             <i class="fas fa-ban me-2 fs-5"></i>
                             <span class="fw-bold">{{ $pesan_blokir ?? 'Akses ditutup.' }}</span>
                         </div>
-                        <a href="{{ route('mahasiswa.dashboard') }}" class="btn btn-secondary fw-bold px-4 py-2 shadow-sm">
-                            Kembali ke Beranda
-                        </a>
+                    <a href="{{ route('mahasiswa.dashboard') }}"
+                    class="btn btn-secondary fw-bold px-4 py-2 shadow-sm align-self-start">
+                        Kembali ke Beranda
+                    </a>
                     @else
                     <div class="d-flex gap-3 align-items-start">
 
@@ -176,16 +187,16 @@
             </div>
             
             <!-- QUIZ AREA -->
-            <div id="quiz-area" class="card border-primary-subtle shadow-sm rounded-4 border p-4 p-md-5 d-none">
+            <div id="quiz-area" class="card border-primary-subtle shadow-sm rounded-4 border p-2 p-md-4 d-none">
                 
-                <h3 class="fs-6 fw-bold mb-4 text-secondary border-bottom pb-3 text-center text-md-start text-uppercase tracking-widest">
+                <h3 class="fs-6 fw-bold mb-2 text-secondary border-bottom pb-2 text-center text-md-start text-uppercase tracking-widest">
                     Evaluasi Akhir
                 </h3>
                 
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
                     <p class="small fw-bold text-secondary text-uppercase tracking-widest mb-0">Sisa Waktu</p>
                     <div id="timer" class="bg-danger text-white px-3 py-2 rounded-3 fw-bolder fs-5">
-                        10:00
+                        00:00
                     </div>
                 </div>
 
@@ -265,7 +276,7 @@
                 </div>
 
                 <!-- AKSI BAWAH -->
-                <div id="nav-bottom-container" class="d-flex justify-content-between mt-5 pt-4 border-top">
+                <div id="nav-bottom-container" class="d-flex justify-content-between mt-3 pt-2 border-top">
                     <button onclick="prevSoal()" class="btn btn-light border text-secondary fw-bold px-4 py-2 rounded-3">Kembali</button>
                     <button onclick="toggleRaguCurrent()" class="btn btn-warning text-dark fw-bold px-4 py-2 rounded-3">Tandai Ragu</button>
                     <button id="btn-next" onclick="nextSoal()" class="btn btn-primary fw-bold px-5 py-2 rounded-3 shadow-sm">Lanjut</button>
@@ -275,7 +286,7 @@
         </div>
 
         <!-- NAVIGASI KANAN -->
-        <div class="col-12 col-lg-3">
+        <div id="navigation-panel" class="col-12 col-lg-3 d-none">
             <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 2rem;">
                 <p class="fw-bold text-secondary text-center small tracking-widest text-uppercase border-bottom pb-3 mb-4">Navigasi Soal</p>
                 
@@ -288,15 +299,23 @@
                 </div>
 
                 <div class="small fw-bold text-secondary border-top text-uppercase">
-                    <div class="d-flex align-items-center mb-2">
+                    <div class="d-flex align-items-center mb-1">
                         <span class="bg-success rounded-2 me-2" style="width: 1rem; height: 1rem;"></span> Sudah Dijawab
                     </div>
-                    <div class="d-flex align-items-center mb-2">
+                    <div class="d-flex align-items-center mb-1">
                         <span class="bg-warning rounded-2 me-2" style="width: 1rem; height: 1rem;"></span> Ragu-ragu
                     </div>
-                    <div class="d-flex align-items-center mb-2">
+                    <div class="d-flex align-items-center mb-1">
                         <span class="bg-primary bg-opacity-25 border border-primary rounded-2 me-2" style="width: 1rem; height: 1rem;"></span> Belum Dijawab
                     </div>
+                </div>
+
+                <div class="mt-1 d-grid">
+                    <button id="btn-finish-sidebar"
+                            onclick="finishQuiz()"
+                            class="btn btn-primary fw-bold py-2 rounded-3">
+                        Selesai
+                    </button>
                 </div>
 
                 <div id="finish-status" class="d-none mt-4 p-3 bg-primary-subtle text-primary rounded-3 small fw-bold text-center border border-primary-subtle text-uppercase tracking-widest">
@@ -361,10 +380,14 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id ?? 0) }}";
                 throw new Error(data.message);
             }
 
-            // --- JIKA BERHASIL ---
-            document.getElementById('intro-area').classList.add('d-none');
-            document.getElementById('quiz-area').classList.remove('d-none');
-            startTimer();
+        document.getElementById('intro-area').classList.add('d-none');
+        document.getElementById('quiz-area').classList.remove('d-none');
+        document.getElementById('navigation-panel').classList.remove('d-none');
+
+        document.getElementById('quiz-column').classList.remove('col-lg-12');
+        document.getElementById('quiz-column').classList.add('col-lg-9');
+
+        startTimer();
         })
         .catch(error => {
             // Tangkap semua error dan tampilkan ke layar
@@ -540,7 +563,7 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id ?? 0) }}";
         if (indexSoal < totalSoal - 1) {
             tampilkanSoal(indexSoal + 1);
         } else {
-            if (isSemuaTerjawab()) {
+            if (isSemuaTerjawab() && !masihAdaRagu()) {
                 hitungNilai();
             } else {
                 Swal.fire({ 
@@ -554,49 +577,111 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id ?? 0) }}";
         }
     }
 
-function hitungNilai() {
-    let benar = 0;
-    clearInterval(intervalTimer);
-    let semuaJawaban = {};
-
-    for (const key in kunciJawaban) {
-        const radios = document.querySelectorAll(`input[name="${key}"]`);
-        const input = document.querySelector(`[name="${key}"]`);
-        let jawabanUser = "";
-
-        if (radios.length > 1) {
-            const checked = document.querySelector(`input[name="${key}"]:checked`);
-            jawabanUser = checked ? checked.value : "";
-        } else if (input) {
-            jawabanUser = input.value.trim();
-        }
-        semuaJawaban[key] = jawabanUser;
-
-        if (Array.isArray(kunciJawaban[key])) {
-            let userArr = [];
-            try { userArr = JSON.parse(jawabanUser); } catch(e) {}
-            if (JSON.stringify(userArr) === JSON.stringify(kunciJawaban[key])) benar++;
-        } else {
-            if (jawabanUser.toLowerCase() === kunciJawaban[key].toLowerCase()) benar++;
-        }
+    function masihAdaRagu() {
+        return document.querySelectorAll('.nav-btn.ragu').length > 0;
     }
 
-    const skor = Math.round((benar / totalSoal) * 100);
+function finishQuiz() {
+    if (!isSemuaTerjawab()) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Belum Selesai',
+            text: 'Masih terdapat soal yang belum dijawab. Silakan periksa kembali dan lengkapi semua jawaban sebelum mengakhiri evaluasi.'
+        });
+        return;
+    }
 
-    Swal.fire({
-        title: 'Konfirmasi Selesai',
-        text: "Setelah menekan Selesai, Anda tidak dapat mengubah jawaban lagi.",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, Selesai',
-        cancelButtonText: 'Cek Lagi',
-        buttonsStyling: false,
-        customClass: {
-            confirmButton: 'btn btn-success fw-bold px-4 py-2 mx-2',
-            cancelButton: 'btn btn-danger fw-bold px-4 py-2 mx-2'
+    if (masihAdaRagu()) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Masih Ada Soal Ragu-ragu',
+            text: 'Masih terdapat soal yang ditandai ragu-ragu. Silakan periksa kembali sebelum mengakhiri evaluasi.'
+        });
+        return;
+    }
+
+    hitungNilai();
+}
+
+    function hitungNilai(otomatis = false) {
+        clearInterval(intervalTimer);
+        let semuaJawaban = {};
+
+        for (const key in kunciJawaban) {
+            const radios = document.querySelectorAll(`input[name="${key}"]`);
+            const input = document.querySelector(`[name="${key}"]`);
+            let jawabanUser = "";
+
+            if (radios.length > 1) {
+                const checked = document.querySelector(`input[name="${key}"]:checked`);
+                jawabanUser = checked ? checked.value : "";
+            } else if (input) {
+                jawabanUser = input.value.trim();
+            }
+
+            semuaJawaban[key] = jawabanUser;
         }
-    }).then((result) => {
-        if (result.isConfirmed) {
+
+        const tampilkanHasil = (data) => {
+            if (data.error) {
+                Swal.fire({
+                    title: 'Evaluasi Ditolak',
+                    text: data.error,
+                    icon: 'error',
+                    confirmButtonText: 'Kembali ke Dashboard',
+                    allowOutsideClick: false,
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: 'btn btn-primary fw-bold px-4 py-2 mt-3'
+                    }
+                }).then(() => {
+                    window.location.href = "{{ route('mahasiswa.dashboard') }}";
+                });
+                return;
+            }
+
+            const skorServer = data.skor;
+
+            Swal.fire({
+                title: 'Hasil Evaluasi!',
+                html: `
+                    <div class="p-4 bg-primary-subtle rounded-3 border border-primary shadow-sm mt-3">
+                        <p class="text-secondary fw-bold small text-uppercase mb-2 tracking-widest">
+                            Skor Akhir Anda
+                        </p>
+
+                        <p class="display-3 fw-bold text-primary mb-3">
+                            ${skorServer}
+                        </p>
+
+                        <div class="border-top pt-3">
+                            <p class="mb-1">
+                                <strong>KKM :</strong> ${data.kkm ?? '-'}
+                            </p>
+
+                            <p class="fw-bold mt-2 ${data.lulus ? 'text-success' : 'text-danger'}">
+                                ${
+                                    data.lulus
+                                    ? 'Anda telah memenuhi KKM.'
+                                    : 'Nilai Anda belum mencapai KKM.'
+                                }
+                            </p>
+                        </div>
+                    </div>
+                `,
+                icon: data.lulus ? 'success' : 'warning',
+                confirmButtonText: 'Kembali',
+                allowOutsideClick: false,
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'btn btn-primary fw-bold px-4 py-2 mt-3'
+                }
+            }).then(() => {
+                window.location.href = "{{ route('mahasiswa.dashboard') }}";
+            });
+        };
+
+        if (otomatis) {
             kunciKuis();
             document.getElementById("btn-next").disabled = true;
 
@@ -608,67 +693,52 @@ function hitungNilai() {
                 },
                 body: JSON.stringify({ jawaban: semuaJawaban })
             })
-            .then(response => {
-                if (!response.ok) throw new Error("Server Error");
-                return response.json();
-            })
-            .then(data => {
+            .then(response => response.json())
+            .then(data => tampilkanHasil(data));
 
-                if (data.error) {
-                    Swal.fire({
-                        title: 'Evaluasi Ditolak',
-                        text: data.error,
-                        icon: 'error',
-                        confirmButtonText: 'Kembali ke Dashboard',
-                        allowOutsideClick: false,
-                        buttonsStyling: false,
-                        customClass: {
-                            confirmButton: 'btn btn-primary fw-bold px-4 py-2 mt-3'
-                        }
-                    }).then(() => {
-                        window.location.href = "{{ route('mahasiswa.dashboard') }}";
-                    });
-                    return;
-                }
-
-                const skorServer = data.skor;
-
-                Swal.fire({
-                    title: 'Hasil Evaluasi!',
-                    html: `
-                        <div class="p-4 bg-primary-subtle rounded-3 border border-primary shadow-sm mt-3">
-                            <p class="text-secondary fw-bold small text-uppercase mb-2 tracking-widest">Skor Akhir Anda</p>
-                            <p class="display-3 fw-bold text-primary mb-3">${skorServer}</p>
-                            <p class="small text-secondary fw-bold border-top pt-2 text-uppercase">
-                                Benar: ${Math.round(skorServer/10)} dari ${totalSoal}
-                            </p>
-                        </div>
-                    `,
-                    icon: 'success',
-                    confirmButtonText: 'Kembali',
-                    allowOutsideClick: false,
-                    buttonsStyling: false,
-                    customClass: {
-                        confirmButton: 'btn btn-primary fw-bold px-4 py-2 mt-3'
-                    }
-                }).then(() => {
-                    window.location.href = "{{ route('mahasiswa.dashboard') }}";
-                });
-
-            })
-            .catch(error => {
-                console.error(error);
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Terjadi Kesalahan',
-                    text: error.message
-                });
-            });
-
+            return;
         }
-    });
-}
+
+        Swal.fire({
+            title: 'Konfirmasi Selesai',
+            text: "Setelah menekan Selesai, Anda tidak dapat mengubah jawaban lagi.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Selesai',
+            cancelButtonText: 'Cek Lagi',
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-success fw-bold px-4 py-2 mx-2',
+                cancelButton: 'btn btn-danger fw-bold px-4 py-2 mx-2'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                kunciKuis();
+                document.getElementById("btn-next").disabled = true;
+
+                fetch(submitQuizUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({ jawaban: semuaJawaban })
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error("Server Error");
+                    return response.json();
+                })
+                .then(data => tampilkanHasil(data))
+                .catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Terjadi Kesalahan',
+                        text: 'Jawaban tidak dapat disimpan ke server.'
+                    });
+                });
+            }
+        });
+    }
 
     function kunciKuis() {
         isLocked = true;
@@ -714,7 +784,7 @@ function hitungNilai() {
             allowOutsideClick: false,
             buttonsStyling: false,
             customClass: { confirmButton: 'btn btn-primary fw-bold px-4 py-2' }
-        }).then(() => { hitungNilai(); });
+        }).then(() => { hitungNilai(true); });
     }
 </script>
 </body>

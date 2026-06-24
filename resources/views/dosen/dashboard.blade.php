@@ -32,7 +32,7 @@
     </div>
 
     <div class="row mb-4 g-3">
-        <div class="col-12 col-sm-6 col-xl-3">
+        <div class="col">
             <div class="card card-panel border-0 h-100 p-3">
                 <div class="d-flex align-items-center">
                     <div class="stat-icon bg-success bg-opacity-10 text-success me-3">
@@ -46,7 +46,7 @@
             </div>
         </div>
 
-        <div class="col-12 col-sm-6 col-xl-3">
+        <div class="col">
             <div class="card card-panel border-0 h-100 p-3">
                 <div class="d-flex align-items-center">
                     <div class="stat-icon bg-primary bg-opacity-10 text-primary me-3">
@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <div class="col-12 col-sm-6 col-xl-3">
+        <div class="col">
             <div class="card card-panel border-0 h-100 p-3">
                 <div class="d-flex align-items-center">
                     <div class="stat-icon bg-warning bg-opacity-10 text-warning me-3">
@@ -74,20 +74,38 @@
             </div>
         </div>
 
-        <div class="col-12 col-sm-6 col-xl-3">
+        <div class="col">
+            <div class="card card-panel border-0 h-100 p-3">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-danger bg-opacity-10 text-danger me-3">
+                        <i class="fa-solid fa-arrow-down"></i>
+                    </div>
+                    <div>
+                        <p class="text-muted small text-uppercase fw-bold mb-1 tracking-wide">
+                            Nilai Terendah
+                        </p>
+                        <h3 class="fw-bold text-dark mb-0">{{ $nilaiTerendah }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
             <div class="card card-panel border-0 h-100 p-3">
                 <div class="d-flex align-items-center">
                     <div class="stat-icon bg-info bg-opacity-10 text-info me-3">
                         <i class="fa-solid fa-chart-line"></i>
                     </div>
                     <div>
-                        <p class="text-muted small text-uppercase fw-bold mb-1 tracking-wide">Progress Maks</p>
+                        <p class="text-muted small text-uppercase fw-bold mb-1 tracking-wide">Progress Tertinggi</p>
                         <h3 class="fw-bold text-dark mb-0">{{ $progresTertinggi }}%</h3>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
 
     <div class="card card-panel bg-white mb-4 border">
         <div class="card-body p-3">
