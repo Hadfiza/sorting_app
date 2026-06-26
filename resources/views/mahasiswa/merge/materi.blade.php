@@ -737,12 +737,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+        // Pilihan tetap aktif agar bisa reset dan pilih ulang
         document.querySelectorAll('#quizActivity input[type="radio"]').forEach(function(radio) {
-            radio.disabled = true;
+            radio.disabled = false;
         });
-
+        // Periksa disembunyikan, reset ditampilkan
         if (btnCheck) btnCheck.classList.add('d-none');
-        if (btnReset) btnReset.classList.add('d-none');
+        if (btnReset) btnReset.classList.remove('d-none');
+        btnReset.innerHTML = '<i class="fa-solid fa-rotate-right me-1"></i> Reset Latihan'; // Agar walau sudah benar semua tombol reset tetap ada
 
         feedback.className = 'alert alert-success mt-3 shadow-sm text-center py-2 mb-0 small fade-in';
         feedback.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i> <strong>Selesai!</strong> Jawaban benar telah ditampilkan.`;
@@ -774,7 +776,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function checkAllAnswered() {
-        if (isSelesai) return;
+        // if (isSelesai) return;
 
         const q1Val = document.querySelector('input[name="mq1"]:checked');
         const q2Val = document.querySelector('input[name="mq2"]:checked');
@@ -792,7 +794,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     btnCheck.addEventListener('click', function() {
-        if (isSelesai) return;
+        // if (isSelesai) return;
 
         const q1Val = document.querySelector('input[name="mq1"]:checked');
         const q2Val = document.querySelector('input[name="mq2"]:checked');
@@ -814,6 +816,8 @@ document.addEventListener('DOMContentLoaded', function() {
             feedback.classList.remove('d-none');
 
             btnCheck.classList.add('d-none');
+            btnReset.classList.remove('d-none');
+            btnReset.innerHTML = '<i class="fa-solid fa-rotate-right me-1"></i> Reset Latihan';
 
             btnNextMateri.classList.remove('disabled');
             btnNextMateri.removeAttribute('tabindex');
@@ -824,18 +828,19 @@ document.addEventListener('DOMContentLoaded', function() {
             if (lockIcon) {
                 lockIcon.className = 'fa-solid fa-unlock me-1';
             }
-
-            fetch("{{ route('mahasiswa.aktivitas.tandai_selesai') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({
-                    id_aktivitas: {{ $item->id }}
-                })
-            }).catch(err => console.error(err));
+            if(!isSelesai){ // agar kalau sdh pernah selesai progres tidak perlu disimpan
+                fetch("{{ route('mahasiswa.aktivitas.tandai_selesai') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({
+                        id_aktivitas: {{ $item->id }}
+                    })
+                }).catch(err => console.error(err));
+            }
 
         } else {
             feedback.className = 'alert alert-danger mt-3 shadow-sm text-center py-2 mb-0 small fade-in';
@@ -848,17 +853,29 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     btnReset.addEventListener('click', function() {
-        if (isSelesai) return;
-
-        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        document.querySelectorAll('#quizActivity input[type="radio"]').forEach(radio => {
             radio.checked = false;
+            radio.disabled = false;
         });
 
         btnReset.classList.add('d-none');
+        btnCheck.classList.add('d-none');
+
         feedback.classList.add('d-none');
+        feedback.innerHTML = '';
 
         currentSlide = 0;
         showSlide(currentSlide);
+
+        btnNextMateri.classList.remove('disabled');
+        btnNextMateri.removeAttribute('tabindex');
+        btnNextMateri.removeAttribute('aria-disabled');
+        btnNextMateri.style.pointerEvents = 'auto';
+        btnNextMateri.style.opacity = '1';
+
+        if (lockIcon) {
+            lockIcon.className = 'fa-solid fa-unlock me-1';
+        }
     });
 
     showSlide(0);

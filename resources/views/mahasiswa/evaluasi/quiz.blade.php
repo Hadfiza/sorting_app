@@ -331,7 +331,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id ?? 0) }}";
+const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id) }}";
 </script>
 <script>
     let indexSoal = 0;
@@ -339,6 +339,7 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id ?? 0) }}";
     const totalSoal = daftarSoal.length;
     // let selectedItem = null; // TAP Drop
     let isLocked = false;
+    let totalWaktu = 0;
 
     const kunciJawaban = {
     @foreach($soal as $s)
@@ -354,10 +355,17 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id ?? 0) }}";
     @endforeach
     };
 
+    function normalisasiJawaban(value) {
+        return String(value ?? '')
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, ' ');
+    }
+
     function mulaiLatihan() {
-        totalWaktu = {{ $quiz->durasi ?? 0 }} * 60;
+        totalWaktu = {{ $quiz->durasi }} * 60;
         
-        fetch("{{ route('mahasiswa.quiz.start', $quiz->id ?? 0) }}", {
+        fetch("{{ route('mahasiswa.quiz.start', $quiz->id) }}", {
             method: "POST",
             headers: {
                 "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -528,6 +536,14 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id ?? 0) }}";
     //     updateDragAnswer(nomorSoal);
     // }
 
+    function updateAfterDrop(target, nomorSoal) {
+        if (target.classList.contains('border-dashed')) {
+            target.classList.remove('bg-slate-50');
+            target.classList.add('bg-blue-50');
+            updateDragAnswer(nomorSoal);
+        }
+    }
+
     function updateDragAnswer(nomor) {
         let arr = [];
         const drops = document.querySelectorAll(`[id^="drop"][id$="-${nomor}"]`);
@@ -639,8 +655,9 @@ function finishQuiz() {
                 });
                 return;
             }
-
-            const skorServer = data.skor;
+            const skorServer = Number(data.skor ?? 0);
+            const benarServer = Number(data.benar ?? 0);
+            const totalSoalServer = Number(data.total_soal ?? totalSoal);
 
             Swal.fire({
                 title: 'Hasil Evaluasi!',
@@ -657,6 +674,10 @@ function finishQuiz() {
                         <div class="border-top pt-3">
                             <p class="mb-1">
                                 <strong>KKM :</strong> ${data.kkm ?? '-'}
+                            </p>
+
+                            <p class="mb-1">
+                                <strong>Jawaban Benar :</strong> ${benarServer} dari ${totalSoalServer} soal
                             </p>
 
                             <p class="fw-bold mt-2 ${data.lulus ? 'text-success' : 'text-danger'}">
@@ -746,6 +767,12 @@ function finishQuiz() {
         document.getElementById('quiz-area').classList.add('quiz-locked');
         document.getElementById('nav-bottom-container').classList.add('d-none');
         document.getElementById('finish-status').classList.remove('d-none');
+    }
+
+    function toggleRagu(i) {
+        if (isLocked) return;
+        indexSoal = i;
+        toggleRaguCurrent();
     }
 
     function prevSoal() { if (indexSoal > 0) tampilkanSoal(indexSoal - 1); }

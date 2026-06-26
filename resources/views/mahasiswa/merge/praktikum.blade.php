@@ -326,10 +326,11 @@
     <div class="alert alert-info">
         <b>Instruksi:</b>
         <ol class="mb-0 mt-2">
-            <li>Ketikkan atau modifikasi kode program pada editor di bawah.</li>
+            <li>Perhatikan Soal praktikum diatas.</li>
+            <li>Ketikkan kode jawaban pada kode editor di bawah ini.</li>
             <li>Klik tombol <b>Run Code</b> untuk menjalankan program.</li>
             <li>Pastikan <b>output berhasil muncul</b> pada bagian Console Output.</li>
-            <li>Jika sudah sesuai, klik tombol <b>Submit Praktikum</b> dinawah untuk mengumpulkan jawaban.</li>
+            <li>Jika sudah sesuai, klik tombol <b>Submit Praktikum</b> dibawah untuk mengumpulkan jawaban.</li>
         </ol>
     </div>
 

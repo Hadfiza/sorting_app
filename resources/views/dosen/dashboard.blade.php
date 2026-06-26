@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    <div class="row mb-4 g-3">
+    <div class="row mb-4 g-3 row-cols-5">
         <div class="col">
             <div class="card card-panel border-0 h-100 p-3">
                 <div class="d-flex align-items-center">
@@ -53,7 +53,7 @@
                         <i class="fa-solid fa-users"></i>
                     </div>
                     <div>
-                        <p class="text-muted small text-uppercase fw-bold mb-1 tracking-wide">Mahasiswa</p>
+                        <p class="text-muted small text-uppercase fw-bold mb-1 tracking-wide">Mahasiswa</p><br>
                         <h3 class="fw-bold text-dark mb-0">{{ $jumlahMahasiswa }}</h3>
                     </div>
                 </div>

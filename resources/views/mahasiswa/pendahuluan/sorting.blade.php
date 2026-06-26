@@ -151,7 +151,7 @@
                         </div>
 
                         <div class="drag-item image-only" draggable="true" data-answer="descending">
-                            <img src="/images/sort/3.png" alt="Skenario 3">
+                            <img src="/images/sort/4.png" alt="Skenario 3">
                         </div>
                     </div>
                 </div>

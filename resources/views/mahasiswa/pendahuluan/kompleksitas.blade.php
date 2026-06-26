@@ -569,23 +569,16 @@
                     Lanjut <i class="fa-solid fa-chevron-right"></i>
                 </button>
             </div>
-
-            @if($isSelesai)
-
-            <div class="alert alert-success mt-3 shadow-sm text-center py-2 mb-0 small">
-                <i class="fa-solid fa-circle-check me-1"></i>
-                <strong>Uji pemahaman telah diselesaikan.</strong>
-                Semua jawaban telah dinyatakan benar dan materi berikutnya sudah terbuka.
-            </div>
-
-            @else
-
             <div id="quizFeedback"
-                class="alert d-none mt-3 shadow-sm text-center py-2 mb-0 small">
+                class="alert {{ $isSelesai ? 'alert-success' : 'd-none' }} mt-3 shadow-sm text-center py-2 mb-0 small">
+                
+                @if($isSelesai)
+                    <i class="fa-solid fa-circle-check me-1"></i>
+                    <strong>Uji pemahaman telah diselesaikan.</strong>
+                    Materi berikutnya sudah terbuka. Kamu tetap dapat mencoba ulang latihan.
+                @endif
+
             </div>
-
-            @endif
-
         </div>
     </div>
 </div>
@@ -674,17 +667,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Nonaktifkan semua pilihan jawaban agar tidak bisa diubah lagi
         document.querySelectorAll('#quizActivity input[type="radio"]').forEach(radio => {
-            radio.disabled = true;
+            radio.disabled = false;
         });
 
         // Sembunyikan tombol periksa dan reset
         btnCheck.classList.add('d-none');
-        btnReset.classList.add('d-none');
+        btnReset.classList.remove('d-none');
+        btnReset.innerHTML = '<i class="fa-solid fa-rotate-right me-1"></i> Reset Latihan';
 
-        // Tampilkan informasi selesai
-        feedback.className = 'alert alert-success mt-3 shadow-sm text-center py-2 mb-0 small fade-in';
-        feedback.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i> <strong>Selesai!</strong> Jawaban benar telah ditampilkan.`;
-        feedback.classList.remove('d-none');
+        // Tampilkan penjelasan
+        tampilkanFeedbackPembahasan();
 
         // Buka gembok materi
         btnNextMateri.classList.remove('disabled');
@@ -696,6 +688,52 @@ document.addEventListener('DOMContentLoaded', function() {
         if (lockIcon) {
             lockIcon.className = 'fa-solid fa-unlock me-1';
         }
+    }
+
+    function tampilkanFeedbackPembahasan() {
+        feedback.className = 'alert alert-primary mt-3 shadow-sm py-3 mb-0 fade-in';
+        feedback.innerHTML = `
+            <h6 class="fw-bold mb-3">
+                <i class="fa-solid fa-circle-check me-1"></i>
+                Kesimpulan Uji Pemahaman
+            </h6>
+
+            <p class="mb-3">
+                <strong>Jawaban sudah benar semua.</strong> Berikut pembahasan singkat dari setiap soal:
+            </p>
+
+            <ul class="mb-3">
+                <li>
+                    <strong>Soal 1:</strong> Merge Sort memiliki kompleksitas waktu 
+                    <code>O(n log n)</code> pada kondisi worst case, sehingga lebih efisien
+                    dibandingkan Bubble Sort, Selection Sort, dan Insertion Sort yang memiliki
+                    kompleksitas <code>O(n²)</code>.
+                </li>
+                <li>
+                    <strong>Soal 2:</strong> Kompleksitas <code>O(n²)</code> menunjukkan bahwa
+                    waktu eksekusi bertambah secara kuadratik ketika jumlah data semakin besar.
+                </li>
+                <li>
+                    <strong>Soal 3:</strong> <em>Time complexity</em> berkaitan dengan waktu eksekusi,
+                    sedangkan <em>space complexity</em> berkaitan dengan penggunaan memori tambahan.
+                </li>
+                <li>
+                    <strong>Soal 4:</strong> Kondisi <em>best case</em> terjadi ketika data sudah
+                    terurut atau hampir terurut, sehingga operasi yang dibutuhkan lebih sedikit.
+                </li>
+                <li>
+                    <strong>Soal 5:</strong> Kompleksitas <code>O(n log n)</code> lebih baik untuk
+                    data besar karena pertumbuhan jumlah operasinya lebih lambat dibandingkan
+                    <code>O(n²)</code>.
+                </li>
+            </ul>
+
+            <p class="mb-0">
+                Dengan demikian, pemahaman terhadap kompleksitas waktu dan ruang penting untuk
+                memilih algoritma sorting yang sesuai dengan ukuran dan kondisi data.
+            </p>
+        `;
+        feedback.classList.remove('d-none');
     }
 
     // Event Tombol Lanjut & Kembali
@@ -715,8 +753,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Pengecekan apakah semua soal sudah dijawab
     function checkAllAnswered() {
-        if (isSelesai) return;
-
+        // if (isSelesai) return;
         const q1Val = document.querySelector('input[name="q1"]:checked');
         const q2Val = document.querySelector('input[name="q2"]:checked');
         const q3Val = document.querySelector('input[name="q3"]:checked');
@@ -735,8 +772,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Periksa Jawaban
     btnCheck.addEventListener('click', function() {
-        if (isSelesai) return;
-
+        // if (isSelesai) return;
         const q1Val = document.querySelector('input[name="q1"]:checked');
         const q2Val = document.querySelector('input[name="q2"]:checked');
         const q3Val = document.querySelector('input[name="q3"]:checked');
@@ -751,11 +787,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (q5Val.value === kunciJawaban.q5) correctCount++;
 
         if (correctCount === totalQuestions) {
-            feedback.className = 'alert alert-success mt-3 shadow-sm text-center py-2 mb-0 small fade-in';
-            feedback.innerHTML = `<i class="fa-solid fa-unlock-keyhole me-1"></i> <strong>Luar Biasa!</strong> (${correctCount}/${totalQuestions}) Benar.`;
-            feedback.classList.remove('d-none');
+            // feedback.className = 'alert alert-success mt-3 shadow-sm text-center py-2 mb-0 small fade-in';
+            // feedback.innerHTML = `<i class="fa-solid fa-unlock-keyhole me-1"></i> <strong>Luar Biasa!</strong> (${correctCount}/${totalQuestions}) Benar.`;
+            // feedback.classList.remove('d-none');
+            tampilkanFeedbackPembahasan();
             
             btnCheck.classList.add('d-none'); // Sembunyikan tombol cek karena sudah benar
+            btnReset.innerHTML = '<i class="fa-solid fa-rotate-right me-1"></i> Reset Latihan';
 
             // Buka gembok materi
             btnNextMateri.classList.remove('disabled');
@@ -769,15 +807,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Simpan progres ke database
-            fetch("{{ route('mahasiswa.aktivitas.tandai_selesai') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({ id_aktivitas: {{ $item->id }} })
-            }).catch(err => console.error(err));
+            if (!isSelesai) {
+                fetch("{{ route('mahasiswa.aktivitas.tandai_selesai') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({ id_aktivitas: {{ $item->id }} })
+                }).catch(err => console.error(err));
+            }
 
         } else {
             // JIKA SALAH
@@ -793,18 +833,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Tombol Reset Jawaban
     btnReset.addEventListener('click', function() {
-        if (isSelesai) return;
+        // Hilangkan centang dan aktifkan kembali semua radio button
+        document.querySelectorAll('#quizActivity input[type="radio"]').forEach(r => {
+            r.checked = false;
+            r.disabled = false;
+        });
 
-        // Hilangkan centang pada semua radio button
-        document.querySelectorAll('#quizActivity input[type="radio"]').forEach(r => r.checked = false);
-        
-        // Sembunyikan tombol reset dan notifikasi
-        btnReset.classList.add('d-none');
+        // Hapus alert/feedback
         feedback.classList.add('d-none');
+        feedback.innerHTML = '';
+        
+        // Sembunyikan tombol reset, tombol periksa, dan feedback
+        btnReset.classList.add('d-none');
+        btnCheck.classList.add('d-none');
         
         // Kembali ke soal nomor 1
         currentSlide = 0;
         showSlide(currentSlide);
+
+        // Materi berikutnya tetap terbuka
+        btnNextMateri.classList.remove('disabled');
+        btnNextMateri.removeAttribute('tabindex');
+        btnNextMateri.removeAttribute('aria-disabled');
+        btnNextMateri.style.pointerEvents = 'auto';
+        btnNextMateri.style.opacity = '1';
+
+        if (lockIcon) {
+            lockIcon.className = 'fa-solid fa-unlock me-1';
+        }
     });
 
     // Inisialisasi tampilan awal

@@ -105,6 +105,7 @@ class KategoriSoalController extends Controller
         $bobotPerSoal = $totalSoal > 0 ? 100 / $totalSoal : 0;
 
         $skor = 0;
+        $jumlahBenar = 0;
 
         // ARRAY: Untuk menyimpan jawaban user sekaligus status benar/salahnya
         $detailJawabanLengkap = [];
@@ -130,13 +131,17 @@ class KategoriSoalController extends Controller
                 }
             } else {
                 // Evaluasi pilihan ganda biasa
-                $userStr = strtolower(trim($jawabanMhs));
-                $correctStr = strtolower(trim($correctRaw));
+                $userStr = strtolower(preg_replace('/\s+/', '', trim((string) $jawabanMhs)));
+                $correctStr = strtolower(preg_replace('/\s+/', '', trim((string) $correctRaw)));
 
                 if ($userStr === $correctStr) {
                     $skor += $bobotPerSoal;
-                    $isCorrect = true;
+                    $isCorrect = true; 
                 }
+            }
+
+            if ($isCorrect) {
+                $jumlahBenar++;
             }
 
             // SIMPAN DATA LENGKAP KE ARRAY BARU
@@ -162,6 +167,16 @@ class KategoriSoalController extends Controller
 
         // 4. Jika dosen belum pernah mengatur KKM untuk tahun tersebut, gunakan default 75
         $kkmDosen = $settingKkm ? $settingKkm->kkm : 75;
+
+        // ==========================================================
+        // Jika ini adalah percobaan ke-2, ke-3, dst.
+        if ($attemptBaru > 1) {
+            // Jika nilai murni mahasiswa melebihi KKM, maka dibatasi menjadi KKM
+            if ($skor > $kkmDosen) {
+                $skor = $kkmDosen;
+            }
+        }
+        // ==========================================================
 
         // 5. Tentukan status lulus berdasarkan KKM Dosen
         $statusLulus = $skor >= $kkmDosen ? 1 : 0;
@@ -198,6 +213,8 @@ class KategoriSoalController extends Controller
 
         return response()->json([
             'skor' => $skor,
+            'benar' => $jumlahBenar,
+            'total_soal' => $totalSoal,
             'lulus' => $statusLulus == 1,
             'kkm' => $kkmDosen
         ]);

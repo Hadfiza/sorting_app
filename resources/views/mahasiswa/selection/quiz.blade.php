@@ -368,6 +368,7 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id) }}";
     const daftarSoal = document.querySelectorAll('.soal');
     const totalSoal = daftarSoal.length;
     let isLocked = false;
+    let totalWaktu = 0;
 
     const kunciJawaban = {
     @foreach($soal as $s)
@@ -382,6 +383,13 @@ const submitQuizUrl = "{{ route('mahasiswa.quiz.submit', $quiz->id) }}";
         @endif
     @endforeach
     };
+
+    function normalisasiJawaban(value) {
+        return String(value ?? '')
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, ' ');
+    }
 
     function mulaiLatihan() {
         totalWaktu = {{ $quiz->durasi }} * 60;
@@ -599,7 +607,7 @@ function hitungNilai(otomatis = false) {
                 benar++;
             }
         } else {
-            if (jawabanUser.toLowerCase() === kunciJawaban[key].toLowerCase()) {
+            if (normalisasiJawaban(jawabanUser) === normalisasiJawaban(kunciJawaban[key])) {
                 benar++;
             }
         }
@@ -607,6 +615,8 @@ function hitungNilai(otomatis = false) {
 
     const tampilkanHasil = (data) => {
         const skorServer = data.skor;
+        const benarServer = data.benar ?? Math.round((Number(skorServer) / 100) * totalSoal);
+        const totalSoalServer = data.total_soal ?? totalSoal;
 
         Swal.fire({
             title: data.lulus ? 'Selamat, Anda Lulus!' : 'Belum Lulus',
@@ -628,7 +638,7 @@ function hitungNilai(otomatis = false) {
                         </p>
 
                         <p class="mb-1">
-                            <strong>Jawaban Benar :</strong> ${benar} dari ${totalSoal}
+                            <strong>Jawaban Benar :</strong> ${benarServer} dari ${totalSoalServer}
                         </p>
 
                         <p class="fw-bold mt-2 ${data.lulus ? 'text-success' : 'text-danger'}">

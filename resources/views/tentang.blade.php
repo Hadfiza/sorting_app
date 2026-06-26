@@ -87,18 +87,23 @@
             <div class="dapus">
                 <h3 class="mb-4 fw-semibold text-light">Daftar Pustaka</h3>
                 <ul>
-                    <li>yaaya</li>
+                    <li>Drs. Afrizal Zein, M.Kom., & Chrisantus Tristianto, S.T., M.Kom. (2025). <i>Algoritma dan Struktur Data Menggunakan Pemrogramman Python</i>. Eureka Media Aksara.</li>
+
+                    <li>Rance D. Necaise. (2011). <i>Data Structures and Algorithms Using Python</i>. John Wiley & Sons, Inc.</li>
+
+                    <li>Michael T. Goodrich, Roberto Tamassia, & Michael H. Goldwasser. (2013). <i>Data Structures and Algorithms in Python</i>. John Wiley & Sons, Inc.</li>
+
+                    <li>Khoirudin, S.Kom., M.Eng. (2019). <i>Algoritma dan Struktur Data dengan Python 3</i>. Universitas Semarang Press.</li>
                 </ul>
             </div>
 
             <div class="atribusi">
                 <h3 class="mb-4 fw-semibold text-light">Atribusi</h3>
                 <ul>
-                    <li>Canva</li>
+                    <li>Ilustrasi yang digunakan dalam media pembelajaran dibuat menggunakan <a href="https://storyset.com" class="text-white text-decoration-underline" target="_blank">Storyset</a>.</li>
+                    <li>Ikon antarmuka menggunakan <a href="https://storyset.com" class="text-white text-decoration-underline" target="_blank">Storyset</a>.</li>
                 </ul>
             </div>
-
-
 
         </div>
     </div>
