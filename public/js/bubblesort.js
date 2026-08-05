@@ -96,7 +96,7 @@ function checkAnswer(userChoice, valA, valB, idx, iterI) {
     if (isProcessing) return;
     isProcessing = true;
 
-    let correctAnswer = valA > valB;
+    let correctAnswer = valA > valB; //Ascending
 
     const actionContainer = document.getElementById(`action-btn-${iterI}-${idx}`);
     const explanationBox = document.getElementById(`explanation-${iterI}-${idx}`);
@@ -200,7 +200,7 @@ function executeSwapWithAnimation(idx, iterI) {
     }, 600); 
 }
 
-// --- FUNGSI EKSEKUSI ARRAY ---
+// --- FUNGSI EKSEKUSI perukaran ARRAY --- 
 function executeSwap(idx) {
     let temp = arr[idx];
     arr[idx] = arr[idx+1];

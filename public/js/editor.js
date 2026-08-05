@@ -48,9 +48,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     runBtn.disabled = false;
 
-    /* =========================
-       RUN BUTTON
-    ========================= */
     runBtn.addEventListener("click", async function () {
 
         outputDiv.innerText = "";

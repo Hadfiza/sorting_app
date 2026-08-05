@@ -396,48 +396,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ========== RESET ========== */
     resetBtn.addEventListener('click', () => {
+
         document.querySelectorAll('.dropped-image').forEach(img => img.remove());
 
         document.querySelectorAll('.drag-item').forEach(item => {
             item.dataset.used = 'false';
             item.draggable = true;
             item.classList.remove('used');
-            item.style.display = ''; 
+            item.style.display = '';
             item.style.opacity = '';
             item.style.cursor = 'grab';
         });
 
-        activityBox.classList.remove('completed');
         feedbackEl.innerHTML = '';
         feedbackEl.classList.add('d-none');
         checkBtn.disabled = true;
 
-        // --- KEMBALIKAN UKURAN KOLOM SEPERTI SEMULA ---
-        kolomSumber.classList.remove('d-none'); 
-        // kolomTarget.classList.remove('col-md-12'); 
-        // kolomTarget.classList.add('col-md-7'); 
+        kolomSumber.classList.remove('d-none');
 
-        // Jangan kunci lagi jika aktivitas sudah pernah selesai
-        if (!isSelesai) {
+        // Kalau sudah pernah selesai, tombol Next tetap terbuka
+        if (isSelesai) {
+            bukaTombolNext();
+        } else {
             btnNext.classList.add('disabled');
             btnNext.setAttribute('tabindex', '-1');
             btnNext.setAttribute('aria-disabled', 'true');
             btnNext.style.pointerEvents = 'none';
             btnNext.style.opacity = '0.5';
-
             lockIcon.className = 'fa-solid fa-lock me-1';
-        } else {
-            activityBox.classList.add('completed');
-            bukaTombolNext();
-            tampilkanJawabanBenar();
-
-            feedbackEl.className = 'alert alert-success py-3 mb-0 mt-3';
-            feedbackEl.innerHTML = `
-                <i class="fa-solid fa-unlock-keyhole"></i>
-                <strong>Aktivitas telah diselesaikan sebelumnya.</strong>
-                Jawaban benar ditampilkan kembali.
-            `;
-            feedbackEl.classList.remove('d-none');
         }
     });
 

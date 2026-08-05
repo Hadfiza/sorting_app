@@ -161,13 +161,13 @@ function resetSimulation() {
 function generateTasks(arr) {
     if (arr.length <= 1) return arr;
     
-    const mid = Math.floor(arr.length / 2);
+    const mid = Math.floor(arr.length / 2); //membagi 2 kiri kanan
     const left = arr.slice(0, mid);
     const right = arr.slice(mid);
 
     queue.push({ type: 'DIVIDE', left, right });
 
-    const sortedLeft = generateTasks(left);
+    const sortedLeft = generateTasks(left);// dipanggil secara rekursif
     const sortedRight = generateTasks(right);
 
     queue.push({ type: 'MERGE', left: sortedLeft, right: sortedRight });
@@ -350,7 +350,7 @@ window.checkMergeAnswer = function(choice, leftVal, rightVal) {
     try {
         let isCorrect = false;
         if (leftVal !== null && rightVal !== null) {
-            let correctChoice = (leftVal <= rightVal) ? 'LEFT' : 'RIGHT';
+            let correctChoice = (leftVal <= rightVal) ? 'LEFT' : 'RIGHT'; // ini untuk menentukan membagi
             isCorrect = (choice === correctChoice);
         } else {
             isCorrect = true; 
@@ -578,7 +578,7 @@ window.checkMergeAnswer = function(choice, leftVal, rightVal) {
 
             setTimeout(() => {
                 if (choice === 'LEFT') {
-                    mergeState.resultArr.push(mergeState.leftArr[mergeState.i]);
+                    mergeState.resultArr.push(mergeState.leftArr[mergeState.i]); //logika penggabungan
                     mergeState.i++;
                 } else {
                     mergeState.resultArr.push(mergeState.rightArr[mergeState.j]);

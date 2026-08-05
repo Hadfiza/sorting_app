@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Bubble Sort Animation</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: #0f172a;
+  color: white;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 40px 0;
+}
+
+.bubble {
+  width: 70px;
+  height: 70px;
+  background: #38bdf8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: bold;
+  transition: transform 0.6s ease, background 0.6s;
+}
+
+.bubble.active {
+  background: #facc15;
+}
+
+.bubble.sorted {
+  background: #22c55e;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+</style>
+
+</head>
+<body>
+
+<h2>Bubble Sort – Efek Gelembung ke Kanan</h2>
+
+<div class="container" id="container">
+  <div class="bubble">5</div>
+  <div class="bubble">1</div>
+  <div class="bubble">4</div>
+  <div class="bubble">2</div>
+  <div class="bubble">8</div>
+</div>
+
+<button onclick="startSort()">Mulai Animasi</button>
+
+<script>
+    async function startSort() {
+  const bubbles = document.querySelectorAll(".bubble");
+  let values = Array.from(bubbles).map(b => parseInt(b.textContent));
+
+  for (let i = 0; i < values.length; i++) {
+    for (let j = 0; j < values.length - i - 1; j++) {
+
+      bubbles[j].classList.add("active");
+      bubbles[j + 1].classList.add("active");
+      await delay(600);
+
+      if (values[j] > values[j + 1]) {
+        // Tukar nilai
+        [values[j], values[j + 1]] = [values[j + 1], values[j]];
+
+        // Tukar teks
+        bubbles[j].textContent = values[j];
+        bubbles[j + 1].textContent = values[j + 1];
+      }
+
+      bubbles[j].classList.remove("active");
+      bubbles[j + 1].classList.remove("active");
+    }
+
+    bubbles[values.length - i - 1].classList.add("sorted");
+  }
+}
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+</script>
+</body>
+</html>

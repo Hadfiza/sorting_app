@@ -84,9 +84,9 @@ function checkAnswer(userChoice, key, valSort, cardIdSuffix, event) {
     isProcessing = true;
 
     // Logika Insertion Sort
-    let correctAnswer = (valSort > key); 
+    let correctAnswer = (valSort > key); // jika elemen di kiri (valSort) lebih besar daripada key → GESER
     let expectedAction = correctAnswer ? 'GESER' : 'SISIP';
-    let chosenAction = userChoice ? 'GESER' : 'SISIP';
+    let chosenAction = userChoice ? 'GESER' : 'SISIP'; //jika pengguna menekan tombol Ya, Perlu Digeser dan jika pengguna menekan tombol Tidak, Sisipkan, maka
 
     const actionContainer = document.getElementById(`action-btn-${cardIdSuffix}`);
     const explanationBox = document.getElementById(`explanation-${cardIdSuffix}`);
